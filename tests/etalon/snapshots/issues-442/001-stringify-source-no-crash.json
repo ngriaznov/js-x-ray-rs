@@ -1,0 +1,30 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "prototype-pollution",
+      "location": [
+        [
+          126,
+          37
+        ],
+        [
+          126,
+          48
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.prototype_pollution",
+      "severity": "Warning",
+      "experimental": false,
+      "value": "__proto__"
+    }
+  ],
+  "flags": [],
+  "dependencies": {
+    "./globals.js": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

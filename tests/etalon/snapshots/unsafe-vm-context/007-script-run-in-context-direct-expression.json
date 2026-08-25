@@ -1,0 +1,50 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "unsafe-vm-context",
+      "location": [
+        [
+          12,
+          16
+        ],
+        [
+          12,
+          38
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.unsafe_vm_context",
+      "severity": "Warning",
+      "experimental": false,
+      "value": "(new vm.Script(code, options)).runInContext"
+    },
+    {
+      "kind": "unsafe-vm-context",
+      "location": [
+        [
+          14,
+          16
+        ],
+        [
+          14,
+          38
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.unsafe_vm_context",
+      "severity": "Warning",
+      "experimental": false,
+      "value": "(new vm.Script(code, options)).runInContext"
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 6.3333,
+  "stringScore": 0,
+  "dependencies": {
+    "node:vm": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "shady-link",
+      "location": [
+        [
+          1,
+          7
+        ],
+        [
+          1,
+          77
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.shady_link",
+      "severity": "Warning",
+      "experimental": false,
+      "value": "data:text/javascript;base64,Y29uc29sZS5sb2coJ2hlbGxvIHdvcmxkJyk7Cg=="
+    },
+    {
+      "kind": "unsafe-import",
+      "location": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          78
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.unsafe_import",
+      "severity": "Warning",
+      "experimental": false,
+      "value": "data:text/javascript;base64,Y29uc29sZS5sb2coJ2hlbGxvIHdvcmxkJyk7Cg=="
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 0,
+  "stringScore": 0,
+  "dependencies": {
+    "data:text/javascript;base64,Y29uc29sZS5sb2coJ2hlbGxvIHdvcmxkJyk7Cg==": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

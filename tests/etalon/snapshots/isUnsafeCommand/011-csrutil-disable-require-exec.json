@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "unsafe-command",
+      "location": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          48
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.unsafe_command",
+      "severity": "Warning",
+      "experimental": true,
+      "value": "csrutil disable"
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 0,
+  "stringScore": 0,
+  "dependencies": {}
+}

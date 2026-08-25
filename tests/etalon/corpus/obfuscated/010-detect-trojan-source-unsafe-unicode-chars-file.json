@@ -1,0 +1,4 @@
+{
+  "name": "should detect 'trojan-source' when there is atleast one unsafe unicode control char",
+  "file": "fixtures/obfuscated/unsafe-unicode-chars.js"
+}

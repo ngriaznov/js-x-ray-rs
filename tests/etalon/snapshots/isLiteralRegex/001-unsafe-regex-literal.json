@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "unsafe-regex",
+      "location": [
+        [
+          1,
+          12
+        ],
+        [
+          1,
+          23
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.unsafe_regex",
+      "severity": "Warning",
+      "experimental": false,
+      "value": "(a+){10}"
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 3,
+  "stringScore": 0,
+  "dependencies": {}
+}

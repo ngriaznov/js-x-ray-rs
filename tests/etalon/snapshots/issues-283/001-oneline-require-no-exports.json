@@ -1,0 +1,15 @@
+{
+  "ok": true,
+  "warnings": [],
+  "flags": [
+    "oneline-require"
+  ],
+  "idsLengthAvg": 0,
+  "stringScore": 0,
+  "dependencies": {
+    "foo.js": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

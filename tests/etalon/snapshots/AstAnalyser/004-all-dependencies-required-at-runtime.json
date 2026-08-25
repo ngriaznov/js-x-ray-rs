@@ -1,0 +1,37 @@
+{
+  "ok": true,
+  "warnings": [],
+  "flags": [],
+  "idsLengthAvg": 3.5,
+  "stringScore": 0,
+  "dependencies": {
+    "http": {
+      "unsafe": false,
+      "inTry": false
+    },
+    "net": {
+      "unsafe": false,
+      "inTry": false
+    },
+    "fs": {
+      "unsafe": false,
+      "inTry": false
+    },
+    "assert": {
+      "unsafe": false,
+      "inTry": false
+    },
+    "timers": {
+      "unsafe": false,
+      "inTry": false
+    },
+    "./aFile.js": {
+      "unsafe": false,
+      "inTry": false
+    },
+    "path": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

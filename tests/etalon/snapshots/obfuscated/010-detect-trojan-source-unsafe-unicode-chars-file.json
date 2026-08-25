@@ -1,0 +1,25 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "obfuscated-code",
+      "location": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.obfuscated_code",
+      "severity": "Critical",
+      "experimental": true,
+      "value": "trojan-source"
+    }
+  ],
+  "flags": [],
+  "dependencies": {}
+}

@@ -1,0 +1,4 @@
+{
+  "name": "should detect 'freejsobfuscator' obfuscation",
+  "file": "fixtures/obfuscated/freejsobfuscator.js"
+}

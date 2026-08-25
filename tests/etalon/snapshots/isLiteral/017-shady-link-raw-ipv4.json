@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "shady-link",
+      "location": [
+        [
+          1,
+          16
+        ],
+        [
+          1,
+          60
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.shady_link",
+      "severity": "Warning",
+      "experimental": false,
+      "value": "http://77.244.210.247/burpcollaborator.txt"
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 7,
+  "stringScore": 0,
+  "dependencies": {}
+}

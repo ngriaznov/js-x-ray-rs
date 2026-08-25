@@ -1,0 +1,25 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "suspicious-file",
+      "location": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.suspicious_file",
+      "severity": "Critical",
+      "experimental": false,
+      "value": null
+    }
+  ],
+  "flags": [],
+  "dependencies": {}
+}

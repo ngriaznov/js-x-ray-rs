@@ -1,0 +1,29 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "encoded-literal",
+      "value": "68656c6c6f20776f726c64",
+      "location": [
+        [
+          [
+            1,
+            12
+          ],
+          [
+            1,
+            36
+          ]
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.encoded_literal",
+      "severity": "Information",
+      "experimental": false
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 3,
+  "stringScore": 0,
+  "dependencies": {}
+}

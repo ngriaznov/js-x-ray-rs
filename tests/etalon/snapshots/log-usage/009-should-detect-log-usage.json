@@ -1,0 +1,84 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "log-usage",
+      "location": [
+        [
+          [
+            3,
+            20
+          ],
+          [
+            3,
+            40
+          ]
+        ],
+        [
+          [
+            4,
+            20
+          ],
+          [
+            4,
+            40
+          ]
+        ],
+        [
+          [
+            5,
+            20
+          ],
+          [
+            5,
+            41
+          ]
+        ],
+        [
+          [
+            6,
+            20
+          ],
+          [
+            6,
+            41
+          ]
+        ],
+        [
+          [
+            7,
+            20
+          ],
+          [
+            7,
+            41
+          ]
+        ],
+        [
+          [
+            8,
+            20
+          ],
+          [
+            8,
+            41
+          ]
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.log_usage",
+      "severity": "Information",
+      "experimental": false,
+      "value": "logger.info, logger.warn, logger.error, logger.fatal, logger.debug, logger.trace"
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 6,
+  "stringScore": 0,
+  "dependencies": {
+    "pino": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

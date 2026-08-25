@@ -1,0 +1,21 @@
+{
+  "ok": true,
+  "warnings": [],
+  "flags": [],
+  "idsLengthAvg": 0,
+  "stringScore": 0,
+  "dependencies": {
+    "http": {
+      "unsafe": false,
+      "inTry": false
+    },
+    "fs": {
+      "unsafe": false,
+      "inTry": false
+    },
+    "xd": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "ok": true,
+  "warnings": [],
+  "flags": [],
+  "idsLengthAvg": 3,
+  "stringScore": 0,
+  "dependencies": {
+    "./bar.js": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

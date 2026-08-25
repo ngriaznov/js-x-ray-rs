@@ -1,0 +1,36 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "crypto.unsafe-prehash",
+      "location": [
+        [
+          4,
+          8
+        ],
+        [
+          4,
+          123
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.unsafe_prehash",
+      "severity": "Warning",
+      "experimental": true,
+      "value": null
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 0,
+  "stringScore": 0,
+  "dependencies": {
+    "bcryptjs": {
+      "unsafe": false,
+      "inTry": false
+    },
+    "crypto": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

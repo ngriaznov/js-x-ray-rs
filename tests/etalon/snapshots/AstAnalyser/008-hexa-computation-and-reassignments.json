@@ -1,0 +1,70 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "encoded-literal",
+      "value": "72657175697265",
+      "location": [
+        [
+          [
+            9,
+            44
+          ],
+          [
+            9,
+            60
+          ]
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.encoded_literal",
+      "severity": "Information",
+      "experimental": false
+    },
+    {
+      "kind": "unsafe-import",
+      "location": [
+        [
+          10,
+          17
+        ],
+        [
+          10,
+          54
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.unsafe_import",
+      "severity": "Warning",
+      "experimental": false,
+      "value": null
+    },
+    {
+      "kind": "unsafe-stmt",
+      "location": [
+        [
+          6,
+          14
+        ],
+        [
+          6,
+          26
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.unsafe_stmt",
+      "severity": "Warning",
+      "experimental": false,
+      "value": "eval"
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 2.6667,
+  "stringScore": 0,
+  "dependencies": {
+    "./test/data": {
+      "unsafe": true,
+      "inTry": false
+    }
+  }
+}

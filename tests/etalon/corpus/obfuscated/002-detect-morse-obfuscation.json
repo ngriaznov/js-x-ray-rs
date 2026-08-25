@@ -1,0 +1,4 @@
+{
+  "name": "should detect 'morse' obfuscation",
+  "file": "fixtures/obfuscated/morse.js"
+}

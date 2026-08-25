@@ -1,0 +1,4 @@
+{
+  "name": "should detect 'trojan-source' when there is one unsafe unicode control char",
+  "code": "\n    const role = \"ROLE_ADMIN⁦\" // Dangerous control char;\n  "
+}

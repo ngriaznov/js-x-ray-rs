@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "sql-injection",
+      "location": [
+        [
+          2,
+          10
+        ],
+        [
+          2,
+          72
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.sql_injection",
+      "severity": "Warning",
+      "experimental": false,
+      "value": "UPDAtE users sET eMail = ${0} WHERE id = 1"
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 0,
+  "stringScore": 0,
+  "dependencies": {}
+}

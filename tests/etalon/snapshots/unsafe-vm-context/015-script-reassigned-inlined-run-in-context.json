@@ -1,0 +1,32 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "unsafe-vm-context",
+      "location": [
+        [
+          10,
+          0
+        ],
+        [
+          10,
+          30
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.unsafe_vm_context",
+      "severity": "Warning",
+      "experimental": false,
+      "value": "(new vm.Script(code, options)).runInContext"
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 11.3333,
+  "stringScore": 0,
+  "dependencies": {
+    "node:vm": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

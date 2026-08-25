@@ -1,0 +1,29 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "data-exfiltration",
+      "location": [
+        [
+          [
+            2,
+            19
+          ],
+          [
+            2,
+            33
+          ]
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.data_exfiltration",
+      "severity": "Warning",
+      "experimental": false,
+      "value": "~/.gitconfig"
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 4,
+  "stringScore": 0,
+  "dependencies": {}
+}

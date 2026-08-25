@@ -1,0 +1,36 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "synchronous-io",
+      "location": [
+        [
+          6,
+          0
+        ],
+        [
+          6,
+          19
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.synchronous_io",
+      "severity": "Warning",
+      "experimental": true,
+      "value": "randomFillSync"
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 16,
+  "stringScore": 0,
+  "dependencies": {
+    "node:buffer": {
+      "unsafe": false,
+      "inTry": false
+    },
+    "crypto": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

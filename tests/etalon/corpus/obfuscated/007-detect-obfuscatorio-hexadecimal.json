@@ -1,0 +1,4 @@
+{
+  "name": "should detect 'obfuscator.io' obfuscation (with hexadecimal generator)",
+  "file": "fixtures/obfuscated/obfuscatorio-hexa.js"
+}

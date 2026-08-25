@@ -1,0 +1,48 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "data-exfiltration",
+      "location": [
+        [
+          [
+            2,
+            5
+          ],
+          [
+            2,
+            32
+          ]
+        ],
+        [
+          [
+            3,
+            5
+          ],
+          [
+            3,
+            30
+          ]
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.data_exfiltration",
+      "severity": "Warning",
+      "experimental": false,
+      "value": "dns, os"
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 0,
+  "stringScore": 0,
+  "dependencies": {
+    "node:dns": {
+      "unsafe": false,
+      "inTry": false
+    },
+    "node:os": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

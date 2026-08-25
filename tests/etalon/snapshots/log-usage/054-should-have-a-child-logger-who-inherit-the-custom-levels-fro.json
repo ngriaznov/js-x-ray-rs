@@ -1,0 +1,44 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "log-usage",
+      "location": [
+        [
+          [
+            9,
+            20
+          ],
+          [
+            9,
+            44
+          ]
+        ],
+        [
+          [
+            10,
+            20
+          ],
+          [
+            10,
+            44
+          ]
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.log_usage",
+      "severity": "Information",
+      "experimental": false,
+      "value": "childLogger.foo, childLogger.bar"
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 8.5,
+  "stringScore": 0,
+  "dependencies": {
+    "winston": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "ok": true,
+  "warnings": [],
+  "flags": [],
+  "idsLengthAvg": 12,
+  "stringScore": 0,
+  "dependencies": {
+    "node:vm": {
+      "unsafe": false,
+      "inTry": false
+    },
+    "pino": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

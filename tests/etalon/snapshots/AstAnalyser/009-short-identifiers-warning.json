@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "short-identifiers",
+      "location": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.short_identifiers",
+      "severity": "Warning",
+      "experimental": false,
+      "value": "1.1111111111111112"
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 1.1111,
+  "stringScore": 0,
+  "dependencies": {}
+}

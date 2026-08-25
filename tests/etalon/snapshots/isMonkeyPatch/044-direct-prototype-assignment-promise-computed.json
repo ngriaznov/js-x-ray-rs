@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "monkey-patch",
+      "location": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          40
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.monkey_patch",
+      "severity": "Warning",
+      "experimental": false,
+      "value": "Promise.prototype"
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 0,
+  "stringScore": 0,
+  "dependencies": {}
+}

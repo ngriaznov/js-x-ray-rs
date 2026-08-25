@@ -1,0 +1,32 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "data-exfiltration",
+      "location": [
+        [
+          [
+            7,
+            10
+          ],
+          [
+            7,
+            16
+          ]
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.data_exfiltration",
+      "severity": "Warning",
+      "experimental": false,
+      "value": "os.cpus"
+    }
+  ],
+  "flags": [],
+  "dependencies": {
+    "os": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

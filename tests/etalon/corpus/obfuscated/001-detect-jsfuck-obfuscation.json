@@ -1,0 +1,4 @@
+{
+  "name": "should detect 'jsfuck' obfuscation",
+  "file": "fixtures/obfuscated/jsfuck.js"
+}

@@ -1,0 +1,45 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "shady-link",
+      "location": [
+        [
+          1,
+          17
+        ],
+        [
+          1,
+          42
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.shady_link",
+      "severity": "Information",
+      "experimental": false,
+      "value": "http://127.0.0.1/script"
+    },
+    {
+      "kind": "shady-link",
+      "location": [
+        [
+          1,
+          44
+        ],
+        [
+          1,
+          69
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.shady_link",
+      "severity": "Information",
+      "experimental": false,
+      "value": "http://127.7.7.7/script"
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 7,
+  "stringScore": 0,
+  "dependencies": {}
+}

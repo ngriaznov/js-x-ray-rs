@@ -1,0 +1,32 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "synchronous-io",
+      "location": [
+        [
+          5,
+          0
+        ],
+        [
+          5,
+          19
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.synchronous_io",
+      "severity": "Warning",
+      "experimental": true,
+      "value": "checkPrimeSync"
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 14,
+  "stringScore": 0,
+  "dependencies": {
+    "crypto": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

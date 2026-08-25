@@ -1,0 +1,4 @@
+{
+  "name": "should detect 'jjencode' obfuscation",
+  "file": "fixtures/obfuscated/jjencode.js"
+}

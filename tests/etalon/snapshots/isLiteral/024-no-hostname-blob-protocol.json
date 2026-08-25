@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "shady-link",
+      "location": [
+        [
+          1,
+          17
+        ],
+        [
+          1,
+          26
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.shady_link",
+      "severity": "Warning",
+      "experimental": false,
+      "value": "blob://"
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 8,
+  "stringScore": 0,
+  "dependencies": {}
+}

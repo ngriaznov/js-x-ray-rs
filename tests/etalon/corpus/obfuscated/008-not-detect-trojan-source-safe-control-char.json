@@ -1,0 +1,4 @@
+{
+  "name": "should not detect 'trojan-source' when providing safe control character",
+  "code": "\n    const simpleStringWithControlCharacters = \"Its only a \bbackspace\";\n  "
+}

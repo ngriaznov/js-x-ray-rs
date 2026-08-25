@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "sql-injection",
+      "location": [
+        [
+          2,
+          10
+        ],
+        [
+          2,
+          60
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.sql_injection",
+      "severity": "Warning",
+      "experimental": false,
+      "value": "DELETE FROM users WHERE id = ${0}"
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 0,
+  "stringScore": 0,
+  "dependencies": {}
+}

@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "prototype-pollution",
+      "location": [
+        [
+          3,
+          6
+        ],
+        [
+          3,
+          22
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.prototype_pollution",
+      "severity": "Warning",
+      "experimental": false,
+      "value": "obj.__proto__"
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 3,
+  "stringScore": 0,
+  "dependencies": {}
+}

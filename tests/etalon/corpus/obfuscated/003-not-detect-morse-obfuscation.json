@@ -1,0 +1,4 @@
+{
+  "name": "should not detect 'morse' obfuscation",
+  "file": "fixtures/obfuscated/notMorse.js"
+}

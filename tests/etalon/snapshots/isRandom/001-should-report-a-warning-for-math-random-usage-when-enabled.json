@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "insecure-random",
+      "location": [
+        [
+          2,
+          20
+        ],
+        [
+          2,
+          33
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.insecure_random",
+      "severity": "Information",
+      "experimental": false,
+      "value": null
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 5,
+  "stringScore": 0,
+  "dependencies": {}
+}

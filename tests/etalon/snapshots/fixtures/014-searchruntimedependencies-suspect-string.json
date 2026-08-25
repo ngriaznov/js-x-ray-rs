@@ -1,0 +1,25 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "suspicious-literal",
+      "location": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.suspicious_literal",
+      "severity": "Warning",
+      "experimental": false,
+      "value": "8"
+    }
+  ],
+  "flags": [],
+  "dependencies": {}
+}

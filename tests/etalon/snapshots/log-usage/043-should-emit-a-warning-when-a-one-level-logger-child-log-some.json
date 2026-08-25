@@ -1,0 +1,104 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "log-usage",
+      "location": [
+        [
+          [
+            4,
+            22
+          ],
+          [
+            4,
+            47
+          ]
+        ],
+        [
+          [
+            5,
+            22
+          ],
+          [
+            5,
+            47
+          ]
+        ],
+        [
+          [
+            6,
+            22
+          ],
+          [
+            6,
+            48
+          ]
+        ],
+        [
+          [
+            7,
+            22
+          ],
+          [
+            7,
+            47
+          ]
+        ],
+        [
+          [
+            8,
+            22
+          ],
+          [
+            8,
+            48
+          ]
+        ],
+        [
+          [
+            9,
+            22
+          ],
+          [
+            9,
+            50
+          ]
+        ],
+        [
+          [
+            10,
+            22
+          ],
+          [
+            10,
+            48
+          ]
+        ],
+        [
+          [
+            11,
+            22
+          ],
+          [
+            11,
+            72
+          ]
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.log_usage",
+      "severity": "Information",
+      "experimental": false,
+      "value": "childLogger.info, childLogger.warn, childLogger.error, childLogger.http, childLogger.debug, childLogger.verbose, childLogger.silly, childLogger.log"
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 8,
+  "stringScore": 0,
+  "dependencies": {
+    "winston": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

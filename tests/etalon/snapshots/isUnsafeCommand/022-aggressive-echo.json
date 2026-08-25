@@ -1,0 +1,32 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "unsafe-command",
+      "location": [
+        [
+          3,
+          6
+        ],
+        [
+          3,
+          38
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.unsafe_command",
+      "severity": "Warning",
+      "experimental": true,
+      "value": "echo hello"
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 13,
+  "stringScore": 0,
+  "dependencies": {
+    "child_process": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

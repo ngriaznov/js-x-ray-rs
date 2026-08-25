@@ -1,0 +1,32 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "crypto.weak-bcrypt",
+      "location": [
+        [
+          3,
+          21
+        ],
+        [
+          3,
+          42
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.weak_bcrypt",
+      "severity": "Warning",
+      "experimental": true,
+      "value": "low-work-factor"
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 4,
+  "stringScore": 0,
+  "dependencies": {
+    "bcryptjs": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

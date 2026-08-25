@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "serialize-environment",
+      "location": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          27
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.serialize_environment",
+      "severity": "Warning",
+      "experimental": false,
+      "value": "JSON.stringify(process.env)"
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 0,
+  "stringScore": 0,
+  "dependencies": {}
+}

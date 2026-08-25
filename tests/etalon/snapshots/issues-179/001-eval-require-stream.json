@@ -1,0 +1,50 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "unsafe-import",
+      "location": [
+        [
+          1,
+          15
+        ],
+        [
+          1,
+          40
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.unsafe_import",
+      "severity": "Warning",
+      "experimental": false,
+      "value": "stream"
+    },
+    {
+      "kind": "unsafe-stmt",
+      "location": [
+        [
+          1,
+          15
+        ],
+        [
+          1,
+          40
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.unsafe_stmt",
+      "severity": "Warning",
+      "experimental": false,
+      "value": "eval"
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 6,
+  "stringScore": 0,
+  "dependencies": {
+    "stream": {
+      "unsafe": true,
+      "inTry": false
+    }
+  }
+}
