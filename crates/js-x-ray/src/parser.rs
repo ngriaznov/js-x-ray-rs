@@ -67,7 +67,9 @@ impl TsSourceParser {
 
 impl SourceParser for TsSourceParser {
     fn parse(&self, source: &str) -> Result<Vec<Node>, ParseError> {
-        let ts = SourceType::ts();
+        // Upstream's `kTypeScriptParsingOptions` sets `jsx: true` unconditionally
+        // (regardless of a `.ts` vs `.tsx` extension), so JSX parses by default here too.
+        let ts = SourceType::ts().with_jsx(true);
         parse_with(source, ts, false)
     }
 }

@@ -137,6 +137,14 @@ impl AstAnalyser {
         }
     }
 
+    /// Upstream `AstAnalyser.probes`: the resolved probe list (defaults plus
+    /// custom probes and any activated optional warnings). Exposed for
+    /// introspection; each call builds fresh probe instances since probes
+    /// carry per-analysis state.
+    pub fn probes(&self) -> Vec<Box<dyn Probe>> {
+        self.build_probes()
+    }
+
     fn build_probes(&self) -> Vec<Box<dyn Probe>> {
         let mut probes = if !self.options.custom_probes.is_empty() && self.options.skip_default_probes {
             Vec::new()

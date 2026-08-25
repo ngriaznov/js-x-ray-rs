@@ -178,6 +178,15 @@ impl EntryFilesAnalyser {
         Ok(out)
     }
 
+    /// Upstream exposes `astAnalyzer` as a public field so callers can read
+    /// back collectable sets populated during `analyse`; this mirrors that
+    /// with a borrow, since Rust's `AstAnalyser` is owned rather than shared
+    /// by reference.
+    #[must_use]
+    pub fn ast_analyzer(&self) -> &AstAnalyser {
+        &self.ast_analyzer
+    }
+
     fn normalize_and_clean_entry_file(&self, file: &Path) -> PathBuf {
         let normalized = normalize_path(file);
         match &self.root_path {

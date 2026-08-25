@@ -9,7 +9,7 @@ use crate::utils::SourceArrayLocation;
 /// "url" | "hostname" | "ip" | "email" | "dependency" | custom
 pub type CollectableType = String;
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct CollectableLocation {
     pub file: Option<String>,
     pub location: Vec<SourceArrayLocation>,
@@ -17,13 +17,13 @@ pub struct CollectableLocation {
     pub metadata: Option<Map<String, Value>>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct CollectableEntry {
     pub value: String,
     pub locations: Vec<CollectableLocation>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct CollectableSetData {
     #[serde(rename = "type")]
     pub r#type: CollectableType,

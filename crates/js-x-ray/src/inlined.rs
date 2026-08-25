@@ -14,8 +14,10 @@ use crate::estree::{
 // `lib.rs` does not declare `virtual_variable_identifier` as a crate module
 // (out of scope for this port: shared file). Mount the already-written
 // sibling file here instead, since `Inlined` is its only upstream consumer.
+// `pub`: `VirtualVariableIdentifier.spec.ts` needs `js_x_ray::inlined::virtual_variable_identifier`
+// reachable from the integration-test binary.
 #[path = "virtual_variable_identifier.rs"]
-mod virtual_variable_identifier;
+pub mod virtual_variable_identifier;
 use virtual_variable_identifier::VirtualVariableIdentifier;
 
 #[derive(Debug, Clone)]
