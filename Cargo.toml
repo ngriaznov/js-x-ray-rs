@@ -14,7 +14,9 @@ repository = "https://github.com/ngriaznov/js-x-ray-rs"
 
 [workspace.dependencies]
 serde = { version = "1", features = ["derive"] }
-serde_json = { version = "1", features = ["preserve_order"] }
+serde_json = { version = "1", features = ["preserve_order", "unbounded_depth"] }
+serde_stacker = "0.1"
+stacker = "0.1"
 oxc_allocator = "0.139"
 oxc_ast = { version = "0.139", features = ["serialize"] }
 oxc_parser = "0.139"

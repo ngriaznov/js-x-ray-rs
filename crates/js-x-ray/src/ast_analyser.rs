@@ -195,6 +195,16 @@ impl AstAnalyser {
 
     /// Upstream `analyse`.
     pub fn analyse(&self, str_: &str, options: RuntimeOptions) -> Result<Report, ParseError> {
+        // Every analysis pass (parse, walk, trace, clone, drop) recurses to
+        // AST depth, and minified/obfuscated sources nest deeply; run the
+        // whole analysis on a large grown stack segment (pages committed
+        // only as touched; direct call on targets without stack switching).
+        stacker::maybe_grow(16 * 1024 * 1024, 256 * 1024 * 1024, || {
+            self.analyse_inner(str_, options)
+        })
+    }
+
+    fn analyse_inner(&self, str_: &str, options: RuntimeOptions) -> Result<Report, ParseError> {
         let start_time = Stopwatch::start();
 
         let RuntimeOptions {

@@ -9,6 +9,7 @@
 use oxc_allocator::Allocator;
 use oxc_parser::{ParseOptions, Parser};
 use oxc_span::SourceType;
+use serde::Deserialize;
 use serde_json::Value;
 
 use crate::estree::Node;
@@ -79,6 +80,21 @@ fn parse_with(
     source_type: SourceType,
     allow_return_outside_function: bool,
 ) -> Result<Vec<Node>, ParseError> {
+    // oxc's recursive-descent parser burns ~11 stack frames per nesting
+    // level and deep nesting is routine in minified/obfuscated sources, so
+    // always run the parse pipeline on a large dedicated stack segment (the
+    // pages are only committed as actually touched; on targets without
+    // stack-switching support, e.g. wasm, this falls back to a direct call).
+    stacker::maybe_grow(16 * 1024 * 1024, 256 * 1024 * 1024, || {
+        parse_with_inner(source, source_type, allow_return_outside_function)
+    })
+}
+
+fn parse_with_inner(
+    source: &str,
+    source_type: SourceType,
+    allow_return_outside_function: bool,
+) -> Result<Vec<Node>, ParseError> {
     let allocator = Allocator::default();
     let ret = Parser::new(&allocator, source, source_type)
         .with_options(ParseOptions {
@@ -100,7 +116,15 @@ fn parse_with(
     }
 
     let json = ret.program.to_estree_json(false, false);
-    let mut program: Value = serde_json::from_str(&json).map_err(|error| ParseError {
+    // Deeply nested sources (common in minified/obfuscated code) exceed
+    // serde_json's default recursion limit of 128, but analyse fine upstream;
+    // disable the limit and grow the stack on demand instead.
+    let mut deserializer = serde_json::Deserializer::from_str(&json);
+    deserializer.disable_recursion_limit();
+    let mut program: Value = Value::deserialize(serde_stacker::Deserializer::new(
+        &mut deserializer,
+    ))
+    .map_err(|error| ParseError {
         message: format!("Failed to deserialize AST: {error}"),
     })?;
 
@@ -170,6 +194,10 @@ impl LineTable {
 
 /// Add a meriyah-style `loc` field to every node carrying start/end offsets.
 fn inject_loc(value: &mut Value, table: &LineTable) {
+    stacker::maybe_grow(64 * 1024, 1024 * 1024, || inject_loc_inner(value, table));
+}
+
+fn inject_loc_inner(value: &mut Value, table: &LineTable) {
     match value {
         Value::Object(map) => {
             let start = map.get("start").and_then(Value::as_u64);

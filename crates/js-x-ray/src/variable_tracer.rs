@@ -509,6 +509,19 @@ impl VariableTracer {
         if child_node.is_null() {
             return;
         }
+        stacker::maybe_grow(64 * 1024, 1024 * 1024, || {
+            self.walk_variable_declarator_initialization_inner(
+                variable_declarator_node,
+                child_node,
+            );
+        });
+    }
+
+    fn walk_variable_declarator_initialization_inner(
+        &mut self,
+        variable_declarator_node: &Value,
+        child_node: &Value,
+    ) {
         let Some(id) = variable_declarator_node.get("id") else {
             return;
         };
@@ -838,6 +851,12 @@ impl VariableTracer {
 
     /// Upstream `walk`.
     pub fn walk(&mut self, node: &Node) {
+        // Deep initializers recurse through the declarator walkers; grow the
+        // stack on demand like the walker and deserializer do.
+        stacker::maybe_grow(64 * 1024, 1024 * 1024, || self.walk_inner(node));
+    }
+
+    fn walk_inner(&mut self, node: &Node) {
         match node_type(node) {
             Some("ImportDeclaration") => {
                 self.walk_import_declaration(node);

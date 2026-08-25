@@ -69,7 +69,12 @@ impl SyncWalker<'_, '_> {
         if node.is_null() {
             return Outcome::Removed;
         }
+        // Deep ASTs (minified/obfuscated sources) exceed default thread
+        // stacks; grow on demand like the deserializer does.
+        stacker::maybe_grow(64 * 1024, 1024 * 1024, || self.visit_inner(node))
+    }
 
+    fn visit_inner(&mut self, node: &mut Value) -> Outcome {
         if self.enter.is_some() {
             let saved = self.context.take();
             if let Some(enter) = self.enter.as_deref_mut() {

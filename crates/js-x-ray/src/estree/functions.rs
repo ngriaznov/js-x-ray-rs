@@ -514,6 +514,16 @@ fn collect_variable_declaration_identifiers(
     prefix: Option<&str>,
     out: &mut Vec<(String, Value)>,
 ) {
+    stacker::maybe_grow(64 * 1024, 1024 * 1024, || {
+        collect_variable_declaration_identifiers_inner(node, prefix, out);
+    });
+}
+
+fn collect_variable_declaration_identifiers_inner(
+    node: &Value,
+    prefix: Option<&str>,
+    out: &mut Vec<(String, Value)>,
+) {
     match node_type(node) {
         Some("VariableDeclaration") => {
             for declarator in node
