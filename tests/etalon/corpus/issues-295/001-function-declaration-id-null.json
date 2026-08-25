@@ -1,0 +1,4 @@
+{
+  "name": "Deobfuscator.#extractCounterIdentifiers should not throw if FunctionDeclaration id is null",
+  "code": "\n    export default async function (app) {\n      app.loaded = true\n    }\n  "
+}

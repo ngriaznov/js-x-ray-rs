@@ -1,0 +1,4 @@
+{
+  "name": "should be capable to extract dependencies name for ECMAScript Modules (ESM)",
+  "code": "\n    import * as http from \"http\";\n    import fs from \"fs\";\n    import { foo } from \"xd\";\n  "
+}

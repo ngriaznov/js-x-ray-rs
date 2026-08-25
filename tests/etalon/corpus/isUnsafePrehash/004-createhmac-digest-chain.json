@@ -1,0 +1,9 @@
+{
+  "name": "(isUnsafePrehash probe): crypto.unsafe-prehash - should warn for createHmac digest chains too",
+  "code": "\n        import bcrypt from 'bcryptjs';\n        import crypto from 'crypto';\n        bcrypt.hash(crypto.createHmac('sha384', pepper).update(password).digest(), salt, (err, hash) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.unsafe-prehash"
+    ]
+  }
+}

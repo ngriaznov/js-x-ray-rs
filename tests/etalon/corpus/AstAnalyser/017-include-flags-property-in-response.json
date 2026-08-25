@@ -1,0 +1,4 @@
+{
+  "name": "should include flags property in response",
+  "file": "fixtures/searchRuntimeDependencies/depName.js"
+}

@@ -1,0 +1,4 @@
+{
+  "name": "should detect unsafe-import of path.join if not every argument is a string literal (case 2): const bin = require(path.join(3, '..', './bin.js'));",
+  "code": "const bin = require(path.join(3, '..', './bin.js'));"
+}

@@ -1,0 +1,4 @@
+{
+  "name": "should combine same encoded-literal as one warning with multiple locations",
+  "code": "\n    const foo = \"18c15e5c5c9dac4d16f9311a92bb8331\";\n    const bar = \"18c15e5c5c9dac4d16f9311a92bb8331\";\n    const xd = \"18c15e5c5c9dac4d16f9311a92bb8331\";\n  "
+}

@@ -1,0 +1,4 @@
+{
+  "name": "should return isOneLineRequire true given a single line CJS export",
+  "code": "module.exports = require('foo');"
+}

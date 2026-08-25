@@ -1,0 +1,4 @@
+{
+  "name": "should return executionTime as a non-negative number",
+  "code": "const foo = 'bar';"
+}

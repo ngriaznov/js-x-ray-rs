@@ -1,0 +1,9 @@
+{
+  "name": "(isUnsafePrehash probe): known limitations - should not warn for the real bcrypt package (only bcryptjs is supported)",
+  "code": "\n        import bcrypt from 'bcrypt';\n        import crypto from 'crypto';\n        bcrypt.hash(crypto.createHash('sha256').update(password).digest(), salt, (err, hash) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.unsafe-prehash"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "(isUnsafePrehash probe): crypto.unsafe-prehash - should warn when a raw digest() (no encoding) is passed to bcryptjs.hash",
+  "code": "\n        import bcrypt from 'bcryptjs';\n        import crypto from 'crypto';\n        bcrypt.hash(crypto.createHash('sha256').update(password).digest(), salt, (err, hash) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.unsafe-prehash"
+    ]
+  }
+}

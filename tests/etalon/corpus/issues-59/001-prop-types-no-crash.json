@@ -1,0 +1,4 @@
+{
+  "name": "it should not crash for prop-types",
+  "file": "fixtures/issues/prop-types.min.js"
+}

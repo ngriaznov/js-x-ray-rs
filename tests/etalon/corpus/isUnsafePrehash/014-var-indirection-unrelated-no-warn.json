@@ -1,0 +1,9 @@
+{
+  "name": "(isUnsafePrehash probe): variable indirection - should not warn when the bcryptjs argument variable is unrelated to any digest",
+  "code": "\n        import bcrypt from 'bcryptjs';\n        import crypto from 'crypto';\n        const plainValue = getUserInput();\n        bcrypt.hash(plainValue, salt, (err, hash) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.unsafe-prehash"
+    ]
+  }
+}

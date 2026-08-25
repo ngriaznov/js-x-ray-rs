@@ -1,0 +1,9 @@
+{
+  "name": "(isUnsafePrehash probe): crypto.unsafe-prehash - should warn when digest is reassigned, then called as hash argument",
+  "code": "\n        import * as bcrypt from 'bcryptjs';\n        import crypto from 'crypto';\n        const digest = crypto.createHash('sha256').update(password).digest;\n        bcrypt.hash(digest(), salt, (err, hash) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.unsafe-prehash"
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "should not crash when there is an unknown optional warning",
+  "code": "",
+  "analyserOptions": {
+    "optionalWarnings": ["unknown"]
+  }
+}

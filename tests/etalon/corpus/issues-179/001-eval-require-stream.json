@@ -1,0 +1,4 @@
+{
+  "name": "should detect unsafe-import and unsafe-statement",
+  "code": "const stream = eval('require')('stream');"
+}

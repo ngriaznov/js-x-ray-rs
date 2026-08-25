@@ -1,0 +1,7 @@
+{
+  "name": "should add is-minified flag for minified files",
+  "code": "var a=require(\"fs\"),b=require(\"http\");a.readFile(\"test.txt\",function(c,d){b.createServer().listen(3000)});",
+  "runtimeOptions": {
+    "isMinified": true
+  }
+}

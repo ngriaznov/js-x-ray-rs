@@ -1,0 +1,4 @@
+{
+  "name": "should not crash when analysing the stringify source code",
+  "file": "fixtures/issues/stringify.js"
+}

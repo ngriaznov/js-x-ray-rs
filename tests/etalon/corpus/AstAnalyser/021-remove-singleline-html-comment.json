@@ -1,0 +1,7 @@
+{
+  "name": "should remove singleline HTML comment from source code when removeHTMLComments is enabled",
+  "code": "<!-- const yo = 5; -->",
+  "runtimeOptions": {
+    "removeHTMLComments": true
+  }
+}

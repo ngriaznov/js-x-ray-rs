@@ -1,0 +1,4 @@
+{
+  "name": "it should not throw error for a global return statement",
+  "code": "\nconst argv = process.argv.slice(2);\n\nfunction foobar() {\n  console.log(\"foobar\");\n}\n\nif (!argv.length) {\n  return foobar();\n}\n"
+}

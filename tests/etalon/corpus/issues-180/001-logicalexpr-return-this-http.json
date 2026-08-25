@@ -1,0 +1,4 @@
+{
+  "name": "should detect required core 'http' with a LogicalExpr containing Function('return this')()",
+  "code": "\n    var root = freeGlobal || freeSelf || Function('return this')();\n    const foo = root.require;\n    foo(\"http\");\n  "
+}

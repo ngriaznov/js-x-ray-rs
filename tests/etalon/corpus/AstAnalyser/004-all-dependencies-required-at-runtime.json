@@ -1,0 +1,4 @@
+{
+  "name": "should return all dependencies required at runtime",
+  "code": "\n    const http = require(\"http\");\n    const net = require(\"net\");\n    const fs = require(\"fs\").promises;\n\n    require(\"assert\").strictEqual;\n    require(\"timers\");\n    require(\"./aFile.js\");\n\n    const myVar = \"path\";\n    require(myVar);\n  "
+}

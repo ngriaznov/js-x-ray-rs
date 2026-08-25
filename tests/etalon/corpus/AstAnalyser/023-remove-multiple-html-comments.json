@@ -1,0 +1,7 @@
+{
+  "name": "should remove multiple HTML comments",
+  "code": "<!-- const yo = 5; -->\nconst yo = 'foo'\n<!-- const yo = 5; -->",
+  "runtimeOptions": {
+    "removeHTMLComments": true
+  }
+}

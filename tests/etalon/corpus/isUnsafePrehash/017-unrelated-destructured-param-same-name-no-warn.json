@@ -1,0 +1,9 @@
+{
+  "name": "(isUnsafePrehash probe): variable indirection - should not warn when an unrelated destructured parameter shares its name with an unsafe pre-hashed variable",
+  "code": "\n        import bcrypt from 'bcryptjs';\n        import crypto from 'crypto';\n\n        function foo() {\n          const prehashed = crypto.createHash('sha256').update(password).digest();\n        }\n\n        function bar({ prehashed }) {\n          bcrypt.hash(prehashed, salt, (err, hash) => {});\n        }\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.unsafe-prehash"
+    ]
+  }
+}

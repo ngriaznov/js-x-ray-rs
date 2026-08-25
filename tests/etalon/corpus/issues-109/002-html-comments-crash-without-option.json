@@ -1,0 +1,4 @@
+{
+  "name": "it should crash for a JavaScript file containing HTML comments",
+  "file": "fixtures/issues/html-comments.js"
+}

@@ -1,0 +1,9 @@
+{
+  "name": "(isUnsafePrehash probe): crypto.unsafe-prehash - should warn when digest('binary').toString('hex') is used (outer toString is a no-op)",
+  "code": "\n        import bcrypt from 'bcryptjs';\n        import crypto from 'crypto';\n        bcrypt.hash(crypto.createHash('sha256').update(password).digest('binary').toString('hex'), salt, (err, hash) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.unsafe-prehash"
+    ]
+  }
+}

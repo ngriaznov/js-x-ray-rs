@@ -1,0 +1,7 @@
+{
+  "name": "it should not crash for a JavaScript file containing HTML comments (and removeHTMLComments option enabled)",
+  "file": "fixtures/issues/html-comments.js",
+  "runtimeOptions": {
+    "removeHTMLComments": true
+  }
+}

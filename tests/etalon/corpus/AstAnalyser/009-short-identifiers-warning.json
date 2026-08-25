@@ -1,0 +1,4 @@
+{
+  "name": "should throw a 'short-identifiers' warning for a code with only one-character identifiers",
+  "code": "\n    var a = 0, b, c, d;\n    for (let i = 0; i < 10; i++) {\n      a += i;\n    }\n    let de = \"foo\";\n    let x, z;\n  "
+}

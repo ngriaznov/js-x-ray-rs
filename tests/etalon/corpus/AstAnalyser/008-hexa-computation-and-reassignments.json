@@ -1,0 +1,4 @@
+{
+  "name": "should be capable to follow a malicious code with hexa computation and reassignments",
+  "code": "\n    function unhex(r) {\n      return Buffer.from(r, \"hex\").toString();\n    }\n\n    const g = eval(\"this\");\n    const p = g[\"pro\" + \"cess\"];\n\n    const evil = p[\"mainMod\" + \"ule\"][unhex(\"72657175697265\")];\n    const work = evil(unhex(\"2e2f746573742f64617461\"));\n  "
+}

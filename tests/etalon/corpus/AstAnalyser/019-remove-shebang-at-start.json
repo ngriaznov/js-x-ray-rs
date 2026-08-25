@@ -1,0 +1,4 @@
+{
+  "name": "should remove shebang at the start of the file",
+  "code": "#!/usr/bin/env node\nconst hello = \"world\";"
+}

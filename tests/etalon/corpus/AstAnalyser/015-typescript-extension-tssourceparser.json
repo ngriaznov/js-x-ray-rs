@@ -1,0 +1,7 @@
+{
+  "name": "should detect typescript extension and use TsSourceParser automatically",
+  "file": "fixtures/searchRuntimeDependencies/test.ts",
+  "runtimeOptions": {
+    "packageName": "foobar"
+  }
+}

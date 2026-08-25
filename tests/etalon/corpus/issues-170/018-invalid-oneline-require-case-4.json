@@ -1,0 +1,4 @@
+{
+  "name": "it should return isOneLineRequire false given a single line CJS export with illegal callees (case 4): module.exports = (notRequire('foo') || {}) || (notRequire('foo') || {});",
+  "code": "module.exports = (notRequire('foo') || {}) || (notRequire('foo') || {});"
+}

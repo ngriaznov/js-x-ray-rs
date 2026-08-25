@@ -1,0 +1,7 @@
+{
+  "name": "should call with the expected arguments (first call)",
+  "code": "const http = require(\"http\");",
+  "runtimeOptions": {
+    "removeHTMLComments": true
+  }
+}

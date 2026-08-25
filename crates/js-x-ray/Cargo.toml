@@ -26,3 +26,4 @@ regex.workspace = true
 regex-syntax.workspace = true
 thiserror.workspace = true
 indexmap.workspace = true
+url.workspace = true

@@ -1,0 +1,4 @@
+{
+  "name": "should detect unsafe-import and unsafe-statement",
+  "code": "const help = require('help-me')({\n    dir: path.join(__dirname, 'help'),\n    ext: '.txt'\n  })"
+}

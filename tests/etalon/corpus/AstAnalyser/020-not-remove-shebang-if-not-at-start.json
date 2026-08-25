@@ -1,0 +1,4 @@
+{
+  "name": "should not remove shebang if not at the start (that's an illegal code)",
+  "code": "const hello = \"world\";\n#!/usr/bin/env node"
+}

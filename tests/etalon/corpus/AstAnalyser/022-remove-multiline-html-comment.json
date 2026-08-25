@@ -1,0 +1,7 @@
+{
+  "name": "should remove multiline HTML comment from source code when removeHTMLComments is enabled",
+  "code": "\n      <!--\n    // == fake comment == //\n\n    const yo = 5;\n    //-->\n    ",
+  "runtimeOptions": {
+    "removeHTMLComments": true
+  }
+}

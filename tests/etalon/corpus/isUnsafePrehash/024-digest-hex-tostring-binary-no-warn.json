@@ -1,0 +1,9 @@
+{
+  "name": "(isUnsafePrehash probe): no warning (proper usage) - should not warn when digest('hex').toString('binary') is used",
+  "code": "\n        import bcrypt from 'bcryptjs';\n        import crypto from 'crypto';\n        bcrypt.hash(crypto.createHash('sha256').update(password).digest('hex').toString('binary'), salt, (err, hash) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.unsafe-prehash"
+    ]
+  }
+}

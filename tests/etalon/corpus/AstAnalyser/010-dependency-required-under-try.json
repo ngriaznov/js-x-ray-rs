@@ -1,0 +1,4 @@
+{
+  "name": "should detect dependency required under a TryStatement",
+  "code": "\n    try {\n      require(\"http\");\n    }\n    catch {}\n  "
+}

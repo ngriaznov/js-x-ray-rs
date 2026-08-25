@@ -1,0 +1,4 @@
+{
+  "name": "should throw a 'suspicious-file' warning because the file contains to much encoded-literal warnings",
+  "file": "fixtures/searchRuntimeDependencies/suspiciousFile.js"
+}

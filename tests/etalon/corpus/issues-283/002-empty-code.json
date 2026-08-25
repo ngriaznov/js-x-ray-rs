@@ -1,0 +1,4 @@
+{
+  "name": "Given an empty code then isOneLineRequire must equal false",
+  "code": ""
+}

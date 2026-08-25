@@ -1,0 +1,9 @@
+{
+  "name": "(isUnsafePrehash probe): variable indirection - should warn when an unsafely pre-hashed variable (via toString) is passed to bcryptjs.hashSync",
+  "code": "\n        import bcrypt from 'bcryptjs';\n        import crypto from 'crypto';\n        const prehashed = crypto.createHash('sha256').update(password).digest().toString('binary');\n        const hash = bcrypt.hashSync(prehashed, salt);\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.unsafe-prehash"
+    ]
+  }
+}

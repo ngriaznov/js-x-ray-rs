@@ -1,0 +1,9 @@
+{
+  "name": "(isUnsafePrehash probe): crypto.unsafe-prehash - should warn when digest() uses an unsafe encoding (binary/latin1)",
+  "code": "\n        import bcrypt from 'bcryptjs';\n        import crypto from 'crypto';\n        bcrypt.hash(crypto.createHash('sha256').update(password).digest('binary'), salt, (err, hash) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.unsafe-prehash"
+    ]
+  }
+}

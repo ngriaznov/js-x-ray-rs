@@ -1,0 +1,7 @@
+{
+  "name": "should not emit a ParsingError event when parsing succeeds",
+  "file": "fixtures/searchRuntimeDependencies/depName.js",
+  "runtimeOptions": {
+    "packageName": "foobar"
+  }
+}

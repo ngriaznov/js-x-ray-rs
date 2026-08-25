@@ -1,0 +1,4 @@
+{
+  "name": "it should not return shady-link warning",
+  "code": "\n    var debug = require('debug')('express:view');\n  "
+}

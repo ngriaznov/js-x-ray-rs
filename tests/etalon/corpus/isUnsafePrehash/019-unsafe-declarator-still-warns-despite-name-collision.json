@@ -1,0 +1,9 @@
+{
+  "name": "(isUnsafePrehash probe): variable indirection - should still warn for the unsafe declarator itself when its name later collides with an unrelated variable",
+  "code": "\n        import bcrypt from 'bcryptjs';\n        import crypto from 'crypto';\n\n        function foo() {\n          const prehashed = crypto.createHash('sha256').update(password).digest();\n          bcrypt.hash(prehashed, salt, (err, hash) => {});\n        }\n\n        function bar() {\n          const prehashed = someUnrelatedSafeValue();\n        }\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.unsafe-prehash"
+    ]
+  }
+}

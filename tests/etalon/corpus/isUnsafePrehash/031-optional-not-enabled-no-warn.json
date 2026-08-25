@@ -1,0 +1,4 @@
+{
+  "name": "(isUnsafePrehash probe): optional warning behavior - should NOT report warnings when crypto.unsafe-prehash is not enabled",
+  "code": "\n        import bcrypt from 'bcryptjs';\n        import crypto from 'crypto';\n        bcrypt.hash(crypto.createHash('sha256').update(password).digest(), salt, (err, hash) => {});\n      "
+}

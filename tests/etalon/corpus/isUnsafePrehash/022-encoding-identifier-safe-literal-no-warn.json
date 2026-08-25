@@ -1,0 +1,9 @@
+{
+  "name": "(isUnsafePrehash probe): no warning (proper usage) - should not warn when the encoding is stored in an identifier pointing to a safe literal",
+  "code": "\n        import bcrypt from 'bcryptjs';\n        import crypto from 'crypto';\n        const encoding = 'hex';\n        const prehashed = crypto.createHash('sha256').update(password).digest(encoding);\n        bcrypt.hash(prehashed, salt, (err, hash) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.unsafe-prehash"
+    ]
+  }
+}

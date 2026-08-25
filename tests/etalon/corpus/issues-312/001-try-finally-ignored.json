@@ -1,0 +1,4 @@
+{
+  "name": "SourceFile inTryStatement must ignore try/finally statements",
+  "code": "\n    try {\n      // do something\n    }\n    finally {\n\n    }\n\n    var import_ts = __toESM(require(\"foobar\"), 1);\n  "
+}

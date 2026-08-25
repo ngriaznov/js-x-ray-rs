@@ -10,7 +10,13 @@ use crate::estree::{
     Node, SourceLocation, call_expression_identifier, is_call_expression, is_identifier,
     is_member_expression, is_type,
 };
-use crate::virtual_variable_identifier::VirtualVariableIdentifier;
+
+// `lib.rs` does not declare `virtual_variable_identifier` as a crate module
+// (out of scope for this port: shared file). Mount the already-written
+// sibling file here instead, since `Inlined` is its only upstream consumer.
+#[path = "virtual_variable_identifier.rs"]
+mod virtual_variable_identifier;
+use virtual_variable_identifier::VirtualVariableIdentifier;
 
 #[derive(Debug, Clone)]
 pub struct SplitResult {
@@ -47,7 +53,11 @@ fn build_split_result(node: &Node, target: &Node, identifier: &str) -> SplitResu
     }
 }
 
-fn rebuild_with_virtual_identifier(node: &Node, target: &Node, virtual_identifier: &str) -> Option<Node> {
+fn rebuild_with_virtual_identifier(
+    node: &Node,
+    target: &Node,
+    virtual_identifier: &str,
+) -> Option<Node> {
     if std::ptr::eq(node, target) {
         return None;
     }
@@ -129,7 +139,10 @@ impl InlinedCallExpression {
             && is_call_expression(object)
             && object.get("callee").is_some_and(|callee| {
                 is_identifier(callee)
-                    && matches!(callee.get("name").and_then(Value::as_str), Some("require" | "eval"))
+                    && matches!(
+                        callee.get("name").and_then(Value::as_str),
+                        Some("require" | "eval")
+                    )
             })
         {
             return None;
@@ -210,7 +223,8 @@ impl InlinedRequire {
 
         if is_call_expression(object)
             && object.get("callee").is_some_and(|callee| {
-                is_identifier(callee) && callee.get("name").and_then(Value::as_str) == Some("require")
+                is_identifier(callee)
+                    && callee.get("name").and_then(Value::as_str) == Some("require")
             })
         {
             return Some(object);

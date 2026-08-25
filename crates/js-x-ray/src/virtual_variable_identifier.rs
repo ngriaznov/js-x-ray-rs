@@ -21,7 +21,9 @@ pub struct VirtualVariableIdentifier;
 
 impl VirtualVariableIdentifier {
     pub fn generate(name: &str, location: Option<SourceLocation>) -> String {
-        let mut state = STATE.lock().expect("VirtualVariableIdentifier state poisoned");
+        let mut state = STATE
+            .lock()
+            .expect("VirtualVariableIdentifier state poisoned");
         let virtual_id = format!("__virtual_{name}_{}__", state.counter);
         state.counter += 1;
         state.id_to_locations.insert(virtual_id.clone(), location);
@@ -39,7 +41,9 @@ impl VirtualVariableIdentifier {
     }
 
     pub fn reset() {
-        let mut state = STATE.lock().expect("VirtualVariableIdentifier state poisoned");
+        let mut state = STATE
+            .lock()
+            .expect("VirtualVariableIdentifier state poisoned");
         state.counter = 0;
         state.id_to_locations.clear();
     }

@@ -1,0 +1,4 @@
+{
+  "name": "it should return isOneLineRequire true given a single line CJS export with a valid assignment (case 11): module.exports = require('constants') ? {} : (require('fs') ? {} : require('bar'));",
+  "code": "module.exports = require('constants') ? {} : (require('fs') ? {} : require('bar'));"
+}

@@ -1,0 +1,7 @@
+{
+  "name": "should emit a ParsingError event when analyseFile encounters a parsing error",
+  "file": "fixtures/searchRuntimeDependencies/parsingError.js",
+  "runtimeOptions": {
+    "packageName": "foobar"
+  }
+}

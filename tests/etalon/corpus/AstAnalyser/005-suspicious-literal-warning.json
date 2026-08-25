@@ -1,0 +1,4 @@
+{
+  "name": "should throw a 'suspicious-literal' warning when given a code with a suspicious string",
+  "file": "fixtures/searchRuntimeDependencies/suspect-string.js"
+}

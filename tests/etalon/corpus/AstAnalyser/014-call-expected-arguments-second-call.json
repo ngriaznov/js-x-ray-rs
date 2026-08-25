@@ -1,0 +1,7 @@
+{
+  "name": "should call with the expected arguments (second call)",
+  "code": "const fs = require(\"fs\");",
+  "runtimeOptions": {
+    "removeHTMLComments": false
+  }
+}

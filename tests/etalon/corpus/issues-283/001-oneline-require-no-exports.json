@@ -1,0 +1,4 @@
+{
+  "name": "Given a one line require (with no module.exports) then isOneLineRequire must equal true",
+  "code": "require('foo.js');"
+}
