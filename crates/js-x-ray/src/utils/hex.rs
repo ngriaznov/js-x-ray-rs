@@ -34,7 +34,9 @@ pub fn encode_hex(value: &str) -> String {
 pub fn decode_hex_lossy(value: &str) -> String {
     let bytes: Vec<u8> = value
         .as_bytes()
-        .chunks_exact(2)
+        .as_chunks::<2>()
+        .0
+        .iter()
         .map_while(|pair| {
             let s = std::str::from_utf8(pair).ok()?;
             u8::from_str_radix(s, 16).ok()
