@@ -1,0 +1,9 @@
+{
+  "name": "(isPasswordShucking): should warn when a createHash digest with a safe encoding is stored in a variable (unique to this probe)",
+  "code": "\n        import bcrypt from 'bcryptjs';\n        import crypto from 'crypto';\n        const prehashed = crypto.createHash('sha512').update(password).digest('hex');\n        bcrypt.hash(prehashed, salt, (err, hash) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.password-shucking"
+    ]
+  }
+}

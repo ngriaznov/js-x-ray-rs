@@ -1,0 +1,4 @@
+{
+  "name": "(isWeakCrypto probe): crypto.createHash - should detect weak algorithm when called as a member expression (memberExpression/ripemd160.js)",
+  "file": "fixtures/weakCrypto/memberExpression/ripemd160.js"
+}

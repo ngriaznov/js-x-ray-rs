@@ -1,0 +1,4 @@
+{
+  "name": "(isWeakCrypto probe): crypto.createHmac - should detect weak algorithm when createHmac is destructured from crypto (createHmac/directCallExpression/sha1.js)",
+  "file": "fixtures/weakCrypto/createHmac/directCallExpression/sha1.js"
+}

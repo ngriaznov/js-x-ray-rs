@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakBcrypt): should warn when bcrypt.hashSync rounds are below the OWASP minimum (< 10)",
+  "code": "\n        import bcrypt from 'bcryptjs';\n        const hash = bcrypt.hashSync(password, 4);\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-bcrypt"
+    ]
+  }
+}

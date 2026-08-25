@@ -1,0 +1,4 @@
+{
+  "name": "(isWeakCrypto probe): crypto.createHmac - should not warn when crypto module is not imported",
+  "code": "\n        const crypto = {\n          createHmac() {}\n        }\n        crypto.createHmac('md5');\n      "
+}

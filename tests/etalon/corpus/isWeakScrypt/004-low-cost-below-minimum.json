@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakScrypt): should warn when cost option is below the lowest OWASP recommendation (N < 8192)",
+  "code": "\n        import crypto from 'crypto';\n        crypto.scrypt(password, salt, 64, { cost: 1024 }, (err, key) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-scrypt"
+    ]
+  }
+}

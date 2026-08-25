@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakScrypt): should warn when salt is a short string literal (less than 16 chars)",
+  "code": "\n        import crypto from 'crypto';\n        crypto.scrypt(password, \"short\", 64, (err, key) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-scrypt"
+    ]
+  }
+}

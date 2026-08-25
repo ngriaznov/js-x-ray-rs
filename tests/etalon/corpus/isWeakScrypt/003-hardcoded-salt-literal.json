@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakScrypt): should warn when salt is a hardcoded string literal (16 chars or more)",
+  "code": "\n        import crypto from 'crypto';\n        crypto.scrypt(password, \"this-is-a-long-hardcoded-salt\", 64, (err, key) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-scrypt"
+    ]
+  }
+}

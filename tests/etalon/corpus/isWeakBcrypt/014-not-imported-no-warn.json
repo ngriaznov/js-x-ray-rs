@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakBcrypt): should not warn when bcryptjs module is not imported",
+  "code": "\n        const bcrypt = { hash() {} };\n        bcrypt.hash(password, 4, (err, hash) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-bcrypt"
+    ]
+  }
+}

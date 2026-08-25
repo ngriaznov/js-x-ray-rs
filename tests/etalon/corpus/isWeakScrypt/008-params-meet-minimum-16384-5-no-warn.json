@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakScrypt): should not warn when params meet OWASP minimum (N=16384, p=5)",
+  "code": "\n        import crypto from 'crypto';\n        crypto.scrypt(password, salt, 64, { cost: 16384, parallelization: 5 }, (err, key) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-scrypt"
+    ]
+  }
+}

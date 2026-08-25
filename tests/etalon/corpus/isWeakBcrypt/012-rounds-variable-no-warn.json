@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakBcrypt): should not warn when rounds are a variable",
+  "code": "\n        import bcrypt from 'bcryptjs';\n        bcrypt.hash(password, rounds, (err, hash) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-bcrypt"
+    ]
+  }
+}

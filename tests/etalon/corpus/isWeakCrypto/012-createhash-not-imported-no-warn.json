@@ -1,0 +1,4 @@
+{
+  "name": "(isWeakCrypto probe): crypto.createHash - should not warn when crypto module is not imported",
+  "code": "\n        const crypto = {\n          createHash() {}\n        }\n        crypto.createHash('md5');\n      "
+}

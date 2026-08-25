@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakScrypt): should warn when salt is an empty string literal",
+  "code": "\n        import crypto from 'crypto';\n        crypto.scrypt(password, \"\", 64, (err, key) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-scrypt"
+    ]
+  }
+}

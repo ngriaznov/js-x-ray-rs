@@ -28,6 +28,7 @@ pub struct NodeCounterOptions {
     pub filter: Option<NodeCounterFilterCallback>,
 }
 
+#[derive(Debug)]
 pub struct NodeCounter {
     pub r#type: String,
     pub name: String,

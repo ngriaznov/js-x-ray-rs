@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakBcrypt): should warn when rounds are exactly 9 (one below the OWASP minimum)",
+  "code": "\n        import bcrypt from 'bcryptjs';\n        bcrypt.hash(password, 9, (err, hash) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-bcrypt"
+    ]
+  }
+}

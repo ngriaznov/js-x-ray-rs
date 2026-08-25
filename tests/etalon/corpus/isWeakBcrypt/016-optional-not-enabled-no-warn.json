@@ -1,0 +1,4 @@
+{
+  "name": "(isWeakBcrypt): optional warning behavior - should NOT report warnings when weak-bcrypt is not enabled",
+  "code": "\n        import bcrypt from 'bcryptjs';\n        bcrypt.hash(password, 4, (err, hash) => {});\n      "
+}

@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakBcrypt): should not warn when salt comes from a generated value",
+  "code": "\n        import bcrypt from 'bcryptjs';\n        const salt = bcrypt.genSaltSync(12);\n        bcrypt.hash(password, salt, (err, hash) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-bcrypt"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakBcrypt): should warn when rounds are stored in a constant with a low literal value",
+  "code": "\n        import bcrypt from 'bcryptjs';\n        const ROUNDS = 4;\n        bcrypt.hash(password, ROUNDS, (err, hash) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-bcrypt"
+    ]
+  }
+}

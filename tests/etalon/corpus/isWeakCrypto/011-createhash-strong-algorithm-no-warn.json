@@ -1,0 +1,4 @@
+{
+  "name": "(isWeakCrypto probe): crypto.createHash - should not warn when using a strong algorithm (e.g. `crypto.createHash('sha256')`)",
+  "code": "\n        import crypto from 'crypto';\n        crypto.createHash('sha256');\n      "
+}

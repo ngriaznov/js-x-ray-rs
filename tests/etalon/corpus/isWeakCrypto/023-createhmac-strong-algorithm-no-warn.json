@@ -1,0 +1,4 @@
+{
+  "name": "(isWeakCrypto probe): crypto.createHmac - should not warn when using a strong algorithm (e.g. `crypto.createHmac('sha256')`)",
+  "code": "\n        import crypto from 'crypto';\n        crypto.createHmac('sha256', 'secret');\n      "
+}

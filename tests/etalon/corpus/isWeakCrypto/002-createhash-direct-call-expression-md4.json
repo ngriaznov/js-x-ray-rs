@@ -1,0 +1,4 @@
+{
+  "name": "(isWeakCrypto probe): crypto.createHash - should detect weak algorithm when createHash is destructured from crypto (directCallExpression/md4.js)",
+  "file": "fixtures/weakCrypto/directCallExpression/md4.js"
+}

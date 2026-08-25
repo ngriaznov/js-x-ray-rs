@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakBcrypt): should not warn for the less used bcrypt package (only bcryptjs is supported)",
+  "code": "\n        import bcrypt from 'bcrypt';\n        bcrypt.hash(password, 4, (err, hash) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-bcrypt"
+    ]
+  }
+}

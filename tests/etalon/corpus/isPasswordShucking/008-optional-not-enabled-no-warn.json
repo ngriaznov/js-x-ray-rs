@@ -1,0 +1,4 @@
+{
+  "name": "(isPasswordShucking): optional warning behavior - should not report when crypto.password-shucking is not enabled",
+  "code": "\n        import bcrypt from 'bcryptjs';\n        import crypto from 'crypto';\n        bcrypt.hash(crypto.createHash('sha256').update(password).digest('hex'), salt, (err, hash) => {});\n      "
+}

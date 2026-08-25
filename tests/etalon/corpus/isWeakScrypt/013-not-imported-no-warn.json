@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakScrypt): should not warn when crypto module is not imported",
+  "code": "\n        const crypto = { scrypt() {} };\n        crypto.scrypt(password, \"short\", 64, (err, key) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-scrypt"
+    ]
+  }
+}

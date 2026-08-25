@@ -1,0 +1,9 @@
+{
+  "name": "(isPasswordShucking): should warn regardless of encoding, shuckability is independent of digest encoding (encoding: hex)",
+  "code": "\n          import bcrypt from 'bcryptjs';\n          import crypto from 'crypto';\n          bcrypt.hash(crypto.createHash('sha256').update(password).digest('hex'), salt, (err, hash) => {});\n        ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.password-shucking"
+    ]
+  }
+}

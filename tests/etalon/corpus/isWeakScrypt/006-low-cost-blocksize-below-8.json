@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakScrypt): should warn when blockSize is below 8",
+  "code": "\n        import crypto from 'crypto';\n        crypto.scrypt(password, salt, 64, { N: 131072, r: 4 }, (err, key) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-scrypt"
+    ]
+  }
+}

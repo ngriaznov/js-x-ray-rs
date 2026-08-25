@@ -1,0 +1,4 @@
+{
+  "name": "(isWeakScrypt): optional warning behavior - should NOT report warnings when crypto.weak-scrypt is not enabled",
+  "code": "\n        import crypto from 'crypto';\n        crypto.scrypt(password, \"short\", 64, (err, key) => {});\n      "
+}

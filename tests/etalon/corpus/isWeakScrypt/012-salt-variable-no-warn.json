@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakScrypt): should not warn when salt is a variable",
+  "code": "\n        import crypto from 'crypto';\n        const salt = crypto.randomBytes(16);\n        crypto.scrypt(password, salt, 64, (err, key) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-scrypt"
+    ]
+  }
+}

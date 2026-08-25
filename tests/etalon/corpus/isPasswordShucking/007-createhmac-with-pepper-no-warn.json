@@ -1,0 +1,9 @@
+{
+  "name": "(isPasswordShucking): should not warn when createHmac is used, pepper prevents hash enumeration",
+  "code": "\n        import bcrypt from 'bcryptjs';\n        import crypto from 'crypto';\n        bcrypt.hash(crypto.createHmac('sha512', pepper).update(password).digest('base64'), salt, (err, hash) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.password-shucking"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakBcrypt): should warn when bcrypt.genSalt rounds are below the OWASP minimum (< 10)",
+  "code": "\n        import bcrypt from 'bcryptjs';\n        const salt = bcrypt.genSalt(8, (err, salt) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-bcrypt"
+    ]
+  }
+}

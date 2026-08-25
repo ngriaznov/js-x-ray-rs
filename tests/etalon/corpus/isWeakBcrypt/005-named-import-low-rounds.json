@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakBcrypt): should warn when bcryptjs.hash is imported as a named import",
+  "code": "\n        import { hash } from 'bcryptjs';\n        hash(password, 4, (err, h) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-bcrypt"
+    ]
+  }
+}

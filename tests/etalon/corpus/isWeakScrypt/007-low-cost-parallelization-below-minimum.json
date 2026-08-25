@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakScrypt): should warn when parallelization is below OWASP minimum for given cost (N=8192, p=9)",
+  "code": "\n        import crypto from 'crypto';\n        crypto.scrypt(password, salt, 64, { N: 8192, p: 9 }, (err, key) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-scrypt"
+    ]
+  }
+}

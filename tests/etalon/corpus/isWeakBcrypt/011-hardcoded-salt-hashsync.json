@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakBcrypt): should warn when a hardcoded salt string is passed to bcrypt.hashSync",
+  "code": "\n        import bcrypt from 'bcryptjs';\n        const hash = bcrypt.hashSync(password, \"$2b$10$N9qo8uLOickgx2ZMRZoMye\");\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-bcrypt"
+    ]
+  }
+}
