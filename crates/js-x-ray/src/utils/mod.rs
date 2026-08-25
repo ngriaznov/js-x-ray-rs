@@ -24,3 +24,5 @@ pub use patterns::*;
 pub use string_suspicion_score::*;
 pub use strip_node_prefix::*;
 pub use to_array_location::*;
+
+pub mod safe_regex;
