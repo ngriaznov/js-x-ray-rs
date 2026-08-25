@@ -1,8 +1,39 @@
 {
-  "ok": false,
+  "ok": true,
   "warnings": [
     {
-      "kind": "parsing-error"
+      "kind": "data-exfiltration",
+      "location": [
+        [
+          [
+            2,
+            20
+          ],
+          [
+            2,
+            28
+          ]
+        ],
+        [
+          [
+            3,
+            20
+          ],
+          [
+            3,
+            28
+          ]
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.data_exfiltration",
+      "severity": "Warning",
+      "experimental": false,
+      "value": "~/.ssh"
     }
-  ]
+  ],
+  "flags": [],
+  "idsLengthAvg": 5,
+  "stringScore": 0,
+  "dependencies": {}
 }

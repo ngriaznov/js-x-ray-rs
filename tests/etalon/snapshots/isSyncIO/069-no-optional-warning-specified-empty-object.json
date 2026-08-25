@@ -1,8 +1,13 @@
 {
-  "ok": false,
-  "warnings": [
-    {
-      "kind": "parsing-error"
+  "ok": true,
+  "warnings": [],
+  "flags": [],
+  "idsLengthAvg": 12,
+  "stringScore": 0,
+  "dependencies": {
+    "fs": {
+      "unsafe": false,
+      "inTry": false
     }
-  ]
+  }
 }

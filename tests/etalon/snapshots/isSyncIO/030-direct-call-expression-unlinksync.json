@@ -1,8 +1,32 @@
 {
-  "ok": false,
+  "ok": true,
   "warnings": [
     {
-      "kind": "parsing-error"
+      "kind": "synchronous-io",
+      "location": [
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          28
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.synchronous_io",
+      "severity": "Warning",
+      "experimental": true,
+      "value": "unlinkSync"
     }
-  ]
+  ],
+  "flags": [],
+  "idsLengthAvg": 10,
+  "stringScore": 0,
+  "dependencies": {
+    "fs": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
 }

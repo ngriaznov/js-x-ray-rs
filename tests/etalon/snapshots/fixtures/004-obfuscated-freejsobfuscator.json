@@ -1,8 +1,75 @@
 {
-  "ok": false,
+  "ok": true,
   "warnings": [
     {
-      "kind": "parsing-error"
+      "kind": "encoded-literal",
+      "value": "math",
+      "location": [
+        [
+          [
+            4,
+            4
+          ],
+          [
+            4,
+            22
+          ]
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.encoded_literal",
+      "severity": "Information",
+      "experimental": false
+    },
+    {
+      "kind": "encoded-literal",
+      "value": "time",
+      "location": [
+        [
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            22
+          ]
+        ],
+        [
+          [
+            6,
+            4
+          ],
+          [
+            6,
+            22
+          ]
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.encoded_literal",
+      "severity": "Information",
+      "experimental": false
+    },
+    {
+      "kind": "obfuscated-code",
+      "location": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.obfuscated_code",
+      "severity": "Critical",
+      "experimental": true,
+      "value": "freejsobfuscator"
     }
-  ]
+  ],
+  "flags": [],
+  "dependencies": {}
 }

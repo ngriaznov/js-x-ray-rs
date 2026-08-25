@@ -1,8 +1,44 @@
 {
-  "ok": false,
+  "ok": true,
   "warnings": [
     {
-      "kind": "parsing-error"
+      "kind": "data-exfiltration",
+      "location": [
+        [
+          [
+            2,
+            19
+          ],
+          [
+            2,
+            27
+          ]
+        ],
+        [
+          [
+            7,
+            16
+          ],
+          [
+            7,
+            28
+          ]
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.data_exfiltration",
+      "severity": "Warning",
+      "experimental": false,
+      "value": "~/.ssh, dns.getServers"
     }
-  ]
+  ],
+  "flags": [],
+  "idsLengthAvg": 7.6667,
+  "stringScore": 0,
+  "dependencies": {
+    "dns": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
 }

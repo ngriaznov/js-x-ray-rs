@@ -1,8 +1,6 @@
 {
-  "ok": false,
-  "warnings": [
-    {
-      "kind": "parsing-error"
-    }
-  ]
+  "ok": true,
+  "warnings": [],
+  "flags": [],
+  "dependencies": {}
 }

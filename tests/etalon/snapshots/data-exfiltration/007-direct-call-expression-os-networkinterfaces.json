@@ -1,8 +1,32 @@
 {
-  "ok": false,
+  "ok": true,
   "warnings": [
     {
-      "kind": "parsing-error"
+      "kind": "data-exfiltration",
+      "location": [
+        [
+          [
+            5,
+            10
+          ],
+          [
+            5,
+            29
+          ]
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.data_exfiltration",
+      "severity": "Warning",
+      "experimental": false,
+      "value": "os.networkInterfaces"
     }
-  ]
+  ],
+  "flags": [],
+  "dependencies": {
+    "os": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
 }

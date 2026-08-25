@@ -1,8 +1,32 @@
 {
-  "ok": false,
+  "ok": true,
   "warnings": [
     {
-      "kind": "parsing-error"
+      "kind": "unsafe-vm-context",
+      "location": [
+        [
+          4,
+          15
+        ],
+        [
+          6,
+          31
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.unsafe_vm_context",
+      "severity": "Warning",
+      "experimental": false,
+      "value": "vm.runInNewContext"
     }
-  ]
+  ],
+  "flags": [],
+  "idsLengthAvg": 10.5,
+  "stringScore": 0,
+  "dependencies": {
+    "vm": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
 }

@@ -1,8 +1,17 @@
 {
-  "ok": false,
-  "warnings": [
-    {
-      "kind": "parsing-error"
+  "ok": true,
+  "warnings": [],
+  "flags": [],
+  "idsLengthAvg": 5,
+  "stringScore": 0,
+  "dependencies": {
+    "bcryptjs": {
+      "unsafe": false,
+      "inTry": false
+    },
+    "crypto": {
+      "unsafe": false,
+      "inTry": false
     }
-  ]
+  }
 }

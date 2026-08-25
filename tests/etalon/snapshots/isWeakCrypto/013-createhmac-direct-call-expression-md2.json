@@ -1,8 +1,30 @@
 {
-  "ok": false,
+  "ok": true,
   "warnings": [
     {
-      "kind": "parsing-error"
+      "kind": "crypto.weak-algorithm",
+      "location": [
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          17
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.weak_crypto",
+      "severity": "Information",
+      "experimental": false,
+      "value": "md2"
     }
-  ]
+  ],
+  "flags": [],
+  "dependencies": {
+    "crypto": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
 }

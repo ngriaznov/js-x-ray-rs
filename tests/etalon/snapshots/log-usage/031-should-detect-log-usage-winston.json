@@ -1,8 +1,104 @@
 {
-  "ok": false,
+  "ok": true,
   "warnings": [
     {
-      "kind": "parsing-error"
+      "kind": "log-usage",
+      "location": [
+        [
+          [
+            4,
+            20
+          ],
+          [
+            4,
+            40
+          ]
+        ],
+        [
+          [
+            5,
+            20
+          ],
+          [
+            5,
+            40
+          ]
+        ],
+        [
+          [
+            6,
+            20
+          ],
+          [
+            6,
+            41
+          ]
+        ],
+        [
+          [
+            7,
+            20
+          ],
+          [
+            7,
+            40
+          ]
+        ],
+        [
+          [
+            8,
+            20
+          ],
+          [
+            8,
+            41
+          ]
+        ],
+        [
+          [
+            9,
+            20
+          ],
+          [
+            9,
+            43
+          ]
+        ],
+        [
+          [
+            10,
+            20
+          ],
+          [
+            10,
+            41
+          ]
+        ],
+        [
+          [
+            11,
+            20
+          ],
+          [
+            11,
+            65
+          ]
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.log_usage",
+      "severity": "Information",
+      "experimental": false,
+      "value": "winston.info, winston.warn, winston.error, winston.http, winston.debug, winston.verbose, winston.silly, winston.log"
     }
-  ]
+  ],
+  "flags": [],
+  "idsLengthAvg": 6.5,
+  "stringScore": 0,
+  "dependencies": {
+    "winston": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
 }

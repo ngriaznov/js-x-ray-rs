@@ -56,6 +56,7 @@ pub struct ReportOnEntryFile {
 }
 
 impl ReportOnEntryFile {
+    #[must_use]
     pub fn is_ok(&self) -> bool {
         matches!(self.report, ReportOnFile::Ok { .. })
     }
@@ -400,6 +401,7 @@ pub struct DiGraph {
 }
 
 impl DiGraph {
+    #[must_use]
     pub fn has_vertex(&self, id: &str) -> bool {
         self.vertices.contains_key(id)
     }
@@ -420,6 +422,7 @@ impl DiGraph {
     }
 
     /// Upstream `getDeepChildren`.
+    #[must_use]
     pub fn get_deep_children(&self, root_id: &str, depth_limit: usize) -> Vec<String> {
         let Some(root) = self.vertices.get(root_id) else {
             return Vec::new();
@@ -473,6 +476,12 @@ impl DiGraph {
     }
 
     /// Upstream `findCycles` with the default (unlimited) `maxDepth`.
+    ///
+    /// # Panics
+    ///
+    /// Never in practice: `root_id` is looked up via `position` right after
+    /// `adjacency_list.contains(&root_id)` was just confirmed true.
+    #[must_use]
     pub fn find_cycles(&self) -> Vec<Vec<String>> {
         let mut cyclic_paths_with_maybe_duplicates: Vec<Vec<String>> = Vec::new();
 
