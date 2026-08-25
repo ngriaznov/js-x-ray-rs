@@ -2,8 +2,13 @@
 //! the `is-svg` npm package (v6, itself backed by `@file-type/xml`'s
 //! `XmlTextDetector`, a SAX-based full-document scan). This port hand-rolls
 //! an equivalent well-formedness scanner: matching nested tags, quoted
-//! attributes, comments/PIs/DOCTYPE/CDATA skipped, at most one root element,
-//! no non-whitespace text outside it — then checks the root element name.
+//! attributes, comments/PIs/DOCTYPE/CDATA skipped, no non-whitespace text
+//! outside any element — then checks the *first* top-level element's name.
+//! Upstream reads the file type off only the first tag it sees and otherwise
+//! just tracks overall open/close balance, so further top-level sibling
+//! elements after that first one closes are permitted (confirmed live:
+//! `isSvg("<svg></svg><rect/>")` -> `true`, `isSvg("<svg></svg><svg></svg>")`
+//! -> `true`).
 
 use std::sync::LazyLock;
 
@@ -89,9 +94,11 @@ impl<'a> XmlScanner<'a> {
             } else if self.rest.starts_with("</") {
                 self.parse_end_tag()?;
             } else if self.rest.starts_with('<') {
-                if self.stack.is_empty() && self.root_name.is_some() {
-                    return None; // a second root element
-                }
+                // Upstream (`sax`-backed `XmlTextDetector`) only tracks
+                // overall tag-nesting balance and reads the file type off the
+                // very first tag; it does not reject additional top-level
+                // sibling elements after the first root closes (confirmed
+                // live: `isSvg("<svg></svg><rect/>")` -> `true`).
                 self.parse_start_tag()?;
             } else {
                 let text = self.take_text();
@@ -264,8 +271,17 @@ mod tests {
     }
 
     #[test]
-    fn rejects_multiple_roots() {
-        assert!(!is_string_svg("<svg></svg><svg></svg>"));
+    fn accepts_multiple_top_level_siblings_after_the_first_root_closes() {
+        // Confirmed against the live `is-svg` v6 package: the file type is
+        // read off only the first tag, and further siblings (of any name)
+        // are permitted as long as the whole document stays balanced.
+        assert!(is_string_svg("<svg></svg><svg></svg>"));
+        assert!(is_string_svg("<svg></svg><rect/>"));
+    }
+
+    #[test]
+    fn rejects_dangling_unclosed_sibling() {
+        assert!(!is_string_svg("<svg></svg><a>"));
     }
 
     #[test]

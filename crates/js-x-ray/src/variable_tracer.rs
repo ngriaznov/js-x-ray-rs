@@ -289,8 +289,8 @@ impl VariableTracer {
     /// Upstream `#declareNewAssignment`.
     fn declare_new_assignment(&mut self, identifier_or_member_expr: &str, id: &Value) {
         let Some(traced_variant) = self.traced.get(identifier_or_member_expr).cloned() else {
-            // We return if required module has not been imported.
-            // It means the assignment has no relation with the required tracing.
+            // Not a traced identifier: this assignment has no relation to
+            // the required-module tracing this function maintains.
             return;
         };
         if !self.is_traced_identifier_imported_as_module(&traced_variant.borrow()) {
@@ -336,8 +336,6 @@ impl VariableTracer {
     }
 
     /// Upstream `#searchForMemberExprAlternative`.
-    ///
-    /// Search alternative for the given MemberExpression parts.
     fn search_for_member_expr_alternative(&self, parts: &[String]) -> Vec<String> {
         parts
             .iter()
@@ -346,8 +344,8 @@ impl VariableTracer {
                     return vec![traced.borrow().identifier_or_member_expr.clone()];
                 }
 
-                // If identifier is global then we can eliminate the value from
-                // MemberExpr: globalThis.process === process;
+                // A global identifier is eliminated from the MemberExpr:
+                // globalThis.process === process.
                 if self.is_global_variable_identifier(identifier_name) {
                     return vec![];
                 }

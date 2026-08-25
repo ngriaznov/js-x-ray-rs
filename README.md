@@ -106,14 +106,14 @@ const report = JSON.parse(analyse("eval('2 + 2')", JSON.stringify({ optionalWarn
 - **Known divergences**: parsing-error *messages* come from oxc, not meriyah
   (kinds/locations match); a handful of parse edge cases accepted by one parser
   and not the other may differ.
-
-## Performance
-
-On the 588-case etalon corpus the native release build is ~9% faster than the
-original on Node 24 (120 ms vs 131 ms median); the WASM build under Node runs
-at ~0.67× upstream speed. Very large single files (multi-MB bundles) currently
-favor upstream — see [`tools/bench/RESULTS.md`](tools/bench/RESULTS.md) for
-numbers, methodology, and the per-phase breakdown.
+- **Deliberately not ported**: upstream's `src/i18n/*.js` locale bundles
+  (Arabic/English/French/Korean/Turkish translations of warning descriptions)
+  and its `i18nLocation()` export — these are presentation-layer strings for
+  consumers, not analysis behavior, and are out of scope for this crate. Same
+  for `AstAnalyser`/`VariableTracer` being an upstream `EventEmitter`: the
+  port surfaces the same events through return values instead (`Report` /
+  `ReportOnFile`, and `VariableTracer::drain_events`) rather than a Rust
+  event-emitter API.
 
 ## Staying in sync with upstream
 

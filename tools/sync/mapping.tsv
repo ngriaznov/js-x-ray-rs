@@ -14,6 +14,11 @@ SourceFile.ts	crates/js-x-ray/src/source_file.rs
 VariableTracer.ts	crates/js-x-ray/src/variable_tracer.rs
 VirtualVariableIdentifier.ts	crates/js-x-ray/src/virtual_variable_identifier.rs
 contants.ts	crates/js-x-ray/src/probe.rs
+i18n/arabic.js	(not ported — locale bundle, see README "Deliberately not ported")
+i18n/english.js	(not ported — locale bundle, see README "Deliberately not ported")
+i18n/french.js	(not ported — locale bundle, see README "Deliberately not ported")
+i18n/korean.js	(not ported — locale bundle, see README "Deliberately not ported")
+i18n/turkish.js	(not ported — locale bundle, see README "Deliberately not ported")
 estree/functions/arrayExpression.ts	crates/js-x-ray/src/estree/functions.rs
 estree/functions/concatBinaryExpression.ts	crates/js-x-ray/src/estree/functions.rs
 estree/functions/extractLogicalExpression.ts	crates/js-x-ray/src/estree/functions.rs

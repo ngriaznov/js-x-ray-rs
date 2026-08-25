@@ -248,7 +248,6 @@ impl AstAnalyser {
         // and skip the full-AST clone.
         let oneline_require = is_one_line_expression_export(&body);
 
-        // We walk each AST node; this is purely synchronous.
         let reduced_body = self.build_pipelines().reduce(body);
         let mut reduced_root = Value::Array(reduced_body);
         let mut eval_error: Option<ParseError> = None;
