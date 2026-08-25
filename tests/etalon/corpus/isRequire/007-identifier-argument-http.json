@@ -1,0 +1,4 @@
+{
+  "name": "should catch require with an Identifier argument pointing to the Node.js core http module",
+  "code": "\n      const foo = \"http\";\n      require(foo);\n    "
+}

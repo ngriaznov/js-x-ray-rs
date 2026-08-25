@@ -1,0 +1,4 @@
+{
+  "name": "should collect and detect private address with an Information severity",
+  "code": "const IPV6 = '127.0.0.1';"
+}

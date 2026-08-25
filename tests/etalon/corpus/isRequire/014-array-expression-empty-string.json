@@ -1,0 +1,4 @@
+{
+  "name": "should throw an 'unsafe-import' warning for using an ArrayExpression as require argument\n  where all Literals values concatened is equal to an empty string",
+  "code": "\n      require([\"\", \"\"]);\n    "
+}

@@ -1,0 +1,4 @@
+{
+  "name": "should collect valid email addresses",
+  "code": "\n        const email1 = \"user@example.com\";\n        const email2 = \"name.surname@domain.co.uk\";\n        const email3 = \"test123@test-domain.org\";\n      "
+}

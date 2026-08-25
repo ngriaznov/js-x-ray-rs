@@ -1,0 +1,4 @@
+{
+  "name": "should collect the full url and the ip address",
+  "code": "const IPv4URL = 'http://127.0.0.1:80/script'"
+}

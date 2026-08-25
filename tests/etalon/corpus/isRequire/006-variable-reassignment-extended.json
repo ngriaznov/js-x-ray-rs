@@ -1,0 +1,4 @@
+{
+  "name": "should execute probe on a variable reassignments of require extended (detected by the VariableTracer)",
+  "code": "\n      const g = global.process;\n      const r = g.mainModule;\n      const c = r.require;\n      c(\"http\");\n      r.require(\"fs\");\n    "
+}

@@ -1,0 +1,4 @@
+{
+  "name": "should detect eval",
+  "code": "eval(\"this\");"
+}

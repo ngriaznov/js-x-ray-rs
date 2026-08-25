@@ -1,0 +1,7 @@
+{
+  "name": "conservative mode: should not detect ls command",
+  "code": "\n      const { spawn } = require(\"child_process\");\n      spawn(\"ls\", [\"-la\"]);\n    ",
+  "analyserOptions": {
+    "sensitivity": "conservative"
+  }
+}

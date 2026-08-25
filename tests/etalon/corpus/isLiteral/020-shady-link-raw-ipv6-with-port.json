@@ -1,0 +1,4 @@
+{
+  "name": "should detect suspicious links when a URL contains a raw IPv6 address with port",
+  "code": "const IPv6URL = 'http://[2001:0db8:85a3:0000:0000:8a2e:0370:7334]:100/script'"
+}

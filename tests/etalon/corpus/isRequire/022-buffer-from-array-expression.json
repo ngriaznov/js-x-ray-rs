@@ -1,0 +1,4 @@
+{
+  "name": "(require CallExpression): should detect MemberExpression Buffer.from (with ArrayExpression argument)",
+  "code": "\n      require(Buffer.from([104, 101, 108, 108, 111]).toString());\n    "
+}

@@ -1,0 +1,4 @@
+{
+  "name": "should detect a re-assigned native fetch",
+  "code": "const fetchBis = fetch\n                await fetchBis(url);\n          "
+}

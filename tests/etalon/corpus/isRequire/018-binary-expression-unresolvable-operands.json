@@ -1,0 +1,4 @@
+{
+  "name": "should throw an 'unsafe-import' warning for using a BinaryExpression with one or many unresolvable Operands",
+  "code": "\n      require(\"foo\" + evil());\n    "
+}

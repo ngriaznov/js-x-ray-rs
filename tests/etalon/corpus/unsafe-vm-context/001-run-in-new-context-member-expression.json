@@ -1,0 +1,4 @@
+{
+  "name": "should detect vm.runInNewContext usage [member expresion]",
+  "code": "\nimport vm from \"node:vm\";\n\nconst result = vm.runInNewContext(`\n    const proto = this.constructor.constructor;\n    proto(\"return process\")()`);\n"
+}

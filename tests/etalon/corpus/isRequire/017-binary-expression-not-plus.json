@@ -1,0 +1,4 @@
+{
+  "name": "should throw an 'unsafe-import' warning for using a BinaryExpression\n  with an operator not equal to '+' as require argument",
+  "code": "\n      require(5 - 5);\n    "
+}

@@ -1,0 +1,4 @@
+{
+  "name": "should collect emails from various code contexts",
+  "code": "\n        const emails = [\"admin@site.com\", \"support@help.io\"];\n        const config = {\n          contact: \"info@company.net\"\n        };\n      "
+}

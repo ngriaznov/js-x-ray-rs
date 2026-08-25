@@ -1,0 +1,4 @@
+{
+  "name": "(require CallExpression): should detect obfuscated atob value",
+  "code": "\n      const myFunc = atob;\n      const dep = require(myFunc('b3' + 'M='));\n    "
+}

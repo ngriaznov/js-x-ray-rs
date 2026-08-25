@@ -1,0 +1,4 @@
+{
+  "name": "should not detect file:// link ",
+  "code": "worker = realRequire(decodeURIComponent(filename.replace(process.platform === 'win32' ?\n        'file:///server' : 'file://server/share/file.txt', '')));"
+}

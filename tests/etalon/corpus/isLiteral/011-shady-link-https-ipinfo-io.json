@@ -1,0 +1,4 @@
+{
+  "name": "should detect shady link when an URL is known to be suspicious when protocol is https (ipinfo.io/json)",
+  "code": "const foo = 'https://ipinfo.io/json'"
+}

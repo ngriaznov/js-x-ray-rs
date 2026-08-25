@@ -1,0 +1,4 @@
+{
+  "name": "should detect runInContext usage [member expresion]",
+  "code": "\nimport vm from \"node:vm\";\n\nconst code = `\n    const proto = this.constructor.constructor;\n    proto(\"return process\")()`;\n\nconst script1 = new vm.Script(code);\n\nconst script2 = new vm.Script(code);\n\nconst result1 = script1.runInContext();\n\nconst result2 = script2.runInContext();\n"
+}

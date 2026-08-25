@@ -1,0 +1,4 @@
+{
+  "name": "should not detect non suspicious command (exec)",
+  "code": "\n        const { exec } = require(\"child_process\");\n        exec(\"ls -la\");\n      "
+}

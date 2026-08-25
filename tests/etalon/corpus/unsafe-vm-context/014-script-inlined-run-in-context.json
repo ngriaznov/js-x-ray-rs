@@ -1,0 +1,4 @@
+{
+  "name": "should detect inlined runInContext call",
+  "code": "\nimport vm from \"node:vm\";\n\nconst code = `\n    const proto = this.constructor.constructor;\n    proto(\"return process\")()`;\n\nconst result = (new vm.Script(code)).runInContext(createContex({}));\n\n"
+}

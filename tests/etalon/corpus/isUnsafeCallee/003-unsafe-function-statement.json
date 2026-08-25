@@ -1,0 +1,4 @@
+{
+  "name": "should detect for unsafe Function statement",
+  "code": "Function(\"anything in here\")()"
+}

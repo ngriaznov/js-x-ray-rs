@@ -1,0 +1,4 @@
+{
+  "name": "should detect hidden csrutil command (spawnSync)",
+  "code": "\n        const { spawnSync: hide } = require(\"child_process\");\n        hide(\"csrutil\", [\"status\"]);\n      "
+}

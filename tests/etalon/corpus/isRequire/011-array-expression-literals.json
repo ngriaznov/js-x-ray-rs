@@ -1,0 +1,4 @@
+{
+  "name": "should catch require with an ArrayExpression where all Literals values concatened\n  are equal to the Node.js core http module",
+  "code": "\n      require([\"h\", \"t\", \"t\", \"p\"]);\n    "
+}

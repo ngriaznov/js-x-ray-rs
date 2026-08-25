@@ -1,0 +1,4 @@
+{
+  "name": "should execute probe using process.mainModule.require (detected by the VariableTracer)",
+  "code": "\n      process.mainModule.require(\"http\");\n    "
+}

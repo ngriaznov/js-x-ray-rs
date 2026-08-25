@@ -1,0 +1,4 @@
+{
+  "name": "should throw an encoded-literal warning because the hexadecimal value is equal to 'require'",
+  "code": "const _t = globalThis['72657175697265']"
+}

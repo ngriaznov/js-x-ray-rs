@@ -1,0 +1,4 @@
+{
+  "name": "should not detect vm.runInNewContext when vm.runInNewContext is not called",
+  "code": "\nimport { runInNewContext } from \"node:vm\";\n"
+}

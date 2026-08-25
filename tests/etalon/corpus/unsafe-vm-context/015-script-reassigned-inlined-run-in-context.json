@@ -1,0 +1,4 @@
+{
+  "name": "should detect re-assigned inlined runInContext",
+  "code": "\nimport vm from \"node:vm\";\n\nconst code = `\n    const proto = this.constructor.constructor;\n    proto(\"return process\")()`;\n\n const runInContext = (new vm.Script(code)).runInContext;\n\nrunInContext(createContex({}));\n"
+}

@@ -1,0 +1,4 @@
+{
+  "name": "(require CallExpression): should catch a CallExpression containing an hexadecimal value\n  and then add the unobfuscated value in the dependency list",
+  "code": "\n      function unhex(r) {\n        return Buffer.from(r, \"hex\").toString();\n      }\n      // http\n      require(unhex(\"68747470\"));\n    "
+}

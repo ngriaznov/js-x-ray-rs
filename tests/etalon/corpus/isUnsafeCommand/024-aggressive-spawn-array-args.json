@@ -1,0 +1,7 @@
+{
+  "name": "aggressive mode: should handle spawn with array arguments",
+  "code": "\n      const { spawn } = require(\"child_process\");\n      spawn(\"node\", [\"--version\"]);\n    ",
+  "analyserOptions": {
+    "sensitivity": "aggressive"
+  }
+}

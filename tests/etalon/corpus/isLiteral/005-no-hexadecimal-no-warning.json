@@ -1,0 +1,4 @@
+{
+  "name": "should not throw any warnings without hexadecimal value (and should call analyzeLiteral of Analysis class)",
+  "code": "const foo = 'hello world!'"
+}

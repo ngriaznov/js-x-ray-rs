@@ -1,0 +1,4 @@
+{
+  "name": "should not detect runInContext if the call does not come from vm.Script.runInContext",
+  "code": "\nconst vm = {};\n\nclass Script {\n  runInContext() {\n    return null;\n  }\n};\n\nvm.Script = Script;\n\nconst code = `\n    const proto = this.constructor.constructor;\n    proto(\"return process\")()`;\n\nconst script = new vm.Script(code);\n\nfunction runInContext(code){\nreturn code;\n}\n\nrunInContext(code);\n\n"
+}

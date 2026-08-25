@@ -1,0 +1,4 @@
+{
+  "name": "should detect the link as suspicious when a URL contains a raw IPv4 address",
+  "code": "const IPv4URL = 'http://77.244.210.247/burpcollaborator.txt'"
+}

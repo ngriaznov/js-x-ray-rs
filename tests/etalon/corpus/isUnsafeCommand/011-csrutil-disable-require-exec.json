@@ -1,0 +1,4 @@
+{
+  "name": "should detect csrutil command with require (exec)",
+  "code": "require(\"child_process\").exec(\"csrutil disable\");"
+}

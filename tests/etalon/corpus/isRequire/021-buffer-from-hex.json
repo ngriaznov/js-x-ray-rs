@@ -1,0 +1,4 @@
+{
+  "name": "(require CallExpression): should detect MemberExpression Buffer.from",
+  "code": "\n      require(Buffer.from(\"68747470\", \"hex\").toString());\n    "
+}

@@ -1,0 +1,4 @@
+{
+  "name": "should not detect Function",
+  "code": "Function('foo');"
+}

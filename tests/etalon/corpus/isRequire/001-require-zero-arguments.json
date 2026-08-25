@@ -1,0 +1,4 @@
+{
+  "name": "should ignore require CallExpression with no (zero) arguments",
+  "code": "\n      require()\n    "
+}

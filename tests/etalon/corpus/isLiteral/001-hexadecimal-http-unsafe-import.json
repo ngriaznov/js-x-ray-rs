@@ -1,0 +1,4 @@
+{
+  "name": "should throw an unsafe-import because the hexadecimal string is equal to the core 'http' dependency",
+  "code": "const foo = '68747470'"
+}

@@ -1,0 +1,4 @@
+{
+  "name": "should detect shady link when an URL has a suspicious domain",
+  "code": "const foo = 'http://foobar.link'"
+}

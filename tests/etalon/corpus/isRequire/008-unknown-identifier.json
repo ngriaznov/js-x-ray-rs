@@ -1,0 +1,4 @@
+{
+  "name": "should throw an 'unsafe-import' warning for a require with an unknown Identifier",
+  "code": "\n      require(foo);\n    "
+}

@@ -1,0 +1,4 @@
+{
+  "name": "should follow consecutive re-assignment of runInContext",
+  "code": "\nimport vm from \"node:vm\";\n\nconst code = `\n    const proto = this.constructor.constructor;\n    proto(\"return process\")()`;\n\nconst script = new vm.Script(code);\n\nconst scriptBis = script;\n\nconst x = scriptBis;\n\nconst y = x.runInContext;\n\ny();\n\n"
+}

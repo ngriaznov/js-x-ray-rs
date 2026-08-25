@@ -1,0 +1,4 @@
+{
+  "name": "should execute probe using process.getBuiltinModule (detected by the VariableTracer)",
+  "code": "\n      if (globalThis.process?.getBuiltinModule) {\n        const fs = globalThis.process.getBuiltinModule('fs');\n        const module = globalThis.process.getBuiltinModule('module');\n        const require = module.createRequire(import.meta.url);\n        const foo = require('foo');\n      }\n    "
+}

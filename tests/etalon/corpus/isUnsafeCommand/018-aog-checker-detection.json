@@ -1,0 +1,4 @@
+{
+  "name": "aog-checker detection",
+  "code": "\n      const { execSync } = require(\"child_process\");\n      // truncated ...\n      let uname = \"\";\n      try {\n        uname = execSync(\"uname -a\").toString().trim();\n      } catch (e) {\n        uname = \"N/A\";\n      }\n    "
+}

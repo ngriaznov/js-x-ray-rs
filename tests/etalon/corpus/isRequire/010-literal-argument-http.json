@@ -1,0 +1,4 @@
+{
+  "name": "should catch require with a Literal argument having for value the Node.js core http module",
+  "code": "\n      require(\"http\");\n    "
+}

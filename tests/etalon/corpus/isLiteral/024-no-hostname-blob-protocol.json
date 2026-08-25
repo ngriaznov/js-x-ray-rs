@@ -1,0 +1,4 @@
+{
+  "name": "should not collect a hostname when there is none",
+  "code": "const protocol = 'blob://'"
+}

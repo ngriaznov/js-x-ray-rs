@@ -1,0 +1,4 @@
+{
+  "name": "should detect csrutil command with require (spawn)",
+  "code": "require(\"child_process\").spawn(\"csrutil\", [\"disable\"]);"
+}

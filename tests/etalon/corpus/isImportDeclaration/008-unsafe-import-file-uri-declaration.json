@@ -1,0 +1,4 @@
+{
+  "name": "should detect an unsafe import using file: and throw a unsafe-import warning (import declaration)",
+  "code": "import 'file:///etc/passwd';"
+}

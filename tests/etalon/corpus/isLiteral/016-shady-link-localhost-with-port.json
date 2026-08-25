@@ -1,0 +1,4 @@
+{
+  "name": "should be considered suspicious a link with a raw IPv4 address 127.0.0.1 and a port",
+  "code": "const IPv4URL = 'http://127.0.0.1:80/script'"
+}

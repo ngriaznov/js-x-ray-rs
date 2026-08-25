@@ -1,0 +1,4 @@
+{
+  "name": "(require CallExpression): should not have an unsafe-import for a correct path.resolve",
+  "code": "\n      const pkg = require(path.resolve('package.json'));\n    "
+}

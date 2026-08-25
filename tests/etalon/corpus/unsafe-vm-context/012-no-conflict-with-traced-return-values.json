@@ -1,0 +1,7 @@
+{
+  "name": "should not conflict with other traced return values",
+  "code": "import pino from \"pino\";\n                    import vm from \"vm\";\n                    const logger = pino();\n                    logger.runInContext();\n                    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

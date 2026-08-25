@@ -1,0 +1,7 @@
+{
+  "name": "aggressive mode: should detect all child_process usage (ls)",
+  "code": "\n      const { exec } = require(\"child_process\");\n      exec(\"ls -la\");\n    ",
+  "analyserOptions": {
+    "sensitivity": "aggressive"
+  }
+}

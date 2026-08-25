@@ -1,0 +1,4 @@
+{
+  "name": "should throw an encoded-literal warning because hexadecimal value is not safe",
+  "code": "const foo = '68656c6c6f20776f726c64'"
+}

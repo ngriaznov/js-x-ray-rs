@@ -1,0 +1,4 @@
+{
+  "name": "should catch require with a BinaryExpression where all level of operands flattened\n  are equal to the Node.js core http module (with VariableTracer usage)",
+  "code": "\n      const left = \"ht\";\n      const right = \"tp\";\n\n      require(left + right);\n    "
+}

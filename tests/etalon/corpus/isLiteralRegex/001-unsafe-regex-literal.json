@@ -1,0 +1,4 @@
+{
+  "name": "should throw a 'unsafe-regex' warning because the given RegExp Literal is unsafe",
+  "code": "const foo = /(a+){10}/g;"
+}

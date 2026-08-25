@@ -1,0 +1,4 @@
+{
+  "name": "should track email locations correctly",
+  "code": "const email = \"test@example.com\";"
+}

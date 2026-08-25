@@ -1,0 +1,7 @@
+{
+  "name": "aggressive mode: should detect echo command",
+  "code": "\n      const child_process = require(\"child_process\");\n      child_process.exec(\"echo hello\");\n    ",
+  "analyserOptions": {
+    "sensitivity": "aggressive"
+  }
+}

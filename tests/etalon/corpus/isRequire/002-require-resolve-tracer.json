@@ -1,0 +1,4 @@
+{
+  "name": "should execute probe using require.resolve (detected by the VariableTracer)",
+  "code": "\n      require.resolve(\"http\");\n    "
+}

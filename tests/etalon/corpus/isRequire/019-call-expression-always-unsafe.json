@@ -1,0 +1,4 @@
+{
+  "name": "(require CallExpression): should always throw an 'unsafe-import' warning when using a CallExpression",
+  "code": "\n      function evil() {\n        return \"http\";\n      }\n      require(evil());\n    "
+}

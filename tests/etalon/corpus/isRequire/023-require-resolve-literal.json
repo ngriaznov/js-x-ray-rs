@@ -1,0 +1,4 @@
+{
+  "name": "(require CallExpression): should detect MemberExpression require.resolve with a Literal value",
+  "code": "\n      require(require.resolve(\"foo\"));\n    "
+}

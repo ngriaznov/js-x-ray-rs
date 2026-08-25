@@ -1,0 +1,4 @@
+{
+  "name": "should not detect warnings for Function with return this",
+  "code": "Function(\"return this\")()"
+}

@@ -1,0 +1,4 @@
+{
+  "name": "should collect public ip address",
+  "code": "const IPV6 = '8.8.8.8';"
+}

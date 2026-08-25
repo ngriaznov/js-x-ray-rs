@@ -1,0 +1,4 @@
+{
+  "name": "should throw a 'unsafe-regex' warning because the given RegExp Object (with RegExpLiteral) is unsafe",
+  "code": "const foo = new RegExp(/(a+){10}/);"
+}

@@ -1,0 +1,4 @@
+{
+  "name": "should catch require with a BinaryExpression where all level of operands flattened\n  are equal to the Node.js core http module",
+  "code": "\n      require(\"ht\" + \"tp\");\n    "
+}

@@ -1,0 +1,4 @@
+{
+  "name": "should not throw a warning because the given Literal RegExp is considered 'safe'",
+  "code": "const foo = new RegExp('^hello');"
+}

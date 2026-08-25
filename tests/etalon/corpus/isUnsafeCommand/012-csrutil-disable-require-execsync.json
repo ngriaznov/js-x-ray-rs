@@ -1,0 +1,4 @@
+{
+  "name": "should detect csrutil command with require (execSync)",
+  "code": "require(\"child_process\").execSync(\"csrutil disable\");"
+}

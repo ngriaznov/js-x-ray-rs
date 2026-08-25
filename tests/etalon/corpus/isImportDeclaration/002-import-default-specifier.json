@@ -1,0 +1,4 @@
+{
+  "name": "should detect 1 dependency for an ImportDefaultSpecifier",
+  "code": "import foo from \"bar\""
+}

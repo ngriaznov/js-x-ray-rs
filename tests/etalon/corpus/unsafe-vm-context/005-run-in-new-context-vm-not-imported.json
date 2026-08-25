@@ -1,0 +1,4 @@
+{
+  "name": "should not detect vm.runInNewContext when vm is not imported",
+  "code": "\nfunction runInNewContext(code){\n  return null;\n}\n\nconst code = `\n    const proto = this.constructor.constructor;\n    proto(\"return process\")()`;\n\nconst result = runInNewContext(code);\n\nconst vm = {\n  runInNewContext(code) {\n    return null;\n  }\n}\n\nvm.runInNewContext(code);\n"
+}

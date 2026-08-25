@@ -1,0 +1,4 @@
+{
+  "name": "should detect ExportNamedDeclaration statement with a Literal source as dependency",
+  "code": "\n      export { foo } from \"./bar.js\";\n      export const bar = \"foo\";\n    "
+}

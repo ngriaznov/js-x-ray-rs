@@ -1,0 +1,4 @@
+{
+  "name": "should not detect non suspicious command (spawnSync)",
+  "code": "\n        const { spawnSync } = require(\"child_process\");\n        spawnSync(\"ls\", [\"-la\"]);\n      "
+}

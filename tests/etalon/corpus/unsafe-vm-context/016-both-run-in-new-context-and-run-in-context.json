@@ -1,0 +1,4 @@
+{
+  "name": "should detect both vm.runInNewContext and vm.Script.runInContext",
+  "code": "\nimport vm from \"node:vm\";\n\nconst code = `\n    const proto = this.constructor.constructor;\n    proto(\"return process\")()`;\n\nconst result = vm.runInNewContext(code);\n\n\nconst script = new vm.Script(code);\n\nscript.runInContext();\n"
+}

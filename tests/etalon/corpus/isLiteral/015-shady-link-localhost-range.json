@@ -1,0 +1,4 @@
+{
+  "name": "should mark suspicious links the IPv4 address range 127.0.0.0/8 (localhost 127.0.0.1)",
+  "code": "const IPv4URL = ['http://127.0.0.1/script', 'http://127.7.7.7/script']"
+}

@@ -1,0 +1,4 @@
+{
+  "name": "should detect 1 dependency with no specificiers",
+  "code": "import \"bar\""
+}

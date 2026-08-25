@@ -1,0 +1,4 @@
+{
+  "name": "should detect csrutil command (spawn)",
+  "code": "\n        const { spawn } = require(\"child_process\");\n        spawn(\"csrutil\", [\"status\"]);\n      "
+}

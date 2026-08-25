@@ -1,0 +1,4 @@
+{
+  "name": "should not collect invalid email formats",
+  "code": "\n        const invalid1 = \"@example.com\";\n        const invalid2 = \"user@\";\n        const invalid3 = \"user@@example.com\";\n        const invalid4 = \".user@example.com\";\n        const invalid5 = \"user.@example.com\";\n      "
+}

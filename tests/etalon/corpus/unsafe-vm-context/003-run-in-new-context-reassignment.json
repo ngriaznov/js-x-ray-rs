@@ -1,0 +1,4 @@
+{
+  "name": "should be able to follow re-assignment",
+  "code": "\nimport { runInNewContext } from \"vm\";\n\nconst fn = runInNewContext;\n\nconst result = fn(`\n    const proto = this.constructor.constructor;\n    proto(\"return process\")()`);\n"
+}

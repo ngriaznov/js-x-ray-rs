@@ -1,0 +1,4 @@
+{
+  "name": "should detect native fetch",
+  "code": "await fetch(url);"
+}

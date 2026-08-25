@@ -1,0 +1,4 @@
+{
+  "name": "should execute probe on a variable reassignments of require (detected by the VariableTracer)",
+  "code": "\n      const r = require;\n      const b = r;\n      b(\"http\");\n    "
+}

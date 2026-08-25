@@ -1,0 +1,4 @@
+{
+  "name": "should detect vm.runInNewContext usage [direct call expresion]",
+  "code": "\nconst { runInNewContext } = require(\"vm\");\n\nconst result = runInNewContext(`\n    const proto = this.constructor.constructor;\n    proto(\"return process\")()`);\n"
+}
