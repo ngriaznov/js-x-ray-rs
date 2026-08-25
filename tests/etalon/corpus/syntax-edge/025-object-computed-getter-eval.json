@@ -1,0 +1,4 @@
+{
+  "name": "object literal with a computed getter key calling eval",
+  "code": "const key = \"dyn\";\nconst o = {\n  get [key]() {\n    return eval(\"1 + 1\");\n  }\n};\no.dyn;"
+}

@@ -1,0 +1,4 @@
+{
+  "name": "should record a require('fs') dependency alongside a TC39 using declaration",
+  "file": "fixtures/typescript/using-declaration-require.ts"
+}

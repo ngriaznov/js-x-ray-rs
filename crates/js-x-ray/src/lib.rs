@@ -8,6 +8,25 @@
 //! to the same ESTree JSON shape meriyah produces, and every analysis module
 //! maps 1:1 to an upstream TypeScript file (see each module's `Upstream:`
 //! header) to keep synchronization with upstream releases mechanical.
+//!
+//! # Example
+//!
+//! ```
+//! use js_x_ray::{AstAnalyser, RuntimeOptions};
+//!
+//! let analyser = AstAnalyser::default();
+//! let report = analyser
+//!     .analyse(
+//!         r#"const stream = require("node:stream"); eval("console.log('hello')");"#,
+//!         RuntimeOptions::default(),
+//!     )
+//!     .expect("source parses");
+//!
+//! for warning in &report.warnings {
+//!     println!("{}: {:?}", warning.kind, warning.value);
+//! }
+//! println!("dependencies: {:?}", report.dependencies.keys().collect::<Vec<_>>());
+//! ```
 
 pub mod ast_analyser;
 pub mod collectable_set;

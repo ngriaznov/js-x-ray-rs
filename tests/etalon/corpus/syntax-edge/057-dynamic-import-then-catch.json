@@ -1,0 +1,4 @@
+{
+  "name": "dynamic import() chained with .then()/.catch()",
+  "code": "import(\"./plugin.js\").then((mod) => mod.default()).catch(() => {});"
+}

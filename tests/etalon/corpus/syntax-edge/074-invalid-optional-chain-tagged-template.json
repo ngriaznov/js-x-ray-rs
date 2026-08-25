@@ -1,0 +1,4 @@
+{
+  "name": "INVALID: tagged templates are disallowed on an optional chain",
+  "code": "const a = {};\nconst bad = a?.`template`;"
+}

@@ -1,0 +1,4 @@
+{
+  "name": "should record a require('fs') dependency from a concrete override of an abstract class method",
+  "file": "fixtures/typescript/abstract-class-method-require.ts"
+}

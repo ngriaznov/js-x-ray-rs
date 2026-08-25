@@ -1,0 +1,15 @@
+{
+  "ok": true,
+  "warnings": [],
+  "flags": [],
+  "dependencies": {
+    "./foo": {
+      "unsafe": false,
+      "inTry": false
+    },
+    "bar": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

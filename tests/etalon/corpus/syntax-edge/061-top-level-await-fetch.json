@@ -1,0 +1,4 @@
+{
+  "name": "top-level await of a fetch() call to a remote URL",
+  "code": "const res = await fetch(\"https://evil.com/data\");\nconsole.log(await res.text());"
+}

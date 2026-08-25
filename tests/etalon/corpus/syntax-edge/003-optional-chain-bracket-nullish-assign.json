@@ -1,0 +1,4 @@
+{
+  "name": "nullish assignment operator followed by optional bracket chain",
+  "code": "let cfg;\ncfg ??= require(\"./config.json\");\nconst value = cfg?.[\"api\"]?.[\"key\"] ?? \"default\";"
+}

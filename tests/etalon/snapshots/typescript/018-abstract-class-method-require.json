@@ -1,0 +1,11 @@
+{
+  "ok": true,
+  "warnings": [],
+  "flags": [],
+  "dependencies": {
+    "fs": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

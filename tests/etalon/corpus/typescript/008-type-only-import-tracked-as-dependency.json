@@ -1,0 +1,4 @@
+{
+  "name": "should still record an import type declaration as a tracked dependency alongside a normal import",
+  "file": "fixtures/typescript/type-only-import-tracked-as-dependency.ts"
+}

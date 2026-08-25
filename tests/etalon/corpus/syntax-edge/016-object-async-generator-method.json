@@ -1,0 +1,4 @@
+{
+  "name": "object literal async generator method awaiting a dynamic import",
+  "code": "const obj = {\n  async *stream() {\n    yield await import(\"os\");\n  }\n};\nobj.stream();"
+}

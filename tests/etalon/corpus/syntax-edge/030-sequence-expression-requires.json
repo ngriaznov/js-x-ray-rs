@@ -1,0 +1,4 @@
+{
+  "name": "top-level sequence expression of two require() calls",
+  "code": "require(\"fs\"), require(\"os\");"
+}

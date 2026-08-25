@@ -1,0 +1,4 @@
+{
+  "name": "BigInt literal used to size a crypto.randomBytes() call",
+  "code": "const big = 9007199254740993n;\nrequire(\"crypto\").randomBytes(Number(big % 100n));"
+}

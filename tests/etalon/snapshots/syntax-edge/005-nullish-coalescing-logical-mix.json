@@ -1,0 +1,13 @@
+{
+  "ok": true,
+  "warnings": [],
+  "flags": [],
+  "idsLengthAvg": 2,
+  "stringScore": 0,
+  "dependencies": {
+    "child_process": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

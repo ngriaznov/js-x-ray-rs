@@ -1,0 +1,4 @@
+{
+  "name": "spread arguments in a `new` expression feeding a computed global call",
+  "code": "class Multi {\n  constructor(...parts) {\n    this.value = parts.join(\"\");\n  }\n}\nconst parts = [\"e\", \"v\", \"a\", \"l\"];\nconst fnName = new Multi(...parts).value;\nglobalThis[fnName](\"1 + 1\");"
+}

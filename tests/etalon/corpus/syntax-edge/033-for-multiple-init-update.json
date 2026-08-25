@@ -1,0 +1,4 @@
+{
+  "name": "for-loop with multiple comma-separated init declarators",
+  "code": "for (let i = 0, len = 10, step = 2; i < len; i += step) {\n  void 0;\n}"
+}

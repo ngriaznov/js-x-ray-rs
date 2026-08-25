@@ -1,0 +1,4 @@
+{
+  "name": "should record a require('fs') dependency from inside a class static initialization block",
+  "file": "fixtures/typescript/static-initialization-block-require.ts"
+}

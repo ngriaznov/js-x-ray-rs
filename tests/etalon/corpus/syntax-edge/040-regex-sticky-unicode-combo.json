@@ -1,0 +1,4 @@
+{
+  "name": "regex combining the sticky (y) and unicode (u) flags",
+  "code": "const su = /foo/uy;\nsu.lastIndex = 0;\nsu.test(\"foo\");"
+}

@@ -1,0 +1,4 @@
+{
+  "name": "should throw unsafe-import for require(name) inside a TS namespace when name is an untraced parameter",
+  "file": "fixtures/typescript/namespace-require-untraced-identifier.ts"
+}

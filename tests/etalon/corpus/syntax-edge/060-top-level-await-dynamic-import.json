@@ -1,0 +1,4 @@
+{
+  "name": "top-level await of a dynamic import()",
+  "code": "const os = await import(\"os\");\nconsole.log(os.platform());"
+}

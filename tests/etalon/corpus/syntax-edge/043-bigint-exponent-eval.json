@@ -1,0 +1,4 @@
+{
+  "name": "BigInt exponentiation result passed into eval()",
+  "code": "const a = 10n ** 3n;\neval(a.toString());"
+}

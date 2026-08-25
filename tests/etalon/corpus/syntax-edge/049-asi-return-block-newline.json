@@ -1,0 +1,4 @@
+{
+  "name": "ASI inserts a semicolon after `return` before a newline, orphaning the object literal",
+  "code": "function f() {\n  return\n  {\n    a: require(\"fs\")\n  };\n}\nf();"
+}

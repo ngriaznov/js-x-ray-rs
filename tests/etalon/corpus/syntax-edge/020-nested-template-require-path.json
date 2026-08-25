@@ -1,0 +1,4 @@
+{
+  "name": "nested template literal building a path fed back into require()",
+  "code": "const path = require(\"path\");\nconst full = `${path.join(__dirname, \"x\")}`;\nrequire(full);"
+}

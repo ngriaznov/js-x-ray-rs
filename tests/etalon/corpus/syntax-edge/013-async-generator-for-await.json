@@ -1,0 +1,4 @@
+{
+  "name": "async generator function using for-await-of over a require()d stream",
+  "code": "async function* agen() {\n  for await (const chunk of require(\"fs\").createReadStream(\".\")) {\n    yield chunk;\n  }\n}\nagen();"
+}

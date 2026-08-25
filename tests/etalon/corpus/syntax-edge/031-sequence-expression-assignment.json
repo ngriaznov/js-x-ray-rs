@@ -1,0 +1,4 @@
+{
+  "name": "sequence expression inside a parenthesized assignment",
+  "code": "let a, b;\na = (b = 1, b + 1);\nconsole.log(a);"
+}

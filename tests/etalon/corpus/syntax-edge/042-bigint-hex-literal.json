@@ -1,0 +1,4 @@
+{
+  "name": "hexadecimal BigInt literal",
+  "code": "const hexBig = 0x1fffffffffffffn;\nconsole.log(hexBig.toString(16));"
+}

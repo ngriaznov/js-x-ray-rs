@@ -1,0 +1,4 @@
+{
+  "name": "string literal spelled out via \\u escapes, passed to eval",
+  "code": "const secret = \"\\u0070\\u0061\\u0073\\u0073\\u0077\\u006f\\u0072\\u0064\";\neval(secret);"
+}

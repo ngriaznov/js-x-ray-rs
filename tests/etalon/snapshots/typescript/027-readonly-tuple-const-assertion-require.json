@@ -1,0 +1,25 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "unsafe-import",
+      "location": [
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          23
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.unsafe_import",
+      "severity": "Warning",
+      "experimental": false,
+      "value": null
+    }
+  ],
+  "flags": [],
+  "dependencies": {}
+}

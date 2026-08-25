@@ -1,0 +1,4 @@
+{
+  "name": "INVALID: legacy octal literal with an out-of-range digit",
+  "code": "const bad = 0o18;\nconsole.log(bad);"
+}

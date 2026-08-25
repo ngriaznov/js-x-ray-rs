@@ -1,0 +1,4 @@
+{
+  "name": "JSX fragment with a data attribute whose value calls child_process.exec",
+  "code": "const el = <>\n  <div id=\"root\" data-cmd={require(\"child_process\").exec(\"ls\")}>\n    <span className=\"label\">hi</span>\n  </div>\n</>;\nconsole.log(el);"
+}

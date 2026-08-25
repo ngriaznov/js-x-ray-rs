@@ -1,0 +1,4 @@
+{
+  "name": "should throw unsafe-import for require(cfg.path) where cfg is typed via an interface",
+  "file": "fixtures/typescript/interface-wraps-unsafe-import.ts"
+}

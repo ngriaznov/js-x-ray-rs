@@ -1,0 +1,4 @@
+{
+  "name": "nested labeled loops with labeled continue and labeled break",
+  "code": "outer: for (let i = 0; i < 3; i++) {\n  inner: for (let j = 0; j < 3; j++) {\n    if (j === 1) continue outer;\n    if (i === 2) break outer;\n  }\n}\nrequire(\"fs\");"
+}

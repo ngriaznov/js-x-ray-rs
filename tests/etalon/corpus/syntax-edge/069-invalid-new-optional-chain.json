@@ -1,0 +1,4 @@
+{
+  "name": "INVALID: optional chaining is disallowed directly under `new`",
+  "code": "new a?.b();"
+}

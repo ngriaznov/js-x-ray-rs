@@ -1,0 +1,4 @@
+{
+  "name": "computed method name chained off a require() call",
+  "code": "const modName = \"fs\";\nrequire(modName)[\"readFile\" + \"Sync\"](\"/etc/passwd\", \"utf8\");"
+}

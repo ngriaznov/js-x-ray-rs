@@ -1,0 +1,4 @@
+{
+  "name": "should detect eval hidden behind a variable typed with a TS function-signature type alias",
+  "file": "fixtures/typescript/type-alias-function-signature-eval.ts"
+}

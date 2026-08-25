@@ -1,0 +1,4 @@
+{
+  "name": "labeled block statement with a labeled break",
+  "code": "block: {\n  if (Math.random() > 2) break block;\n  eval(\"1\");\n}"
+}

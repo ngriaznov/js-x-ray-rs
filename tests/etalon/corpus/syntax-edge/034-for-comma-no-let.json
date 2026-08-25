@@ -1,0 +1,4 @@
+{
+  "name": "for-loop with comma expressions in both init and update (no declaration)",
+  "code": "let i, j;\nfor (i = 0, j = 5; i < j; i++, j--) {\n  void 0;\n}"
+}

@@ -1,0 +1,4 @@
+{
+  "name": "should fail to parse real TS syntax (interface/generics) in a .tsx file since .tsx is not routed to TsSourceParser",
+  "file": "fixtures/typescript/tsx-generic-component-parse-error.tsx"
+}

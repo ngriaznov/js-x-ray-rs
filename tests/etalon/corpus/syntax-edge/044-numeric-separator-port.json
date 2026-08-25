@@ -1,0 +1,4 @@
+{
+  "name": "numeric separator in a decimal literal used as a listen() port",
+  "code": "const port = 8_080;\nrequire(\"net\").createServer().listen(port);"
+}

@@ -1,0 +1,4 @@
+{
+  "name": "class with a computed static field and a computed instance field calling eval",
+  "code": "class C {\n  static [Symbol.iterator] = function* () {\n    yield 1;\n  };\n  [\"comp\" + \"uted\"] = eval(\"1 + 1\");\n}\nnew C();"
+}

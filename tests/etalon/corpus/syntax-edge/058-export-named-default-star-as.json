@@ -1,0 +1,4 @@
+{
+  "name": "mix of named/default/star/star-as/renamed export declarations",
+  "code": "export const a = 1;\nexport default function main() {\n  return require(\"os\").platform();\n}\nexport * from \"./utils.js\";\nexport * as ns from \"./ns.js\";\nexport { a as renamedA };"
+}

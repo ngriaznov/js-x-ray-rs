@@ -1,0 +1,4 @@
+{
+  "name": "should throw unsafe-import for require(Mode.Danger) where Mode is an enum declared inside a namespace",
+  "file": "fixtures/typescript/enum-inside-namespace-require.ts"
+}

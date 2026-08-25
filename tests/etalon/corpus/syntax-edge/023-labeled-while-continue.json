@@ -1,0 +1,4 @@
+{
+  "name": "labeled while loop with labeled continue",
+  "code": "let i = 0;\nloop: while (i < 5) {\n  i++;\n  if (i === 3) continue loop;\n}"
+}

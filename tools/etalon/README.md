@@ -70,15 +70,15 @@ with `npx tsc -b` in the upstream repo) — see `loadUpstream()`.
 
 ## Verification
 
-A full run over all 588 corpus cases completes without a harness crash:
+A full run over all 691 corpus cases completes without a harness crash:
 
 ```
-cases processed: 588
-  ok:     583
-  failed: 5
+cases processed: 691
+  ok:     681
+  failed: 10
 ```
 
-The 5 `ok:false` snapshots are all genuine parser failures baked into the
+The `ok:false` snapshots are all genuine parser failures baked into the
 corpus on purpose (unremoved shebang not at start of file, unremoved HTML
 comments, an explicit `searchRuntimeDependencies/parsingError.js` fixture,
 etc.) — verified individually by re-running upstream on each case's source

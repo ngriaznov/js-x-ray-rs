@@ -1,0 +1,4 @@
+{
+  "name": "for-await-of consuming an immediately invoked async generator containing eval",
+  "code": "async function main() {\n  const it = (async function* () {\n    yield eval(\"1 + 1\");\n  })();\n  for await (const v of it) {\n    console.log(v);\n  }\n}\nmain();"
+}

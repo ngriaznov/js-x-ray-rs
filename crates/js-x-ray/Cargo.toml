@@ -7,6 +7,7 @@ edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
+readme = "../../README.md"
 keywords = ["ast", "security", "analysis", "nodesecure", "sast"]
 categories = ["development-tools", "parser-implementations"]
 

@@ -1,0 +1,4 @@
+{
+  "name": "class with private accessor pair (get/set on a private name)",
+  "code": "class Secret {\n  #value;\n  get #hidden() {\n    return this.#value;\n  }\n  set #hidden(v) {\n    this.#value = v;\n  }\n  reveal() {\n    this.#hidden = require(\"os\").platform();\n    return this.#hidden;\n  }\n}\nnew Secret().reveal();"
+}

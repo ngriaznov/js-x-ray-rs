@@ -1,0 +1,4 @@
+{
+  "name": "should detect eval used inside a legacy TS class decorator's argument object",
+  "file": "fixtures/typescript/legacy-class-decorator-eval-argument.ts"
+}

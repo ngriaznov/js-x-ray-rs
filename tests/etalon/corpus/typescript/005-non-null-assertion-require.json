@@ -1,0 +1,4 @@
+{
+  "name": "should throw unsafe-import for require() wrapped in a TS non-null assertion",
+  "file": "fixtures/typescript/non-null-assertion-require.ts"
+}

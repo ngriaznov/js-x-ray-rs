@@ -1,0 +1,4 @@
+{
+  "name": "nullish coalescing mixed with logical expressions feeding exec()",
+  "code": "const a = (void 0) ?? (null ?? \"fallback\");\nconst cmd = process.env.CMD ?? \"ls -la\";\nrequire(\"child_process\").exec(cmd);"
+}

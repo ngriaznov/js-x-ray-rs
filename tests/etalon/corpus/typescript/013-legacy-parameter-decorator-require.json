@@ -1,0 +1,4 @@
+{
+  "name": "should throw unsafe-import for require(token) where token is a legacy TS parameter-decorated constructor param",
+  "file": "fixtures/typescript/legacy-parameter-decorator-require.ts"
+}

@@ -1,0 +1,4 @@
+{
+  "name": "identifier written with \\u unicode escapes bound to a require() call",
+  "code": "const \\u0061\\u0062 = require(\"fs\");\nab.readFileSync(\"/etc/passwd\", \"utf8\");"
+}

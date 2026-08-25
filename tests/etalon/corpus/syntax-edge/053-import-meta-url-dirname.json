@@ -1,0 +1,4 @@
+{
+  "name": "import.meta.url passed into path.dirname()",
+  "code": "console.log(import.meta.url);\nrequire(\"path\").dirname(import.meta.url);"
+}

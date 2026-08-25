@@ -1,0 +1,4 @@
+{
+  "name": "deep optional call chain on a require()d module",
+  "code": "const net = require(\"net\");\nnet?.createServer?.()?.listen?.(0);"
+}

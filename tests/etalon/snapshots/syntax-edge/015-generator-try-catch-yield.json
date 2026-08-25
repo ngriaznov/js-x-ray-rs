@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "unsafe-stmt",
+      "location": [
+        [
+          3,
+          10
+        ],
+        [
+          3,
+          19
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.unsafe_stmt",
+      "severity": "Warning",
+      "experimental": false,
+      "value": "eval"
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 15.5,
+  "stringScore": 0,
+  "dependencies": {}
+}

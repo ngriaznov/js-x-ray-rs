@@ -1,0 +1,4 @@
+{
+  "name": "export default of an anonymous class expression",
+  "code": "export default class {\n  run() {\n    return eval(\"1 + 1\");\n  }\n}"
+}

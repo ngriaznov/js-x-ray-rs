@@ -1,0 +1,4 @@
+{
+  "name": "missing semicolon lets an IIFE attach to the previous expression as a call",
+  "code": "let ready = true\n(function () {\n  require(\"os\");\n})()"
+}

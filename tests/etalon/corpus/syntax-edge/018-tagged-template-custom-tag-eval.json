@@ -1,0 +1,4 @@
+{
+  "name": "custom tag function with an eval() call inside a template substitution",
+  "code": "function sql(strings, ...vals) {\n  return strings.join(\"\") + vals.join(\",\");\n}\nconst q = sql`SELECT * FROM users WHERE id=${eval(\"1\")}`;"
+}

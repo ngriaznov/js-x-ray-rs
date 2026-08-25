@@ -1,0 +1,4 @@
+{
+  "name": "optional computed member chain assembling \"require\" and \"hostname\"",
+  "code": "const w = globalThis;\nw[\"req\" + \"uire\"]?.(\"os\")?.[\"host\" + \"name\"]?.();"
+}

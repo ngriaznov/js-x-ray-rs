@@ -1,0 +1,4 @@
+{
+  "name": "should detect eval inside a generic function body regardless of a stripped type parameter",
+  "file": "fixtures/typescript/generic-function-eval.ts"
+}

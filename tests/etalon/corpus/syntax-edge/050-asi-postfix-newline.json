@@ -1,0 +1,4 @@
+{
+  "name": "no LineTerminator allowed before postfix ++, so ASI splits the statement",
+  "code": "let a = 1;\na\n++\na;\nconsole.log(a);"
+}

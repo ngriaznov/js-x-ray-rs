@@ -1,0 +1,4 @@
+{
+  "name": "optional catch binding used to guard a require() call",
+  "code": "function safeRequire(name) {\n  try {\n    return require(name);\n  } catch {\n    return null;\n  }\n}\nsafeRequire(\"optional-dep\");"
+}

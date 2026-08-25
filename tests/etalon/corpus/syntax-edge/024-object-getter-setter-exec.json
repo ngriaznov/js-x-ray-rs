@@ -1,0 +1,4 @@
+{
+  "name": "object literal accessor pair where the setter calls child_process.exec",
+  "code": "const conf = {\n  _cmd: \"\",\n  get cmd() {\n    return this._cmd;\n  },\n  set cmd(v) {\n    this._cmd = require(\"child_process\").exec(v);\n  }\n};\nconf.cmd = \"ls -la\";"
+}

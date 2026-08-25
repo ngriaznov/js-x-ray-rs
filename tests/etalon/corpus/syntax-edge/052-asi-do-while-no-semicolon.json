@@ -1,0 +1,4 @@
+{
+  "name": "no semicolon after a do-while statement, relying on ASI before the next statement",
+  "code": "let i = 0;\ndo {\n  i++;\n} while (i < 3)\nrequire(\"fs\");"
+}

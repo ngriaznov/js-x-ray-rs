@@ -1,0 +1,4 @@
+{
+  "name": "should record a dependency for an import declaration using a with-type import attribute",
+  "file": "fixtures/typescript/import-attributes-with-type-json.ts"
+}

@@ -1,0 +1,4 @@
+{
+  "name": "class with private fields, a static private field and a static initializer block",
+  "code": "class Loader {\n  #cache = new Map();\n  static #secret = \"s3cr3t\";\n  static {\n    Loader.#secret = require(\"crypto\").randomBytes(16).toString(\"hex\");\n  }\n  #load(name) {\n    return require(name);\n  }\n  run() {\n    return this.#load(\"fs\");\n  }\n}\nnew Loader().run();"
+}

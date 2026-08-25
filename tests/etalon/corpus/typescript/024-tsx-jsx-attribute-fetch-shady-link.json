@@ -1,0 +1,4 @@
+{
+  "name": "should detect a shady-link fetch() call used inside a .tsx JSX attribute expression",
+  "file": "fixtures/typescript/tsx-jsx-attribute-fetch-shady-link.tsx"
+}

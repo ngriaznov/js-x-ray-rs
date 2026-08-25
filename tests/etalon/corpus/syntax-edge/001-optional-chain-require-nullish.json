@@ -1,0 +1,4 @@
+{
+  "name": "optional chaining on require() result combined with nullish coalescing",
+  "code": "const fsMod = require(\"fs\")?.promises ?? null;\nfsMod?.readFile?.(\"/etc/passwd\", \"utf8\");"
+}

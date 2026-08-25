@@ -1,0 +1,4 @@
+{
+  "name": "should record a plain require('fs') literal dependency from inside a TS namespace",
+  "file": "fixtures/typescript/namespace-require-literal-dependency.ts"
+}

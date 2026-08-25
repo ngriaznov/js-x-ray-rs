@@ -1,0 +1,13 @@
+{
+  "ok": true,
+  "warnings": [],
+  "flags": [],
+  "idsLengthAvg": 3.6667,
+  "stringScore": 0,
+  "dependencies": {
+    "./config.json": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

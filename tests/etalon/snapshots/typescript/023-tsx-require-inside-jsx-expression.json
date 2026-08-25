@@ -1,0 +1,13 @@
+{
+  "ok": true,
+  "warnings": [],
+  "flags": [
+    "is-minified"
+  ],
+  "dependencies": {
+    "fs": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

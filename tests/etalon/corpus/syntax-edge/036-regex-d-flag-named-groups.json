@@ -1,0 +1,4 @@
+{
+  "name": "regex with the hasIndices (d) flag and named capture groups",
+  "code": "const withIndices = /(?<year>\\d{4})-(?<month>\\d{2})/d;\nconst m = withIndices.exec(\"2024-01\");\nm.indices.groups.year;"
+}

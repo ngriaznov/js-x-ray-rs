@@ -1,0 +1,4 @@
+{
+  "name": "ergonomic brand check using the private-name `in` operator",
+  "code": "class P {\n  #x = 1;\n  static has(o) {\n    return #x in o;\n  }\n}\nP.has(new P());"
+}

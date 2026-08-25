@@ -1,0 +1,4 @@
+{
+  "name": "spread in a call argument array literal and in object literal merging",
+  "code": "const args = [\"-la\"];\nrequire(\"child_process\").spawn(\"ls\", [...args, \"--color\"]);\nconst merged = { ...{ a: 1 }, ...{ b: 2 } };\nconsole.log(merged);"
+}

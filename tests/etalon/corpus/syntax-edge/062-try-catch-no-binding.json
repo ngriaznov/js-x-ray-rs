@@ -1,0 +1,4 @@
+{
+  "name": "optional catch binding (no parameter) around eval, with a require() fallback",
+  "code": "try {\n  eval(\"this.will.throw\");\n} catch {\n  require(\"fs\").writeFileSync(\"/tmp/err.log\", \"failed\");\n}"
+}

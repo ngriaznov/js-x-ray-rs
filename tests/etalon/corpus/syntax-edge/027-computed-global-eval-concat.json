@@ -1,0 +1,4 @@
+{
+  "name": "computed member access assembling the string \"eval\" at runtime",
+  "code": "const g = globalThis;\ng[\"ev\" + \"al\"](\"1 + 1\");"
+}

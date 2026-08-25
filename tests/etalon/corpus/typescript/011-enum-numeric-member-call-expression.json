@@ -1,0 +1,4 @@
+{
+  "name": "should throw unsafe-import for require(String(Level.Low)) wrapping a numeric enum member in a CallExpression",
+  "file": "fixtures/typescript/enum-numeric-member-call-expression.ts"
+}

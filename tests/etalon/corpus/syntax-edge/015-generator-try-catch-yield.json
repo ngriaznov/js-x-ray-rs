@@ -1,0 +1,4 @@
+{
+  "name": "generator with yield inside a try/catch calling eval",
+  "code": "function* g() {\n  try {\n    yield eval(\"1\");\n  } catch {\n    yield 0;\n  }\n}\ng().next();"
+}

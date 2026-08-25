@@ -1,0 +1,4 @@
+{
+  "name": "should throw unsafe-import for require(mod) where mod is initialized via a satisfies expression",
+  "file": "fixtures/typescript/satisfies-expression-require.ts"
+}

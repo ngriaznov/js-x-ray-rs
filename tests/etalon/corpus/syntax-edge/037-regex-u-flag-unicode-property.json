@@ -1,0 +1,4 @@
+{
+  "name": "unicode-mode regex using a \\p{} unicode property escape",
+  "code": "const uFlag = /\\p{Emoji}/u;\nuFlag.test(\"\\u{1F600}\");"
+}

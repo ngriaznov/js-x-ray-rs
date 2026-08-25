@@ -1,0 +1,4 @@
+{
+  "name": "regex literal combining g, i, m, s and y flags against a URL",
+  "code": "const re = /^https?:\\/\\/evil\\.com/gimsy;\nre.test(\"http://evil.com/path\");"
+}

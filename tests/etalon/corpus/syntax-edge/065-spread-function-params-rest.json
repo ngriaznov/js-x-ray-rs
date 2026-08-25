@@ -1,0 +1,4 @@
+{
+  "name": "rest parameter collected and re-spread into exec()",
+  "code": "function run(cmd, ...rest) {\n  return require(\"child_process\").exec([cmd, ...rest].join(\" \"));\n}\nrun(\"ls\", \"-la\", \"-h\");"
+}

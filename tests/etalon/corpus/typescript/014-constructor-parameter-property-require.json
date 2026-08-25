@@ -1,0 +1,4 @@
+{
+  "name": "should throw unsafe-import for require(this.path) where path is a TS constructor parameter property",
+  "file": "fixtures/typescript/constructor-parameter-property-require.ts"
+}

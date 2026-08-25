@@ -1,0 +1,4 @@
+{
+  "name": "should not raise any warning for an ambient declare module block with no runtime code",
+  "file": "fixtures/typescript/declare-module-ambient-no-warnings.ts"
+}

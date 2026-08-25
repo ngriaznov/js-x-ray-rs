@@ -1,0 +1,4 @@
+{
+  "name": "should throw unsafe-import for a require() ArrayExpression wrapped in an as const assertion",
+  "file": "fixtures/typescript/as-const-array-require.ts"
+}

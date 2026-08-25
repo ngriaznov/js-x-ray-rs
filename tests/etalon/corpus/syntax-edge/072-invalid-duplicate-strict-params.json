@@ -1,0 +1,4 @@
+{
+  "name": "duplicate parameter names in module (implicitly strict) code (meriyah does not early-error this)",
+  "code": "function f(a, a) {\n  return a;\n}\nf(1, 2);"
+}

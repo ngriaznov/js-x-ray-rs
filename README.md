@@ -8,11 +8,11 @@ The port is a **behavioral clone** of the upstream Node.js library (v16): same
 probes, same warning kinds, values and locations, same flags and scores. It is
 verified two ways:
 
-- **588/588 etalon cases** — reference outputs produced by running the
+- **691/691 etalon cases** — reference outputs produced by running the
   *original* library over a corpus extracted from upstream's entire test suite
   match the Rust port exactly (warnings incl. locations, flags, `idsLengthAvg`,
   `stringScore`, dependencies).
-- **~420 ported unit tests** — upstream's spec files for internal APIs
+- **~430 ported unit tests** — upstream's spec files for internal APIs
   (walker, estree helpers, VariableTracer, Deobfuscator, probes, utils,
   EntryFilesAnalyser, …) transcribed to Rust and passing.
 

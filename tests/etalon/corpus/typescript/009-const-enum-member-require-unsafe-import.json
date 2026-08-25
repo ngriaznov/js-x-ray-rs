@@ -1,0 +1,4 @@
+{
+  "name": "should throw unsafe-import for require(Mod.Http) where Mod is a const enum (enum members are not statically resolved)",
+  "file": "fixtures/typescript/const-enum-member-require-unsafe-import.ts"
+}

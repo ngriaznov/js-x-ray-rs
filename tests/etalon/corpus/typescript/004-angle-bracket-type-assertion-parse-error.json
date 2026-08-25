@@ -1,0 +1,4 @@
+{
+  "name": "should fail to parse an old-style angle-bracket type assertion since TS parsing always enables jsx",
+  "file": "fixtures/typescript/angle-bracket-type-assertion-parse-error.ts"
+}

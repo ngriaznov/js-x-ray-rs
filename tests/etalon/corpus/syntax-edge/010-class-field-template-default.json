@@ -1,0 +1,4 @@
+{
+  "name": "class field initialized from a template literal calling require()",
+  "code": "class T {\n  url = `https://${require(\"os\").hostname()}/api`;\n}\nnew T();"
+}

@@ -1,0 +1,4 @@
+{
+  "name": "referencing a private name that no enclosing class declares (meriyah does not early-error this)",
+  "code": "class A {\n  #x = 1;\n}\nconsole.log(new A().#y);"
+}

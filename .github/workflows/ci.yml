@@ -36,3 +36,8 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - name: Build WASM
         run: cargo build -p js-x-ray-wasm --target wasm32-unknown-unknown --release
+      - name: Etalon suite (release mode, host target)
+        # Smoke-tests the js-x-ray crate as built in release mode (same
+        # profile the WASM build uses) without needing wasm-bindgen-cli /
+        # a JS runtime to execute the actual .wasm artifact.
+        run: cargo test -p js-x-ray --test etalon --release

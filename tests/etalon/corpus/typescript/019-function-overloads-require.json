@@ -1,0 +1,4 @@
+{
+  "name": "should throw unsafe-import for require(x) inside the implementation of an overloaded TS function",
+  "file": "fixtures/typescript/function-overloads-require.ts"
+}

@@ -1,0 +1,4 @@
+{
+  "name": "String.raw tagged template feeding child_process.exec",
+  "code": "const cmd = String.raw`rm -rf /tmp/x`;\nrequire(\"child_process\").exec(cmd);"
+}

@@ -1,0 +1,4 @@
+{
+  "name": "JSX element with spread attributes, one of which triggers eval",
+  "code": "const props = { onClick: () => eval(\"1\") };\nconst el = <button {...props} disabled>{\"click\"}</button>;"
+}

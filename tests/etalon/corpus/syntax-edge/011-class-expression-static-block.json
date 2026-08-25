@@ -1,0 +1,4 @@
+{
+  "name": "anonymous class expression with a static initializer block",
+  "code": "const Anon = class {\n  static ready = false;\n  static {\n    this.ready = true;\n    globalThis.__anonReady = this.ready;\n  }\n};\nnew Anon();"
+}

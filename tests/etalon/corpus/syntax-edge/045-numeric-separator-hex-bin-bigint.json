@@ -1,0 +1,4 @@
+{
+  "name": "numeric separators across hex, binary and BigInt literals",
+  "code": "const hex = 0xFF_FF_FF;\nconst bin = 0b1010_0101;\nconst bigSep = 1_000_000_000_000n;\nconsole.log(hex, bin, bigSep);"
+}

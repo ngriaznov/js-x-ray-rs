@@ -1,0 +1,4 @@
+{
+  "name": "sequence expression whose first operand is an eval() call",
+  "code": "const x = (eval(\"1\"), 2, 3);\nconsole.log(x);"
+}

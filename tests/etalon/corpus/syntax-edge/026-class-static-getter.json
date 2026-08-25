@@ -1,0 +1,4 @@
+{
+  "name": "class static getter calling a require()d module method",
+  "code": "class C {\n  static get version() {\n    return require(\"os\").release();\n  }\n}\nC.version;"
+}

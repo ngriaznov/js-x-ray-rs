@@ -1,0 +1,4 @@
+{
+  "name": "import.meta.url combined with a dynamic import() of a resolved URL",
+  "code": "const url = import.meta.url;\nimport(new URL(\"./worker.js\", url).href);"
+}

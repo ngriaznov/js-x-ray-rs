@@ -1,0 +1,4 @@
+{
+  "name": "string literal containing a \\u surrogate pair, used as a URL",
+  "code": "const url = \"https://evil.com/\\uD83D\\uDE00\";\nrequire(\"http\").get(url);"
+}

@@ -1,0 +1,4 @@
+{
+  "name": "tagged template whose substitution is a require() call",
+  "code": "function tag(strings, ...values) {\n  return values[0];\n}\nconst mod = tag`module: ${require(\"os\")}`;"
+}

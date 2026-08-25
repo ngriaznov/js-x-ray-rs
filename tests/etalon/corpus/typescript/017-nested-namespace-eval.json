@@ -1,0 +1,4 @@
+{
+  "name": "should detect eval hidden inside a nested TS namespace",
+  "file": "fixtures/typescript/nested-namespace-eval.ts"
+}

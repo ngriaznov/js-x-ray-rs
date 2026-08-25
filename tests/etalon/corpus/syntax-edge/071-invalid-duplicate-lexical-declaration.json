@@ -1,0 +1,4 @@
+{
+  "name": "redeclaring the same `let` binding in one scope (meriyah does not early-error this)",
+  "code": "let dup = 1;\nlet dup = 2;\nconsole.log(dup);"
+}

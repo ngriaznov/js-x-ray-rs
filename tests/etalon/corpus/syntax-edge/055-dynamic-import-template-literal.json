@@ -1,0 +1,4 @@
+{
+  "name": "dynamic import() whose specifier is a template literal",
+  "code": "const name = \"os\";\nimport(`node:${name}`);"
+}

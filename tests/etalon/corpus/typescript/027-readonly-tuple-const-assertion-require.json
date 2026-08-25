@@ -1,0 +1,4 @@
+{
+  "name": "should throw unsafe-import for require(parts.join('')) where parts is a readonly tuple",
+  "file": "fixtures/typescript/readonly-tuple-const-assertion-require.ts"
+}

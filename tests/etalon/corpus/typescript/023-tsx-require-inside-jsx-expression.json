@@ -1,0 +1,4 @@
+{
+  "name": "should record a require('fs') dependency from inside a .tsx JSX expression container",
+  "file": "fixtures/typescript/tsx-require-inside-jsx-expression.tsx"
+}

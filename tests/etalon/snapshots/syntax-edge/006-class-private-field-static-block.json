@@ -1,0 +1,32 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "unsafe-import",
+      "location": [
+        [
+          8,
+          11
+        ],
+        [
+          8,
+          24
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.unsafe_import",
+      "severity": "Warning",
+      "experimental": false,
+      "value": null
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 7.75,
+  "stringScore": 0,
+  "dependencies": {
+    "crypto": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

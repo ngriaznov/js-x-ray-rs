@@ -1,0 +1,4 @@
+{
+  "name": "should throw unsafe-import for require(this.bar) where bar uses a TS definite assignment assertion",
+  "file": "fixtures/typescript/definite-assignment-assertion-require.ts"
+}

@@ -1,0 +1,21 @@
+{
+  "ok": true,
+  "warnings": [],
+  "flags": [],
+  "idsLengthAvg": 2.5,
+  "stringScore": 0,
+  "dependencies": {
+    "os": {
+      "unsafe": false,
+      "inTry": false
+    },
+    "./utils.js": {
+      "unsafe": false,
+      "inTry": false
+    },
+    "./ns.js": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

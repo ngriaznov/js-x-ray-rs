@@ -1,0 +1,4 @@
+{
+  "name": "should throw unsafe-import for require(configPath) below a triple-slash reference directive",
+  "file": "fixtures/typescript/triple-slash-reference-require.ts"
+}

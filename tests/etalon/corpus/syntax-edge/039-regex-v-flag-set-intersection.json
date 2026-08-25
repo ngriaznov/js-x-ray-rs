@@ -1,0 +1,4 @@
+{
+  "name": "unicodeSets (v) flag regex using a character class set-intersection",
+  "code": "const vFlagUnion = /[\\p{ASCII}&&\\p{Letter}]/v;\nvFlagUnion.test(\"a\");"
+}

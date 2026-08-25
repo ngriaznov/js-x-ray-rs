@@ -1,0 +1,4 @@
+{
+  "name": "optional call chain invoking eval via globalThis",
+  "code": "globalThis?.eval?.(\"1 + 1\");"
+}

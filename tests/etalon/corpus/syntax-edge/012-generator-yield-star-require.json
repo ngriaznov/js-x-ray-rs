@@ -1,0 +1,4 @@
+{
+  "name": "generator delegating (yield*) into a require()d stream",
+  "code": "function* gen() {\n  yield* require(\"fs\").createReadStream(\"/etc/passwd\");\n}\ngen().next();"
+}
