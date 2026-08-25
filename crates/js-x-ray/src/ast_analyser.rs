@@ -1,7 +1,6 @@
 //! Upstream: `src/AstAnalyser.ts`
 
 use std::sync::LazyLock;
-use std::time::Instant;
 
 use regex::Regex;
 use serde_json::{Map, Value};
@@ -87,6 +86,34 @@ pub enum ReportOnFile {
     },
 }
 
+
+/// Monotonic timer for `executionTime`; `Instant::now` traps on
+/// wasm32-unknown-unknown, where the reported time is 0.
+struct Stopwatch {
+    #[cfg(not(target_arch = "wasm32"))]
+    start: std::time::Instant,
+}
+
+impl Stopwatch {
+    fn start() -> Self {
+        Self {
+            #[cfg(not(target_arch = "wasm32"))]
+            start: std::time::Instant::now(),
+        }
+    }
+
+    fn elapsed_ms(&self) -> f64 {
+        #[cfg(not(target_arch = "wasm32"))]
+        {
+            self.start.elapsed().as_secs_f64() * 1000.0
+        }
+        #[cfg(target_arch = "wasm32")]
+        {
+            0.0
+        }
+    }
+}
+
 pub struct AstAnalyser {
     options: AstAnalyserOptions,
     /// Shared with each analysis run: taken before, restored after — upstream
@@ -154,7 +181,7 @@ impl AstAnalyser {
 
     /// Upstream `analyse`.
     pub fn analyse(&self, str_: &str, options: RuntimeOptions) -> Result<Report, ParseError> {
-        let start_time = Instant::now();
+        let start_time = Stopwatch::start();
 
         let RuntimeOptions {
             location,
@@ -221,7 +248,7 @@ impl AstAnalyser {
         *self.collectable_registry.borrow_mut() =
             std::mem::take(&mut source.collectables_set_registry);
 
-        let execution_time = start_time.elapsed().as_secs_f64() * 1000.0;
+        let execution_time = start_time.elapsed_ms();
 
         Ok(Report {
             warnings: source.warnings,
@@ -242,7 +269,7 @@ impl AstAnalyser {
     ) -> std::io::Result<ReportOnFile> {
         use crate::parser::TsSourceParser;
 
-        let start_time = Instant::now();
+        let start_time = Stopwatch::start();
         let file_path_string = path_to_file.to_string_lossy().to_string();
 
         if file_path_string.contains("d.ts") {
@@ -276,7 +303,7 @@ impl AstAnalyser {
                     warnings: data.warnings,
                     dependencies: data.dependencies,
                     flags,
-                    execution_time: start_time.elapsed().as_secs_f64() * 1000.0,
+                    execution_time: start_time.elapsed_ms(),
                 })
             }
             Err(error) => Ok(ReportOnFile::Failed {
@@ -287,7 +314,7 @@ impl AstAnalyser {
                         ..Default::default()
                     },
                 )],
-                execution_time: start_time.elapsed().as_secs_f64() * 1000.0,
+                execution_time: start_time.elapsed_ms(),
             }),
         }
     }
