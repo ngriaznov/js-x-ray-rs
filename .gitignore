@@ -1,0 +1,5 @@
+/target
+/.upstream
+node_modules
+/tools/etalon/node_modules
+pkg/
