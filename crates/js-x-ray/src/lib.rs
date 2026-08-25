@@ -33,6 +33,8 @@ pub use ast_analyser::{
     AstAnalyser, AstAnalyserOptions, OptionalWarnings, Report, ReportOnFile, RuntimeOptions,
 };
 pub use collectable_set::{CollectableSetRegistry, DefaultCollectableSet};
+#[cfg(feature = "fs")]
+pub use entry_files_analyser::EntryFilesAnalyser;
 pub use parser::{JsSourceParser, ParseError, SourceParser, TsSourceParser};
 pub use probe::{Probe, ProbeCtx, ProbeReturn, ProbeRunner};
 pub use source_file::{Dependency, Sensitivity, SourceFile};
