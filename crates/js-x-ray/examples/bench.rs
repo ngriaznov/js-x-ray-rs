@@ -37,7 +37,10 @@ fn load_cases(dir: &Path, etalon_root: &Path, out: &mut Vec<Case>) {
             let code = match case.get("code").and_then(Value::as_str) {
                 Some(code) => code.to_owned(),
                 None => {
-                    let file = case.get("file").and_then(Value::as_str).expect("code or file");
+                    let file = case
+                        .get("file")
+                        .and_then(Value::as_str)
+                        .expect("code or file");
                     std::fs::read_to_string(etalon_root.join(file)).expect("fixture readable")
                 }
             };
@@ -56,11 +59,19 @@ fn run_all(cases: &[Case]) -> usize {
         let optional_warnings = match case.analyser_options.get("optionalWarnings") {
             Some(Value::Bool(true)) => OptionalWarnings::All,
             Some(Value::Array(names)) => OptionalWarnings::Names(
-                names.iter().filter_map(Value::as_str).map(str::to_owned).collect(),
+                names
+                    .iter()
+                    .filter_map(Value::as_str)
+                    .map(str::to_owned)
+                    .collect(),
             ),
             _ => OptionalWarnings::Disabled,
         };
-        let sensitivity = match case.analyser_options.get("sensitivity").and_then(Value::as_str) {
+        let sensitivity = match case
+            .analyser_options
+            .get("sensitivity")
+            .and_then(Value::as_str)
+        {
             Some("aggressive") => Sensitivity::Aggressive,
             _ => Sensitivity::Conservative,
         };

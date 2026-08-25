@@ -426,7 +426,13 @@ fn walk_ast(
                 dispatch_tracer_events(source, probe_runner);
             }
 
-            probe_and_recurse(&split.virtual_declaration, source, probe_runner, ctx, eval_error);
+            probe_and_recurse(
+                &split.virtual_declaration,
+                source,
+                probe_runner,
+                ctx,
+                eval_error,
+            );
             if let Some(rebuild) = &split.rebuild_expression {
                 probe_and_recurse(rebuild, source, probe_runner, ctx, eval_error);
             }
