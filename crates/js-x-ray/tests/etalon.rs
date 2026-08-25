@@ -193,11 +193,22 @@ fn round4(value: f64) -> Value {
 }
 
 /// Mirror the harness normalization: parsing-error keeps only the kind.
+/// Keys are re-emitted in sorted order so the sort-by-serialization used for
+/// order-insensitive comparison is canonical across producers.
 fn normalize_warning(warning: &Value) -> Value {
     if warning.get("kind").and_then(Value::as_str) == Some("parsing-error") {
         return json!({ "kind": "parsing-error" });
     }
-    warning.clone()
+    match warning.as_object() {
+        Some(map) => Value::Object(
+            map.iter()
+                .collect::<BTreeMap<_, _>>()
+                .into_iter()
+                .map(|(k, v)| (k.clone(), v.clone()))
+                .collect(),
+        ),
+        None => warning.clone(),
+    }
 }
 
 /// Normalize a stored snapshot for comparison (numbers → round4, warning sort).

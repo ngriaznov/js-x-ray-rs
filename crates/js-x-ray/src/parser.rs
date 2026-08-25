@@ -81,6 +81,8 @@ fn parse_with(
     let ret = Parser::new(&allocator, source, source_type)
         .with_options(ParseOptions {
             allow_return_outside_function,
+            // meriyah emits no ParenthesizedExpression nodes.
+            preserve_parens: false,
             ..ParseOptions::default()
         })
         .parse();
