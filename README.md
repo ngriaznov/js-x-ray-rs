@@ -107,6 +107,14 @@ const report = JSON.parse(analyse("eval('2 + 2')", JSON.stringify({ optionalWarn
   (kinds/locations match); a handful of parse edge cases accepted by one parser
   and not the other may differ.
 
+## Performance
+
+On the 588-case etalon corpus the native release build is ~9% faster than the
+original on Node 24 (120 ms vs 131 ms median); the WASM build under Node runs
+at ~0.67× upstream speed. Very large single files (multi-MB bundles) currently
+favor upstream — see [`tools/bench/RESULTS.md`](tools/bench/RESULTS.md) for
+numbers, methodology, and the per-phase breakdown.
+
 ## Staying in sync with upstream
 
 Upstream is pinned in [`UPSTREAM.lock`](UPSTREAM.lock). When NodeSecure ships a

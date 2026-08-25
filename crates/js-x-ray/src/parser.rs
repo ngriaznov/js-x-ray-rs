@@ -114,23 +114,38 @@ fn parse_with(
 }
 
 /// Byte offset → (1-based line, 0-based UTF-16 column) mapping.
+///
+/// Columns count UTF-16 code units (meriyah/JS semantics). ASCII-only lines
+/// take an O(1) fast path; other lines fall back to scanning the line prefix,
+/// so pathological non-ASCII one-liners are the only quadratic case.
 pub struct LineTable {
     /// Byte offset at which each line starts.
     line_starts: Vec<usize>,
+    /// Whether the line holds only ASCII bytes (column == byte offset).
+    line_is_ascii: Vec<bool>,
     source: Vec<u8>,
 }
 
 impl LineTable {
     pub fn new(source: &str) -> Self {
+        let bytes = source.as_bytes();
         let mut line_starts = vec![0usize];
-        for (idx, byte) in source.bytes().enumerate() {
+        let mut line_is_ascii = Vec::new();
+        let mut current_ascii = true;
+        for (idx, &byte) in bytes.iter().enumerate() {
             if byte == b'\n' {
+                line_is_ascii.push(current_ascii);
                 line_starts.push(idx + 1);
+                current_ascii = true;
+            } else if !byte.is_ascii() {
+                current_ascii = false;
             }
         }
+        line_is_ascii.push(current_ascii);
         Self {
             line_starts,
-            source: source.as_bytes().to_vec(),
+            line_is_ascii,
+            source: bytes.to_vec(),
         }
     }
 
@@ -141,9 +156,13 @@ impl LineTable {
             Err(idx) => idx - 1,
         };
         let line_start = self.line_starts[line_idx];
-        let column = match std::str::from_utf8(&self.source[line_start..offset]) {
-            Ok(s) => s.encode_utf16().count() as u64,
-            Err(_) => (offset - line_start) as u64,
+        let column = if self.line_is_ascii[line_idx] {
+            (offset - line_start) as u64
+        } else {
+            match std::str::from_utf8(&self.source[line_start..offset]) {
+                Ok(s) => s.encode_utf16().count() as u64,
+                Err(_) => (offset - line_start) as u64,
+            }
         };
         ((line_idx + 1) as u64, column)
     }

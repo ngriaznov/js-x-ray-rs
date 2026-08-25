@@ -241,18 +241,44 @@ impl AstAnalyser {
             initialize(&mut source);
         }
 
+        // Upstream evaluates isOneLineExpressionExport on the body array
+        // AFTER the pipelines ran over it (sharing element references);
+        // this port checked a pristine pre-pipeline clone, which is the same
+        // observation — so check before handing the body to the pipelines
+        // and skip the full-AST clone.
+        let oneline_require = is_one_line_expression_export(&body);
+
         // We walk each AST node; this is purely synchronous.
-        let reduced_body = self.build_pipelines().reduce(body.clone());
+        let reduced_body = self.build_pipelines().reduce(body);
         let mut reduced_root = Value::Array(reduced_body);
-        walk_ast(&mut reduced_root, &mut source, &mut probe_runner);
+        let mut eval_error: Option<ParseError> = None;
+        walk_ast(
+            &mut reduced_root,
+            &mut source,
+            &mut probe_runner,
+            &mut eval_error,
+        );
+        // Upstream: a malformed `eval("...")` body throws synchronously out
+        // of `#walkEnter`, so `finalize`/`probeRunner.finalize`/the
+        // oneline-require flag/`getResult` never run. Surface it the same
+        // way here, before any of that happens.
+        if let Some(err) = eval_error {
+            // Still hand the (partially populated) collectable registry
+            // back — upstream's registry is a shared-by-reference object
+            // that keeps whatever the aborted walk already added to it, so
+            // losing it here (it was `mem::take`n out above) would be a
+            // self-inflicted regression, not a faithful port of the throw.
+            *self.collectable_registry.borrow_mut() =
+                std::mem::take(&mut source.collectables_set_registry);
+            return Err(err);
+        }
 
         if let Some(finalize) = finalize {
             finalize(&mut source);
         }
         probe_runner.finalize(&mut source);
 
-        // Add oneline-require flag if this is a one-line require expression.
-        if is_one_line_expression_export(&body) {
+        if oneline_require {
             source.flags.insert("oneline-require".to_owned());
         }
 
@@ -350,7 +376,10 @@ pub fn prepare_source(source: &str, remove_html_comments: bool) -> String {
     let raw_no_shebang = if source.starts_with('#') {
         match source.find('\n') {
             Some(idx) => &source[idx + 1..],
-            None => "",
+            // Upstream: `source.slice(source.indexOf("\n") + 1)`. When there is
+            // no newline, `indexOf` returns -1 and `slice(0)` yields the whole
+            // (unstripped) string back — not an empty string.
+            None => source,
         }
     } else {
         source
@@ -370,9 +399,22 @@ fn remove_html_comment(str_: &str) -> String {
 }
 
 /// Upstream `AstAnalyser.#walkEnter` + `SourceFile.walk` fused together.
-fn walk_ast(root: &mut Value, source: &mut SourceFile, probe_runner: &mut ProbeRunner) {
+///
+/// Upstream parses `eval("...")` bodies inline and lets a parse failure
+/// throw straight out of `#walkEnter` (uncaught), aborting `analyse()`
+/// before `finalize`/`probeRunner.finalize`/the oneline-require check ever
+/// run. `walk_enter`'s closure can't itself return a `Result`, so a failure
+/// is recorded into `eval_error` instead; once set, further probe work is
+/// skipped (matching the "nothing after the throw executes" behavior) and
+/// the caller checks `eval_error` immediately after `walk_ast` returns.
+fn walk_ast(
+    root: &mut Value,
+    source: &mut SourceFile,
+    probe_runner: &mut ProbeRunner,
+    eval_error: &mut Option<ParseError>,
+) {
     walk_enter(root, |ctx, node| {
-        if node.is_array() {
+        if node.is_array() || eval_error.is_some() {
             return;
         }
 
@@ -385,16 +427,16 @@ fn walk_ast(root: &mut Value, source: &mut SourceFile, probe_runner: &mut ProbeR
                 dispatch_tracer_events(source, probe_runner);
             }
 
-            probe_and_recurse(&split.virtual_declaration, source, probe_runner, ctx);
+            probe_and_recurse(&split.virtual_declaration, source, probe_runner, ctx, eval_error);
             if let Some(rebuild) = &split.rebuild_expression {
-                probe_and_recurse(rebuild, source, probe_runner, ctx);
+                probe_and_recurse(rebuild, source, probe_runner, ctx, eval_error);
             }
         }
 
         source.walk_bookkeeping(node);
         dispatch_tracer_events(source, probe_runner);
 
-        probe_and_recurse(node, source, probe_runner, ctx);
+        probe_and_recurse(node, source, probe_runner, ctx, eval_error);
     });
 }
 
@@ -412,6 +454,7 @@ fn probe_and_recurse(
     source: &mut SourceFile,
     probe_runner: &mut ProbeRunner,
     ctx: &mut crate::walker::WalkerContext,
+    eval_error: &mut Option<ParseError>,
 ) {
     let action = probe_runner.walk(probe_node, source);
     if action == WalkAction::Skip {
@@ -422,10 +465,16 @@ fn probe_and_recurse(
         && let Some(first_arg) = probe_node.pointer("/arguments/0")
         && is_string_literal(first_arg)
         && let Some(eval_source) = first_arg.get("value").and_then(Value::as_str)
-        && let Ok(eval_body) = JsSourceParser.parse(eval_source)
     {
-        let mut eval_root = Value::Array(eval_body);
-        walk_ast(&mut eval_root, source, probe_runner);
+        match JsSourceParser.parse(eval_source) {
+            Ok(eval_body) => {
+                let mut eval_root = Value::Array(eval_body);
+                walk_ast(&mut eval_root, source, probe_runner, eval_error);
+            }
+            // Upstream: this parse call is unguarded, so a malformed
+            // `eval(...)` body throws out of `analyse()` entirely.
+            Err(err) => *eval_error = Some(err),
+        }
     }
 }
 

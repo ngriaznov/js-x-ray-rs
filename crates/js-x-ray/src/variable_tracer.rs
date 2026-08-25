@@ -867,13 +867,22 @@ impl VariableTracer {
 
 /// Node.js `Buffer.from(input, "base64").toString()` emulation: a lenient
 /// base64 decoder (accepts both the standard and url-safe alphabets, skips
-/// any other character including padding) followed by lossy UTF-8 decoding.
+/// any other invalid character) followed by lossy UTF-8 decoding.
+///
+/// Node's decoder treats `=` not as a skippable character but as a hard
+/// terminator: decoding stops the instant a `=` is seen, discarding
+/// anything after it (even further valid base64 data), rather than
+/// resuming past it. E.g. `Buffer.from("QQ==QQ==", "base64")` decodes to
+/// just `"A"`, not the four-`Q` stream you'd get by merely skipping `=`.
 fn base64_decode_to_string(input: &str) -> String {
     let mut bytes: Vec<u8> = Vec::with_capacity(input.len() / 4 * 3);
     let mut buffer: u32 = 0;
     let mut bits: u32 = 0;
 
     for ch in input.bytes() {
+        if ch == b'=' {
+            break;
+        }
         let sextet = match ch {
             b'A'..=b'Z' => (ch - b'A') as u32,
             b'a'..=b'z' => (ch - b'a' + 26) as u32,

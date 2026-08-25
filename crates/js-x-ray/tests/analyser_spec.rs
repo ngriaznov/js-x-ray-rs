@@ -1105,6 +1105,24 @@ fn generate_warning_for_a_weak_crypto_kind_uses_a_simple_location_and_experiment
 }
 
 #[test]
+fn analyse_surfaces_a_parse_error_from_inside_an_eval_body() {
+    // Upstream `#walkEnter` parses `eval("...")` bodies with an unguarded
+    // `AstAnalyser.DefaultParser.parse(...)` call: a malformed eval body
+    // throws straight out of `analyse()` (before finalize/oneline-require/
+    // getResult ever run), rather than being silently skipped.
+    let analyser = AstAnalyser::default();
+    let result = analyser.analyse(
+        r#"eval("this ) is not : valid js");"#,
+        RuntimeOptions::default(),
+    );
+
+    assert!(
+        result.is_err(),
+        "expected a ParseError from the malformed eval body, got {result:?}"
+    );
+}
+
+#[test]
 fn generate_warning_severity_option_overrides_the_default_severity() {
     let warning_a = generate_warning(
         "parsing-error",
