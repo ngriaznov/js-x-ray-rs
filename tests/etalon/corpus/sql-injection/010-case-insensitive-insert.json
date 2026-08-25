@@ -1,0 +1,4 @@
+{
+  "name": "should be case insensitive (insert)",
+  "code": "\n    await client.query(`INsERT InTO uSers VaLUeS('aDmin', ${password})`);\n  "
+}

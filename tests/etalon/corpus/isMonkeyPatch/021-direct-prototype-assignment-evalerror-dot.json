@@ -1,0 +1,4 @@
+{
+  "name": "should detect monkey patching via direct prototype assignment (EvalError, dot access)",
+  "code": "EvalError.prototype.any = function() {};"
+}

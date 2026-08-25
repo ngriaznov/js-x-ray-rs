@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should report a warning in case of *Sync(...params)` usage [readFileSync.js]",
+  "code": "const { readFileSync } = require(\"fs\");\n\nreadFileSync(\"./foo.txt\");\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "name": "should detect monkey patching via direct prototype assignment (Uint8ClampedArray, computed access)",
+  "code": "Uint8ClampedArray[\"prototype\"].any = function() {};"
+}

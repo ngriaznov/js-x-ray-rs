@@ -1,0 +1,4 @@
+{
+  "name": "should detect monkey patching via direct prototype assignment (BigInt, computed access)",
+  "code": "BigInt[\"prototype\"].any = function() {};"
+}

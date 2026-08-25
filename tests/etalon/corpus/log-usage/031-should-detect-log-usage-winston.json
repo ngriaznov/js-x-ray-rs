@@ -1,0 +1,7 @@
+{
+  "name": "(log-usage probe > winston > winston logger): should detect log usage [winston]",
+  "code": "const winston = require(\"winston\");\n                    const logger = winston\n\n                    logger.info(\"hello\");\n                    logger.warn(\"hello\");\n                    logger.error(\"hello\");\n                    logger.http(\"hello\");\n                    logger.debug(\"hello\");\n                    logger.verbose(\"hello\");\n                    logger.silly(\"hello\");\n                    logger.log({level: \"info\", message: \"hello\"});\n                    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

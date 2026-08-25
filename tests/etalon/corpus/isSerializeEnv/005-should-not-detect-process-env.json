@@ -1,0 +1,4 @@
+{
+  "name": "(isSerializeEnv probe): should not detect process.env",
+  "code": "\n    const env = {};\n    const env2 = process.env;\n    JSON.stringify(env);\n  "
+}

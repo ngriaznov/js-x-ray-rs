@@ -1,0 +1,4 @@
+{
+  "name": "should detect monkey patching via direct prototype assignment (BigInt64Array, dot access)",
+  "code": "BigInt64Array.prototype.any = function() {};"
+}

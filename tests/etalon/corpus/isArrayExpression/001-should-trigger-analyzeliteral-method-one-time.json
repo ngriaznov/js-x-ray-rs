@@ -1,0 +1,4 @@
+{
+  "name": "(isArrayExpression probe): should trigger analyzeLiteral method one time",
+  "code": "['foo']"
+}

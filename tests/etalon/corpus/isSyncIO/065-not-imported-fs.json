@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should NOT report a warning when relevant module is not imported [1]",
+  "code": "\n    const fs = {\n      readFileSync() {}\n    }\n    fs.readFileSync('foo.txt');\n  ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "name": "should detect monkey patching via direct prototype assignment (Map, dot access)",
+  "code": "Map.prototype.any = function() {};"
+}

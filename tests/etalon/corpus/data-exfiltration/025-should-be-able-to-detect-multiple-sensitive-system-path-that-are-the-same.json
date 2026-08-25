@@ -1,0 +1,7 @@
+{
+  "name": "should be able to detect multiple sensitive system path that are the same",
+  "code": "\n      const path1 = \"~/.ssh\";\n      const path2 = \"~/.ssh\";\n    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

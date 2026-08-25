@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should report a warning in case of `[expression]*Sync(...params)` usage [pbkdf2Sync.js]",
+  "code": "import crypto from 'crypto';\n\nconst pbkdf2Sync = crypto.pbkdf2Sync;\n\npbkdf2Sync('mypassword', 'mysalt', 100000, 64, 'sha512');\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

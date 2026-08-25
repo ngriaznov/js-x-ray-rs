@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should report a warning in case of *Sync(...params)` usage [openSync.js]",
+  "code": "const { openSync } = require(\"fs\");\n\nopenSync('test.txt', 'r');\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

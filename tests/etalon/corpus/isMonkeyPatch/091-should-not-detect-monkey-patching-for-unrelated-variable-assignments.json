@@ -1,0 +1,4 @@
+{
+  "name": "should NOT detect monkey patching for unrelated variable assignments",
+  "code": "const x = 42;\nconst y = \"hello\";"
+}

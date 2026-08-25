@@ -1,0 +1,7 @@
+{
+  "name": "should generate a warning when a sensitive system path is encountered (~/.aws)",
+  "code": "\n      const path = \"~/.aws\";\n    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

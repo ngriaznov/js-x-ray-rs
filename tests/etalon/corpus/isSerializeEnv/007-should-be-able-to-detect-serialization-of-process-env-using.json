@@ -1,0 +1,4 @@
+{
+  "name": "(isSerializeEnv probe): should be able to detect serialization of process.env using a SpreadElement",
+  "code": "\n    const env = {...process.env};\n    JSON.stringify(env);\n  "
+}

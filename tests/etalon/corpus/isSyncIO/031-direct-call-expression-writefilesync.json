@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should report a warning in case of *Sync(...params)` usage [writeFileSync.js]",
+  "code": "const { writeFileSync } = require(\"fs\");\n\nwriteFileSync(\"./foo.txt\", \"foo\");\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

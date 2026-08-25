@@ -1,0 +1,7 @@
+{
+  "name": "(log-usage probe): should be able to detect multiple console.log in one warning",
+  "code": "console.log(token);\n                  console.log(secret)\n                  console.log(password);\n                  console.debug(password);\n  ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

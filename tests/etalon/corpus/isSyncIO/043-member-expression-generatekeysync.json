@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should report a warning in case of `[expression]*Sync(...params)` usage [generateKeySync.js]",
+  "code": "import crypto from \"crypto\";\n\nconst generateKeySync = crypto.generateKeySync;\n\n\ngenerateKeySync('hmac', { length: 512 });\n\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

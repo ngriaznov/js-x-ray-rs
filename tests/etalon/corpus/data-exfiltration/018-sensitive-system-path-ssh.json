@@ -1,0 +1,7 @@
+{
+  "name": "should generate a warning when a sensitive system path is encountered (~/.ssh)",
+  "code": "\n      const path = \"~/.ssh\";\n    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

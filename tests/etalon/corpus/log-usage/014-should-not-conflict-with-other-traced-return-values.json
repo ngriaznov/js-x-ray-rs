@@ -1,0 +1,7 @@
+{
+  "name": "(log-usage probe > pino): should not conflict with other traced return values",
+  "code": "import vm from \"node:vm\";\n                    import pino from \"pino\";\n                    const logger = pino();\n                    (new vm.Script(code)).info(\"hello\");\n                    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

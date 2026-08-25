@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should report a warning in case of *Sync(...params)` usage [symlinkSync.js]",
+  "code": "const { symlinkSync } = require(\"fs\");\n\nsymlinkSync('target.txt', 'symlink.txt');\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

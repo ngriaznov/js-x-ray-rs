@@ -1,0 +1,8 @@
+{
+  "name": "should generate only one warning when multiple detection occurs",
+  "code": "\n     import dns from \"node:dns\";\n     import os from \"node:os\";\n    ",
+  "analyserOptions": {
+    "optionalWarnings": true,
+    "sensitivity": "aggressive"
+  }
+}

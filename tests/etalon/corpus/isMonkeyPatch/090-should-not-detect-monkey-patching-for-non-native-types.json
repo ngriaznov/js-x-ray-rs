@@ -1,0 +1,4 @@
+{
+  "name": "should NOT detect monkey patching for non-native types",
+  "code": "const MyClass = class {};\nMyClass.prototype.foo = function() {};"
+}

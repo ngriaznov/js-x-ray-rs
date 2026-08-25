@@ -1,0 +1,4 @@
+{
+  "name": "should detect monkey patching via chained variable re-assignment",
+  "code": "const A = Array;\nconst B = A;\nB.prototype.includes = function() {};"
+}

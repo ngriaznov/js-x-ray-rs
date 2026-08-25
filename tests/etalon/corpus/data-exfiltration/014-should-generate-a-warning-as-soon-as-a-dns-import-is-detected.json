@@ -1,0 +1,8 @@
+{
+  "name": "should generate a warning as soon as a dns import is detected",
+  "code": "\n     import dns from \"node:dns\";\n    ",
+  "analyserOptions": {
+    "optionalWarnings": true,
+    "sensitivity": "aggressive"
+  }
+}

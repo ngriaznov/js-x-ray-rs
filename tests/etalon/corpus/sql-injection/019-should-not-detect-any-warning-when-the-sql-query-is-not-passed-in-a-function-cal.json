@@ -1,0 +1,4 @@
+{
+  "name": "should not detect any warning when the sql query is not passed in a function call",
+  "code": "\n    const query = `SELECT * FROM users WHERE email = ${ email } `;\n  "
+}

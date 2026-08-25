@@ -1,0 +1,4 @@
+{
+  "name": "should detect monkey patching via direct prototype assignment (ReferenceError, dot access)",
+  "code": "ReferenceError.prototype.any = function() {};"
+}

@@ -1,0 +1,7 @@
+{
+  "name": "should only generate one warning when multiple detection of data exfiltration occurs",
+  "code": "\n     import os from \"os\";\n\n     JSON.stringify(os.userInfo());\n     JSON.stringify(os.userInfo());\n     JSON.stringify(os.networkInterfaces());\n    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should report a warning in case of *Sync(...params)` usage [execSync.js]",
+  "code": "const { execSync } = require(\"child_process\");\n\nexecSync('ls-la');\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

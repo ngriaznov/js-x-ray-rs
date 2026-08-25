@@ -1,0 +1,7 @@
+{
+  "name": "(log-usage probe > pino): should follow the assignment of a pino logger function",
+  "code": "import pino from \"pino\";\n                    const pinoBis = pino;\n                    const logger = pinoBis();\n                    const info = logger.info;\n                    const infoBis = info;\n                    infoBis(\"hello\");\n                    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

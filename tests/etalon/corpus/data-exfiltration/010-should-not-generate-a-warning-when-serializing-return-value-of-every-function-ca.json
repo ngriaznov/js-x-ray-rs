@@ -1,0 +1,7 @@
+{
+  "name": "should not generate a warning when serializing return value of every function call",
+  "code": "\n     function foo (){\n        return \"foo\";\n     }\n     JSON.stringify(foo());\n    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

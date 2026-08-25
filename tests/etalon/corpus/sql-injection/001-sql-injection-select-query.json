@@ -1,0 +1,4 @@
+{
+  "name": "should detect sql injection on select queries (select)",
+  "code": "\n    await client.query(`SELECT * FROM users WHERE email = ${email}`);\n  "
+}

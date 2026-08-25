@@ -1,0 +1,4 @@
+{
+  "name": "should detect monkey patching via resolved evaluation (eval)",
+  "code": "eval(\"Array.prototype.map = ()=> {}\");"
+}

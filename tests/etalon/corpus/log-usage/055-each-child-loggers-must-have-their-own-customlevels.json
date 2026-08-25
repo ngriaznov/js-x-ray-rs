@@ -1,0 +1,7 @@
+{
+  "name": "(log-usage probe > winston > winston logger > logger.child > custom loggers): each child loggers must have their own customLevels",
+  "code": "import winston from \"winston\";\n                    const logger1 = winston.createLogger({\n                    levels:{\n                      foo: 35,\n                      }\n                    });\n                    const logger2 = winston.createLogger({\n                    levels:{\n                      bar: 36,\n                      }\n                    });\n                    const childLogger1 = logger1.child({component: \"database\"});\n                    const childLogger2 = logger2.child({component: \"database\"});\n                    childLogger1.foo(\"hello\");\n                    childLogger1.bar(\"hello\");\n                    childLogger2.bar(\"hello\");\n                    childLogger2.foo(\"hello\");\n                    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

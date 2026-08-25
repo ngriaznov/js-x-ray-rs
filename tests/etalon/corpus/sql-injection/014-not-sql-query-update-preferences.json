@@ -1,0 +1,4 @@
+{
+  "name": "should not detect an sql injection when the template literal is not an sql query (update-preferences)",
+  "code": "\n    await client.query(`Update your preferences ${here}`);\n    "
+}

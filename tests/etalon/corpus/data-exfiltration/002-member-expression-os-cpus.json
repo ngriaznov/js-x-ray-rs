@@ -1,0 +1,7 @@
+{
+  "name": "should report a warning in case of JSON.stringify(sensitiveData) for member expression (os.cpus.js)",
+  "file": "fixtures/dataExfiltration/memberExpression/os.cpus.js",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

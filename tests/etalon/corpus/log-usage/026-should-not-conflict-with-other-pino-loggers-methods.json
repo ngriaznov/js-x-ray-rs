@@ -1,0 +1,7 @@
+{
+  "name": "(log-usage probe > pino > custom loggers): should not conflict with other pino loggers methods",
+  "code": "import pino from \"pino\";\n                    const logger1 = pino({\n                    customLevels:{\n                      foo: 35,\n                      bar: 36\n                      },\n                    useOnlyCustomLevels: false\n                    });\n\n                    const logger2 = pino();\n                    logger2.foo(\"hello\");\n                    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

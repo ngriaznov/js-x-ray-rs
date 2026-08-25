@@ -1,0 +1,4 @@
+{
+  "name": "should detect monkey patching via Object.defineProperty",
+  "code": "Object.defineProperty(Array.prototype, \"map\", {\n      configurable: true,\n      enumerable: false,\n      writable: true,\n      value: function mapper(fn, thisArg) {}\n    });"
+}

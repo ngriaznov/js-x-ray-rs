@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should report a warning in case of *Sync(...params)` usage [generateKeyPairSync.js]",
+  "code": "const { generateKeyPairSync } = require(\"crypto\");\n\ngenerateKeyPairSync(\"dsa\");\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

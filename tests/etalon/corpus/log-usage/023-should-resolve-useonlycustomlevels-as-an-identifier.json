@@ -1,0 +1,7 @@
+{
+  "name": "(log-usage probe > pino > custom loggers): should resolve useOnlyCustomLevels as an identifier",
+  "code": "import pino from \"pino\";\n\n                    const useOnlyCustomLevels = true;\n                    const logger = pino({\n                    customLevels:{\n                      foo: 35,\n                      bar: 36\n                      },\n                    useOnlyCustomLevels,\n                    });\n                    logger.info(\"hello\");\n                    logger.warn(\"hello\");\n                    logger.error(\"hello\");\n                    logger.fatal(\"hello\");\n                    logger.debug(\"hello\");\n                    logger.trace(\"hello\");\n                    logger.foo(\"hello\");\n                    logger.bar(\"hello\");\n                    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

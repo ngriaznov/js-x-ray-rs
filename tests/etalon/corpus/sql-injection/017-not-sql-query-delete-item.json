@@ -1,0 +1,4 @@
+{
+  "name": "should not detect an sql injection when the template literal is not an sql query (delete-item)",
+  "code": "\n    await client.query(`I want to delete this item ${item}`);\n    "
+}

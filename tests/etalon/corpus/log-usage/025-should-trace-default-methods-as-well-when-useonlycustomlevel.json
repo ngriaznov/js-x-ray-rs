@@ -1,0 +1,7 @@
+{
+  "name": "(log-usage probe > pino > custom loggers): should trace default methods as well when useOnlyCustomLevels is false",
+  "code": "import pino from \"pino\";\n                    const logger = pino({\n                    customLevels:{\n                      foo: 35,\n                      bar: 36\n                      },\n                    useOnlyCustomLevels: false,\n                    });\n                    logger.info(\"hello\");\n                    logger.warn(\"hello\");\n                    logger.error(\"hello\");\n                    logger.fatal(\"hello\");\n                    logger.debug(\"hello\");\n                    logger.trace(\"hello\");\n                    logger.foo(\"hello\");\n                    logger.bar(\"hello\");\n                    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

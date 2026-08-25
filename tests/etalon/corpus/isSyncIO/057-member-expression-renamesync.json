@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should report a warning in case of `[expression]*Sync(...params)` usage [renameSync.js]",
+  "code": "import fs from 'fs';\n\nconst renameSync = fs.renameSync;\n\nrenameSync('oldfile.txt', 'newfile.txt');\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

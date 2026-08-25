@@ -1,0 +1,7 @@
+{
+  "name": "should generate a warning when a sensitive system path is encountered (~/.bashrc)",
+  "code": "\n      const path = \"~/.bashrc\";\n    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

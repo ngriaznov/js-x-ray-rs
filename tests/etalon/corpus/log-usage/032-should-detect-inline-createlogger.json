@@ -1,0 +1,7 @@
+{
+  "name": "(log-usage probe > winston > winston logger): should detect inline createLogger()*",
+  "code": "import { createLogger } from \"winston\";\n                      createLogger().info(\"hello\");\n          ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

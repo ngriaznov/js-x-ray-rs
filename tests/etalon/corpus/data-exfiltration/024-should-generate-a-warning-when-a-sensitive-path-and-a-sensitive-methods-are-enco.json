@@ -1,0 +1,7 @@
+{
+  "name": "should generate a warning when a sensitive path and a sensitive methods are encountered",
+  "code": "\n      const path = \"~/.ssh\";\n      const { getServers } = require(\"dns\");\n\n      const stringify = JSON.stringify;\n\n      stringify(getServers());\n    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

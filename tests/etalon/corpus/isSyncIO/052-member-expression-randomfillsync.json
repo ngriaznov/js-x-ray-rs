@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should report a warning in case of `[expression]*Sync(...params)` usage [randomFillSync.js]",
+  "code": "import { Buffer } from \"node:buffer\";\nimport crypto from \"crypto\";\n\nconst randomFillSync = crypto.randomFillSync;\n\nconst buf = Buffer.alloc(10);\nrandomFillSync(buf).toString('hex');\n\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "name": "should not detect sql injection when the variable is not an sql query",
+  "code": "const query = `hello ${name}`;\n                  db.query(query);"
+}

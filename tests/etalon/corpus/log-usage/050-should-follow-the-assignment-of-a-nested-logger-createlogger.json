@@ -1,0 +1,7 @@
+{
+  "name": "(log-usage probe > winston > winston logger > logger.child): should follow the assignment of a nested logger [createLogger]",
+  "code": "const winston = require(\"winston\");\n                      const logger = winston.createLogger();\n                      const childLogger = logger.child({module: \"auth\"});\n                      const childLoggerBis = childLogger;\n                      const childLogger2 = childLoggerBis.child({ module: \"something\"});\n                      const childLogger3 = childLogger2.child({ module: \"something2\"});\n                      const info = childLogger3.info;\n                      info(\"hello\");\n                      ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

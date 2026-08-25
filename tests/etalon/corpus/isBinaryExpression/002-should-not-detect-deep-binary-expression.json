@@ -1,0 +1,4 @@
+{
+  "name": "(isBinaryExpression probe): should not detect deep binary expression",
+  "code": "10 + 5 - (10)"
+}

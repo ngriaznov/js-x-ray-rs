@@ -1,0 +1,4 @@
+{
+  "name": "should detect monkey patching via direct prototype assignment (DataView, computed access)",
+  "code": "DataView[\"prototype\"].any = function() {};"
+}

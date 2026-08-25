@@ -1,0 +1,4 @@
+{
+  "name": "should detect sql injection on select queries (insert)",
+  "code": "\n    await client.query(`INSERT INTO users VALUES('admin', ${password})`);\n  "
+}

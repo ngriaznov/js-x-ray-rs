@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should report a warning in case of `[expression]*Sync(...params)` usage [gzipSync.js]",
+  "code": "import zlib from \"zlib\";\n\nconst gzipSync = zlib.gzipSync;\n\n\ngzipSync(Buffer.from(\"text\",\"utf-8\"));\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

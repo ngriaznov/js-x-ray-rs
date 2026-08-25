@@ -1,0 +1,8 @@
+{
+  "name": "should not generate a warning when the import is not from the expected modules module",
+  "code": "\n     import * as c from \"crypto\";\n    ",
+  "analyserOptions": {
+    "optionalWarnings": true,
+    "sensitivity": "aggressive"
+  }
+}

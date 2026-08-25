@@ -1,0 +1,7 @@
+{
+  "name": "(log-usage probe): should detect re-assigned console.log",
+  "code": "const log = console.log;\n                log(token);",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "name": "should detect monkey patching via direct prototype assignment (RegExp, dot access)",
+  "code": "RegExp.prototype.any = function() {};"
+}

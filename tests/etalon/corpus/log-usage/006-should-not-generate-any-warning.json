@@ -1,0 +1,4 @@
+{
+  "name": "(log-usage probe): should not generate any warning",
+  "code": "console.log(token);"
+}

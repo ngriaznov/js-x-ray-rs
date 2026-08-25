@@ -1,0 +1,7 @@
+{
+  "name": "(log-usage probe > pino > logger.child): should emit a warning when a one level logger child log something",
+  "code": "import pino from \"pino\";\n                    const logger = pino();\n                    const childLogger = logger.child({module: \"auth\"});\n                    childLogger.info(\"hello\");\n                    childLogger.warn(\"hello\");\n                    childLogger.error(\"hello\");\n                    childLogger.fatal(\"hello\");\n                    childLogger.debug(\"hello\");\n                    childLogger.trace(\"hello\");\n                    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

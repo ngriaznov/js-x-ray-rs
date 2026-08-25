@@ -1,0 +1,7 @@
+{
+  "name": "(log-usage probe > winston > winston logger): should follow the assignment of winston createLogger [winston]",
+  "code": "const winston = require(\"winston\");\n                    const logger = winston\n                    logger.info(\"hello\");\n                    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "name": "should detect monkey patching via re-assigned variable with Object.defineProperty",
+  "code": "const Obj = Object;\nObj.defineProperty(Array.prototype, \"map\", {\n      value: function() {}\n    });"
+}

@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should report a warning in case of *Sync(...params)` usage [fstatSync.js]",
+  "code": "const { fstatSync } = require(\"fs\");\n\nfstatSync(1);\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

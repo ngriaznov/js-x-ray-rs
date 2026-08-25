@@ -1,0 +1,4 @@
+{
+  "name": "should be case insensitive (update)",
+  "code": "\n    await client.query(`UPDAtE users sET eMail = ${email} WHERE id = 1`);\n  "
+}

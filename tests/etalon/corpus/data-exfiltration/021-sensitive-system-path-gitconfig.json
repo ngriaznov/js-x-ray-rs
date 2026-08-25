@@ -1,0 +1,7 @@
+{
+  "name": "should generate a warning when a sensitive system path is encountered (~/.gitconfig)",
+  "code": "\n      const path = \"~/.gitconfig\";\n    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

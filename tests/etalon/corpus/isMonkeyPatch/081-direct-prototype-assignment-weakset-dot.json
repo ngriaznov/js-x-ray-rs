@@ -1,0 +1,4 @@
+{
+  "name": "should detect monkey patching via direct prototype assignment (WeakSet, dot access)",
+  "code": "WeakSet.prototype.any = function() {};"
+}

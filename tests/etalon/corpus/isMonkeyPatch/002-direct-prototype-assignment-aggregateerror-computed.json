@@ -1,0 +1,4 @@
+{
+  "name": "should detect monkey patching via direct prototype assignment (AggregateError, computed access)",
+  "code": "AggregateError[\"prototype\"].any = function() {};"
+}

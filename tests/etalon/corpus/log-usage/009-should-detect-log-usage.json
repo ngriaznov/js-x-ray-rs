@@ -1,0 +1,7 @@
+{
+  "name": "(log-usage probe > pino): should detect log usage",
+  "code": "import pino from \"pino\";\n                    const logger = pino();\n                    logger.info(\"hello\");\n                    logger.warn(\"hello\");\n                    logger.error(\"hello\");\n                    logger.fatal(\"hello\");\n                    logger.debug(\"hello\");\n                    logger.trace(\"hello\");\n                    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

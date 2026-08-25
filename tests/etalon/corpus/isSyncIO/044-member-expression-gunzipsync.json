@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should report a warning in case of `[expression]*Sync(...params)` usage [gunzipSync.js]",
+  "code": "import zlib from \"zlib\";\n\nconst gunzipSync = zlib.gunzipSync;\n\ngunzipSync(Buffer.from(\"compressed\",\"utf-8\"));\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

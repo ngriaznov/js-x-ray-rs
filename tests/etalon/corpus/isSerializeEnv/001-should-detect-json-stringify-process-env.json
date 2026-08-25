@@ -1,0 +1,4 @@
+{
+  "name": "(isSerializeEnv probe): should detect JSON.stringify(process.env)",
+  "code": "JSON.stringify(process.env)"
+}

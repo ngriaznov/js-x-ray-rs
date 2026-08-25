@@ -1,0 +1,7 @@
+{
+  "name": "(isSerializeEnv probe): should NOT detect direct process.env access in explicit conservative mode",
+  "code": "const env = process.env",
+  "analyserOptions": {
+    "sensitivity": "conservative"
+  }
+}

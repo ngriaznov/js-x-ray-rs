@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should report a warning in case of *Sync(...params)` usage [readdirSync.js]",
+  "code": "const { readdirSync } = require(\"fs\");\n\nreaddirSync(__dirname);\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

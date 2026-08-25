@@ -1,0 +1,7 @@
+{
+  "name": "should not generate a warning when os is not imported",
+  "code": "\n     const os = {\n        userInfo(){\n            return {};\n        },\n        cpus(){\n            return [];\n        },\n        networkInterfaces(){\n            return [];\n        }\n\n     }\n     JSON.stringify(os.userInfo());\n     JSON.stringify(os.networkInterfaces());\n     JSON.stringify(os.cpus());\n    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

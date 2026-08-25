@@ -1,0 +1,4 @@
+{
+  "name": "should detect monkey patching via variable re-assignment (VariableTracer)",
+  "code": "const Arr = Array;\nArr.prototype.map = function() {};"
+}

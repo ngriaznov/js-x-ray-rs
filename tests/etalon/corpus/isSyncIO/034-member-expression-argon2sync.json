@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should report a warning in case of `[expression]*Sync(...params)` usage [argon2Sync.js]",
+  "code": "import crypto from \"crypto\";\n\nconst parameters = {\n  message: 'password',\n  nonce: randomBytes(16),\n  parallelism: 4,\n  tagLength: 64,\n  memory: 65536,\n  passes: 3,\n};\n\nconst argon2Sync = crypto.argon2Sync;\n\nargon2Sync('argon2id', parameters);\n\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

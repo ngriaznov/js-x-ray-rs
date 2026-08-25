@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should report a warning in case of `[expression]*Sync(...params)` usage [spawnSync.js]",
+  "code": "import child_process from \"child_process\";\n\nconst spawnSync = child_process.spawnSync;\n\nspawnSync(\"ls\",[\"-la\", \"/home\"], {encoding: \"utf-8\"});\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

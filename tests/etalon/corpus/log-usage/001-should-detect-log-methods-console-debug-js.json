@@ -1,0 +1,7 @@
+{
+  "name": "(log-usage probe): should detect log methods [console.debug.js]",
+  "code": "console.debug(token);",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

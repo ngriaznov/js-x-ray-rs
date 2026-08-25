@@ -1,0 +1,4 @@
+{
+  "name": "should detect monkey patching via direct prototype assignment (WeakRef, computed access)",
+  "code": "WeakRef[\"prototype\"].any = function() {};"
+}

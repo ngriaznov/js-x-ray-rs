@@ -1,0 +1,4 @@
+{
+  "name": "should NOT report a warning for Math.random() if NOT enabled",
+  "code": "\n      const token = Math.random();\n    "
+}

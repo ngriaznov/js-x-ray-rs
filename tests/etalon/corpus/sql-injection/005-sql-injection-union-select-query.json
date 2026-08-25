@@ -1,0 +1,4 @@
+{
+  "name": "should detect sql injection on select queries (union-select)",
+  "code": "\n    await client.query(`1' UNION SELECT * FROM users where email = ${email}`);\n  "
+}

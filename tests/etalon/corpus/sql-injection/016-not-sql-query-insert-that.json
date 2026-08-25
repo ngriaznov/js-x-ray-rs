@@ -1,0 +1,4 @@
+{
+  "name": "should not detect an sql injection when the template literal is not an sql query (insert-that)",
+  "code": "\n    await client.query(`insert that ${here}`);\n    "
+}

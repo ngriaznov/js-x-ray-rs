@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should report a warning in case of *Sync(...params)` usage [execFileSync.js]",
+  "code": "const { execFileSync } = require(\"child_process\");\n\nexecFileSync('node', ['--version'], { encoding: 'utf8' });\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

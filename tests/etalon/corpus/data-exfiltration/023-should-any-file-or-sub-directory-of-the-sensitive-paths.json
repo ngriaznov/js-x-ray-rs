@@ -1,0 +1,7 @@
+{
+  "name": "should any file or sub directory of the sensitive paths",
+  "code": "\n      const path = \"~/.ssh/id_rsa\";\n    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should report a warning in case of *Sync(...params)` usage [deflateSync.js]",
+  "code": "const { deflateSync } = require(\"zlib\");\n\ndeflateSync(Buffer.from(\"text\",\"utf-8\"));\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

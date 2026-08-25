@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should report a warning in case of `[expression]*Sync(...params)` usage [checkPrimeSync.js]",
+  "code": "import crypto from \"crypto\";\n\nconst checkPrimeSync = crypto.checkPrimeSync;\n\ncheckPrimeSync(17n);\n\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

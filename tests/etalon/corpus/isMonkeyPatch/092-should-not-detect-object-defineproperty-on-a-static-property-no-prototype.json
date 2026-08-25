@@ -1,0 +1,4 @@
+{
+  "name": "should NOT detect Object.defineProperty on a static property (no prototype)",
+  "code": "Object.defineProperty(Array, 'newStaticMethod', { value: 1 });"
+}

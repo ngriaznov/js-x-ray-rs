@@ -1,0 +1,7 @@
+{
+  "name": "(log-usage probe > pino > logger.child): should trace inline pino()* calls",
+  "code": "import pino from \"pino\";\n                    const logger = pino();\n                    pino().info(\"hello\");\n                    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

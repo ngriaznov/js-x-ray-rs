@@ -1,0 +1,4 @@
+{
+  "name": "(isSerializeEnv probe): should detect process.env reassignment",
+  "code": "\n    const env = process.env;\n    JSON.stringify(env);\n  "
+}

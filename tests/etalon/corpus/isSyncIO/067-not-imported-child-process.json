@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should NOT report a warning when relevant module is not imported [3]",
+  "code": "\n    const child_process = {\n      execSync() {}\n    }\n    child_process.execSync('ls -la');\n  ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

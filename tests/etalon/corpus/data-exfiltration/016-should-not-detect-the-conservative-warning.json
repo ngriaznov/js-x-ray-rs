@@ -1,0 +1,8 @@
+{
+  "name": "should not detect the conservative warning",
+  "code": "\n     import dns from \"node:dns\";\n\n\n     JSON.stringify(dns.getServers());\n    ",
+  "analyserOptions": {
+    "optionalWarnings": true,
+    "sensitivity": "aggressive"
+  }
+}

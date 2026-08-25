@@ -1,0 +1,4 @@
+{
+  "name": "(isSyncIO probe): should not have any warning when no optional warnings is specified",
+  "code": "const { readFileSync } = require(\"fs\");\n\nreadFileSync(\"./foo.txt\");\n"
+}

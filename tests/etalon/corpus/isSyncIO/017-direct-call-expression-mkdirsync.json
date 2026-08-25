@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should report a warning in case of *Sync(...params)` usage [mkdirSync.js]",
+  "code": "const { mkdirSync } = require(\"fs\");\n\nmkdirSync('./test-dir', { recursive: true });\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

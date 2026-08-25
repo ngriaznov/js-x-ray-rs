@@ -1,0 +1,4 @@
+{
+  "name": "(isArrayExpression probe): should trigger analyzeLiteral one time (ignoring non-literal Node)",
+  "code": "[5, () => void 0]"
+}

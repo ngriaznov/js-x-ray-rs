@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should report a warning in case of `[expression]*Sync(...params)` usage [inflateSync.js]",
+  "code": "import zlib from \"zlib\";\n\nconst inflateSync = zlib.inflateSync;\n\ninflateSync(Buffer.from(\"compressed\",\"utf-8\"));\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

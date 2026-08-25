@@ -1,0 +1,7 @@
+{
+  "name": "(log-usage probe > winston > winston logger > logger.child): should emit a warning when a one level logger child log something [createLogger]",
+  "code": "const winston = require(\"winston\");\n                      const logger = winston.createLogger({\n                        format: winston.format.json(),\n                        transports: [new winston.transports.Console()]\n                        });\n                      const childLogger = logger.child({module: \"auth\"});\n                      childLogger.info(\"hello\");\n                      childLogger.warn(\"hello\");\n                      childLogger.error(\"hello\");\n                      childLogger.http(\"hello\");\n                      childLogger.debug(\"hello\");\n                      childLogger.verbose(\"hello\");\n                      childLogger.silly(\"hello\");\n                      childLogger.log({level: \"info\", message: \"hello\"});\n                      ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

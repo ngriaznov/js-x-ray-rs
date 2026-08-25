@@ -1,0 +1,4 @@
+{
+  "name": "should detect monkey patching via direct prototype assignment (Array, computed access)",
+  "code": "Array[\"prototype\"].any = function() {};"
+}

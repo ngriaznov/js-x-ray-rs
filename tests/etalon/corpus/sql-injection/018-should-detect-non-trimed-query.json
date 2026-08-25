@@ -1,0 +1,4 @@
+{
+  "name": "should detect non trimed query",
+  "code": "\n    await client.query(` SELECT * FROM users WHERE email = ${email} `);\n  "
+}

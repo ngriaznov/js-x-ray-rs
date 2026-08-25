@@ -1,0 +1,4 @@
+{
+  "name": "should be case insensitive (select)",
+  "code": "\n    await client.query(`SeLEcT * FRoM users wHERe eMail = ${email}`);\n  "
+}

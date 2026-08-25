@@ -1,0 +1,4 @@
+{
+  "name": "should not detect sql injection when the query is not a TemplateLiteral in variable",
+  "code": "const query = \"SELECT * FROM users WHERE id = 1\";\n                  db.query(query);"
+}

@@ -1,0 +1,4 @@
+{
+  "name": "should detect prototype pollution via __proto__ literal",
+  "code": "\n      const key = \"__proto__\";\n      const obj = {};\n      obj[key] = true;\n    "
+}

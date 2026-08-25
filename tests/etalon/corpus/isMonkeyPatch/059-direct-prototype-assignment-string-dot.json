@@ -1,0 +1,4 @@
+{
+  "name": "should detect monkey patching via direct prototype assignment (String, dot access)",
+  "code": "String.prototype.any = function() {};"
+}

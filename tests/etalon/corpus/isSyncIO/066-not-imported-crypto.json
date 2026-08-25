@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should NOT report a warning when relevant module is not imported [2]",
+  "code": "\n    const crypto = {\n      generateKeyPairSync() {}\n    }\n    crypto.generateKeyPairSync('foo.txt');\n  ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

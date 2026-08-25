@@ -1,0 +1,4 @@
+{
+  "name": "should only detect sql injection when the string is a template literal",
+  "code": "\n    await client.query(\"SELECT * FROM users WHERE email = $1\");\n  "
+}

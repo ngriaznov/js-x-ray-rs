@@ -1,0 +1,4 @@
+{
+  "name": "(isSerializeEnv probe): should not detect direct process.env access in conservative mode (default)",
+  "code": "const env = process.env"
+}

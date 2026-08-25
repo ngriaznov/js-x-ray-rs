@@ -1,0 +1,8 @@
+{
+  "name": "should generate a warning as soon as a os import is detected",
+  "code": "\n     import os from \"node:os\";\n    ",
+  "analyserOptions": {
+    "optionalWarnings": true,
+    "sensitivity": "aggressive"
+  }
+}

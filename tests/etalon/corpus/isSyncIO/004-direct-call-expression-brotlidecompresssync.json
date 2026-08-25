@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should report a warning in case of *Sync(...params)` usage [brotliDecompressSync.js]",
+  "code": "const { brotliDecompressSync } = require(\"zlib\");\n\nbrotliDecompressSync(Buffer.from(\"compressed\",\"utf-8\"));\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

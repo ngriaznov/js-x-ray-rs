@@ -1,0 +1,4 @@
+{
+  "name": "should detect prototype pollution via __proto__ property access",
+  "code": "\n      const obj = {};\n      obj.__proto__.polluted = true;\n    "
+}

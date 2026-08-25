@@ -1,0 +1,7 @@
+{
+  "name": "should report a warning in case of JSON.stringify(sensitiveData) for direct call expression (os.cpus.js)",
+  "file": "fixtures/dataExfiltration/directCallExpression/os.cpus.js",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

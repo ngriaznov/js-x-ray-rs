@@ -1,0 +1,4 @@
+{
+  "name": "should not detect the warning if the template literal does not have any template element",
+  "code": "\n    await client.query(` SELECT * FROM users WHERE email = 'exemple@hotmail.fr' `);\n  "
+}

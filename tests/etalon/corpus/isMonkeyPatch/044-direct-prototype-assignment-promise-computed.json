@@ -1,0 +1,4 @@
+{
+  "name": "should detect monkey patching via direct prototype assignment (Promise, computed access)",
+  "code": "Promise[\"prototype\"].any = function() {};"
+}

@@ -1,0 +1,9 @@
+{
+  "name": "should report a warning for Math.random() usage when reassigned",
+  "code": "\n      const m = Math;\n      const token = m.random();\n    ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "insecure-random"
+    ]
+  }
+}

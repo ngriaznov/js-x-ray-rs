@@ -1,0 +1,4 @@
+{
+  "name": "should not detect an sql injection when the template literal is not an sql query (select-product)",
+  "code": "\n    await client.query(`Please select a product in this ${menu} menu`);\n    "
+}

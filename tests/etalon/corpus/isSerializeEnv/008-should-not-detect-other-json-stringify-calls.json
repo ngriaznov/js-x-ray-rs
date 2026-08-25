@@ -1,0 +1,4 @@
+{
+  "name": "(isSerializeEnv probe): should not detect other JSON.stringify calls",
+  "code": "JSON.stringify({ foo: 'bar' })"
+}

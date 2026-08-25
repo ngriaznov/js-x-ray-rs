@@ -1,0 +1,4 @@
+{
+  "name": "should detect monkey patching via direct prototype assignment (Float32Array, computed access)",
+  "code": "Float32Array[\"prototype\"].any = function() {};"
+}

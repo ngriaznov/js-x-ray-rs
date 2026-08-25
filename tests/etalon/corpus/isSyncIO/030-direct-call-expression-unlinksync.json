@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should report a warning in case of *Sync(...params)` usage [unlinkSync.js]",
+  "code": "const { unlinkSync } = require(\"fs\");\n\nunlinkSync('./someFile.txt');\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

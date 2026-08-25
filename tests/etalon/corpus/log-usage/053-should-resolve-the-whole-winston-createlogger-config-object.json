@@ -1,0 +1,7 @@
+{
+  "name": "(log-usage probe > winston > winston logger > logger.child > custom loggers): should resolve the whole winston.createLogger() config object when passed as an identifier",
+  "code": "const winston = require(\"winston\");\n                    const opts = {\n                      format: winston.format.json(),\n                      transports: [new winston.transports.Console()],\n                      levels: {\n                         foo: 1,\n                         bar: 2\n                        }\n                      };\n                    const logger = winston.createLogger(opts);\n\n                    logger.info(\"hello\");\n                    logger.warn(\"hello\");\n                    logger.foo(\"hello\");\n                    logger.bar(\"hello\");\n                    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

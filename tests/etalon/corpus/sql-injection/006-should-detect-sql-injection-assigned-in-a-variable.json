@@ -1,0 +1,4 @@
+{
+  "name": "should detect sql injection assigned in a variable",
+  "code": "const userId = req.query.id;\n                  const query = `SELECT * FROM users WHERE id = ${userId}`;\n                  db.query(query);"
+}

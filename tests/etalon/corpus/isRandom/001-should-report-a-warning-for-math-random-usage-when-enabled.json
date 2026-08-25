@@ -1,0 +1,9 @@
+{
+  "name": "should report a warning for Math.random() usage when enabled",
+  "code": "\n      const token = Math.random();\n    ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "insecure-random"
+    ]
+  }
+}

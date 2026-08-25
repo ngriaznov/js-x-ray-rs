@@ -1,0 +1,4 @@
+{
+  "name": "should be case insensitive (delete)",
+  "code": "\n    await client.query(`DElETE FROM users wHERE id = ${id}`);\n  "
+}

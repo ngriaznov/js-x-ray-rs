@@ -1,0 +1,7 @@
+{
+  "name": "(log-usage probe > pino > custom loggers): each child loggers must have their own customLevels",
+  "code": "import pino from \"pino\";\n                    const logger1 = pino({\n                    customLevels:{\n                      foo: 35,\n                      },\n                    useOnlyCustomLevels: true\n                    });\n                    const logger2 = pino({\n                    customLevels:{\n                      bar: 36,\n                      },\n                    useOnlyCustomLevels: true\n                    });\n                    const childLogger1 = logger1.child({component: \"database\"});\n                    const childLogger2 = logger2.child({component: \"database\"});\n                    childLogger1.foo(\"hello\");\n                    childLogger1.bar(\"hello\");\n                    childLogger2.bar(\"hello\");\n                    childLogger2.foo(\"hello\");\n                    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

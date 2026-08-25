@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should report a warning in case of *Sync(...params)` usage [hkdfSync.js]",
+  "code": "import { hkdfSync } from \"crypto\";\n\nhkdfSync('sha512', 'key', 'salt', 'info', 64);\n\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

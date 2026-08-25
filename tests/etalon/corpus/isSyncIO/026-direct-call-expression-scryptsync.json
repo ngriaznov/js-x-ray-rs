@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should report a warning in case of *Sync(...params)` usage [scryptSync.js]",
+  "code": "const { scryptSync } = require(\"crypto\");\n\nscryptSync('mypassword', 'mysalt', 64);\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

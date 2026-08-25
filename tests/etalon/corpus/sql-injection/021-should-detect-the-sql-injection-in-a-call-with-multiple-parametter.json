@@ -1,0 +1,4 @@
+{
+  "name": "should detect the sql injection in a call with multiple parametter",
+  "code": "\n    await client.query([userId],`SELECT * FROM users\n WHERE userId = $1 and email = ${email}`);\n  "
+}

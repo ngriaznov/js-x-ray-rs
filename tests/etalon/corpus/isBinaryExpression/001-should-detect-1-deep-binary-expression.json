@@ -1,0 +1,4 @@
+{
+  "name": "(isBinaryExpression probe): should detect 1 deep binary expression",
+  "code": "0x1*-0x12df+-0x1fb9*-0x1+0x2*-0x66d"
+}

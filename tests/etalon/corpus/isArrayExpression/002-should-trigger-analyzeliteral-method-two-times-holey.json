@@ -1,0 +1,4 @@
+{
+  "name": "(isArrayExpression probe): should trigger analyzeLiteral method two times (ignoring the holey between)",
+  "code": "[5, ,10]"
+}

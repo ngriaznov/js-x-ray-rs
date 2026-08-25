@@ -1,0 +1,4 @@
+{
+  "name": "should detect the sql injection in a\n call with multiple template literals",
+  "code": "\n    await client.query(`user-${id}`,`SELECT * FROM users\n WHERE userId = $1 and email = ${email}`);\n  "
+}

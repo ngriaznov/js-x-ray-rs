@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): should not have any warning when synchronous-io is not in the optional warnings",
+  "code": "const { readFileSync } = require(\"fs\");\n\nreadFileSync(\"./foo.txt\");\n",
+  "analyserOptions": {
+    "optionalWarnings": []
+  }
+}

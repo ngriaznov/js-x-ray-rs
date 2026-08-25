@@ -1,0 +1,7 @@
+{
+  "name": "should not generate a warning when dns is not imported",
+  "code": "\n     const dns = {\n        getServers(){\n            return [];\n        }\n     }\n     JSON.stringify(getServers());\n    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

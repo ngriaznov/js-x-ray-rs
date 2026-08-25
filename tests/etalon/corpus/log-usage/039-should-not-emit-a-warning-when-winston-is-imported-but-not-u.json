@@ -1,0 +1,7 @@
+{
+  "name": "(log-usage probe > winston > winston logger): should not emit a warning when winston is imported but not used",
+  "code": "const winston = require(\"winston\");\n                  const logger = (() => {\n                    const createLogger = () => ({\n                      info: () => {\n                      }\n                    });\n                    return createLogger();\n                  })();\n                  logger.info(\"hello\");\n                  ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

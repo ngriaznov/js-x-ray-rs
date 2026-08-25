@@ -1,0 +1,4 @@
+{
+  "name": "should detect sql injection on select queries (delete)",
+  "code": "\n    await client.query(`DELETE FROM users WHERE id = ${id}`);\n  "
+}

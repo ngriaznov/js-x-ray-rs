@@ -1,0 +1,7 @@
+{
+  "name": "should report a warning in case of JSON.stringify(sensitiveData) for direct call expression (dns.getServers.js)",
+  "file": "fixtures/dataExfiltration/directCallExpression/dns.getServers.js",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

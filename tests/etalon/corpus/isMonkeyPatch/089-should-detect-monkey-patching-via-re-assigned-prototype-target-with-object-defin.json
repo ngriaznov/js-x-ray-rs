@@ -1,0 +1,4 @@
+{
+  "name": "should detect monkey patching via re-assigned prototype target with Object.defineProperty",
+  "code": "const Str = String;\nObject.defineProperty(Str.prototype, \"trim\", {\n      value: function() { return \"\"; }\n    });"
+}

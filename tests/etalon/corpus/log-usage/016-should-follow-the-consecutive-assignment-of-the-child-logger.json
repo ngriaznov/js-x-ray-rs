@@ -1,0 +1,7 @@
+{
+  "name": "(log-usage probe > pino > logger.child): should follow the consecutive assignment of the child logger",
+  "code": "import pino from \"pino\";\n                    const logger = pino();\n                    const childLogger = logger.child({module: \"auth\"});\n                    const childLoggerBis = childLogger;\n                    childLoggerBis.info(\"hello\");\n                    childLoggerBis.warn(\"hello\");\n                    childLoggerBis.error(\"hello\");\n                    childLoggerBis.fatal(\"hello\");\n                    childLoggerBis.debug(\"hello\");\n                    childLoggerBis.trace(\"hello\");\n                    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

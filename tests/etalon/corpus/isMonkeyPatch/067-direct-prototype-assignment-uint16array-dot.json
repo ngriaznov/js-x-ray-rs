@@ -1,0 +1,4 @@
+{
+  "name": "should detect monkey patching via direct prototype assignment (Uint16Array, dot access)",
+  "code": "Uint16Array.prototype.any = function() {};"
+}

@@ -1,0 +1,7 @@
+{
+  "name": "(isSerializeEnv probe): should detect direct process.env access in aggressive mode",
+  "code": "const env = process.env",
+  "analyserOptions": {
+    "sensitivity": "aggressive"
+  }
+}

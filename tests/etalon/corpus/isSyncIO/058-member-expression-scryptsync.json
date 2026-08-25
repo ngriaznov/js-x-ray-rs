@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should report a warning in case of `[expression]*Sync(...params)` usage [scryptSync.js]",
+  "code": "import crypto from 'crypto';\n\nconst scryptSync = crypto.scryptSync;\n\nscryptSync('mypassword', 'mysalt', 64);\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

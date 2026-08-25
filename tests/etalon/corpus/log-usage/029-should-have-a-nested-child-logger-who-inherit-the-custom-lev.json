@@ -1,0 +1,7 @@
+{
+  "name": "(log-usage probe > pino > custom loggers): should have a nested child logger who inherit the custom levels from its root parent logger",
+  "code": "import pino from \"pino\";\n                    const logger = pino({\n                    customLevels:{\n                      foo: 35,\n                      bar: 36\n                      },\n                    useOnlyCustomLevels: true\n                    });\n                    const childLogger1 = logger.child({component: \"database\"});\n                    const childLogger1Bis = childLogger1;\n                    const childLogger2 = childLogger1Bis.child({module: \"auth\"});\n                    childLogger2.foo(\"hello\");\n                    childLogger2.bar(\"hello\");\n                    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

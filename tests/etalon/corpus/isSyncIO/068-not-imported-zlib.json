@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should NOT report a warning when relevant module is not imported [4]",
+  "code": "\n    const zlib = {\n      gzipSync() {}\n    }\n    zlib.gzipSync(Buffer.from(\"text\",\"utf-8\"));\n  ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

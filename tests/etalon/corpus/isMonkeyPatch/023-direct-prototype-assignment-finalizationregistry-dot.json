@@ -1,0 +1,4 @@
+{
+  "name": "should detect monkey patching via direct prototype assignment (FinalizationRegistry, dot access)",
+  "code": "FinalizationRegistry.prototype.any = function() {};"
+}

@@ -1,0 +1,7 @@
+{
+  "name": "(log-usage probe > winston > winston logger > logger.child): should follow the consecutive assignment of the child logger [createLogger]",
+  "code": "const winston = require(\"winston\");\n                      const logger = winston.createLogger({\n                        format: winston.format.json(),\n                        transports: [new winston.transports.Console()]\n                        });\n                      const childLogger = logger.child({module: \"auth\"});\n                      const childLoggerBis = childLogger;\n                      childLoggerBis.info(\"hello\");\n                      ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}
