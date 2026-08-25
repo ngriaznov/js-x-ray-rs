@@ -33,7 +33,10 @@ fn export_assignment_has_require_leave(expr: &Value) -> bool {
         return at_least_one_branch_has_require_leave(expr.get("left"), expr.get("right"));
     }
     if is_type(expr, "ConditionalExpression") {
-        return at_least_one_branch_has_require_leave(expr.get("consequent"), expr.get("alternate"));
+        return at_least_one_branch_has_require_leave(
+            expr.get("consequent"),
+            expr.get("alternate"),
+        );
     }
     if is_call_expression(expr) {
         return call_expression_identifier(expr).as_deref() == Some("require");

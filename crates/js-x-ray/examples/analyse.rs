@@ -37,7 +37,10 @@ fn main() {
                 "idsLengthAvg": report.ids_length_avg,
                 "stringScore": report.string_score,
             });
-            println!("{}", serde_json::to_string_pretty(&out).expect("serializable"));
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&out).expect("serializable")
+            );
         }
         Err(error) => {
             eprintln!("parsing error: {error}");

@@ -35,10 +35,9 @@ fn is_create_hash_chain(node: Option<&Value>) -> bool {
         if !is_member_expression(callee) {
             break;
         }
-        if callee
-            .get("property")
-            .is_some_and(|property| is_identifier(property) && identifier_name(property) == Some("createHash"))
-        {
+        if callee.get("property").is_some_and(|property| {
+            is_identifier(property) && identifier_name(property) == Some("createHash")
+        }) {
             return true;
         }
         current = callee.get("object");
@@ -86,7 +85,12 @@ pub struct IsPasswordShucking {
 
 impl IsPasswordShucking {
     fn mark_ambiguous_params(&mut self, data: &Value) -> ProbeReturn {
-        for name in data.as_array().into_iter().flatten().filter_map(Value::as_str) {
+        for name in data
+            .as_array()
+            .into_iter()
+            .flatten()
+            .filter_map(Value::as_str)
+        {
             self.ambiguous_variable_names.insert(name.to_owned());
         }
 
@@ -94,12 +98,16 @@ impl IsPasswordShucking {
     }
 
     fn bcrypt_hash_call(&mut self, bcrypt_node: &Node, ctx: &mut ProbeCtx<'_>) -> ProbeReturn {
-        let hash_argument = bcrypt_node.get("arguments").and_then(Value::as_array).and_then(|args| args.first());
+        let hash_argument = bcrypt_node
+            .get("arguments")
+            .and_then(Value::as_array)
+            .and_then(|args| args.first());
 
         let is_variable_shucking = hash_argument.is_some_and(|arg| {
             is_identifier(arg)
                 && identifier_name(arg).is_some_and(|name| {
-                    !self.ambiguous_variable_names.contains(name) && self.shucking_variables.contains(name)
+                    !self.ambiguous_variable_names.contains(name)
+                        && self.shucking_variables.contains(name)
                 })
         });
 
@@ -124,7 +132,12 @@ impl Probe for IsPasswordShucking {
     }
 
     fn node_types(&self) -> Option<&'static [&'static str]> {
-        Some(&["CallExpression", "FunctionDeclaration", "FunctionExpression", "ArrowFunctionExpression"])
+        Some(&[
+            "CallExpression",
+            "FunctionDeclaration",
+            "FunctionExpression",
+            "ArrowFunctionExpression",
+        ])
     }
 
     fn initialize(&mut self, source_file: &mut SourceFile) {
@@ -153,7 +166,12 @@ impl Probe for IsPasswordShucking {
     }
 
     fn on_tracer_event(&mut self, event: &TracerEvent, _source_file: &mut SourceFile) {
-        let TracerEvent::ReturnValue { identifier_or_member_expr, id, .. } = event else {
+        let TracerEvent::ReturnValue {
+            identifier_or_member_expr,
+            id,
+            ..
+        } = event
+        else {
             return;
         };
 
@@ -163,7 +181,11 @@ impl Probe for IsPasswordShucking {
     }
 
     fn validate_node(&mut self, node: &Node, ctx: &mut ProbeCtx<'_>) -> Option<Value> {
-        if !ctx.source_file.tracer.imported_modules.contains(K_MODULE_NAME)
+        if !ctx
+            .source_file
+            .tracer
+            .imported_modules
+            .contains(K_MODULE_NAME)
             || !ctx.source_file.tracer.imported_modules.contains("crypto")
         {
             return None;
@@ -176,9 +198,14 @@ impl Probe for IsPasswordShucking {
                 .map(|params| get_param_names(params))
                 .unwrap_or_default();
 
-            if param_names.iter().any(|name| self.shucking_variables.contains(name)) {
+            if param_names
+                .iter()
+                .any(|name| self.shucking_variables.contains(name))
+            {
                 self.entry_point = EntryPoint::MarkAmbiguousParams;
-                return Some(Value::Array(param_names.into_iter().map(Value::String).collect()));
+                return Some(Value::Array(
+                    param_names.into_iter().map(Value::String).collect(),
+                ));
             }
 
             return None;
@@ -186,7 +213,9 @@ impl Probe for IsPasswordShucking {
 
         self.entry_point = EntryPoint::Default;
         ctx.traced_data
-            .is_some_and(|data| K_TRACED_FUNCTIONS.contains(&data.identifier_or_member_expr.as_str()))
+            .is_some_and(|data| {
+                K_TRACED_FUNCTIONS.contains(&data.identifier_or_member_expr.as_str())
+            })
             .then_some(Value::Null)
     }
 

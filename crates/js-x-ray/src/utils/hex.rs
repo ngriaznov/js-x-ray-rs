@@ -9,8 +9,12 @@ use crate::estree::{to_raw, to_value};
 use super::string_char_diversity;
 
 /// `["require", "length"]` hex-encoded.
-static UNSAFE_HEX_VALUES: LazyLock<Vec<String>> =
-    LazyLock::new(|| ["require", "length"].iter().map(|v| encode_hex(v)).collect());
+static UNSAFE_HEX_VALUES: LazyLock<Vec<String>> = LazyLock::new(|| {
+    ["require", "length"]
+        .iter()
+        .map(|v| encode_hex(v))
+        .collect()
+});
 
 pub const SAFE_HEX_VALUES: &[&str] = &[
     "0123456789",
@@ -53,7 +57,7 @@ pub fn is_safe(any_value: &Value) -> bool {
     let Some(raw_value) = to_raw(any_value) else {
         return false;
     };
-    if UNSAFE_HEX_VALUES.iter().any(|v| *v == raw_value) {
+    if UNSAFE_HEX_VALUES.contains(&raw_value) {
         return false;
     }
 
@@ -63,7 +67,9 @@ pub fn is_safe(any_value: &Value) -> bool {
     }
 
     let lowered = raw_value.to_lowercase();
-    SAFE_HEX_VALUES.iter().any(|value| lowered.starts_with(value))
+    SAFE_HEX_VALUES
+        .iter()
+        .any(|value| lowered.starts_with(value))
 }
 
 /// `/^([0-9]+|[a-z]+|[A-Z]+)$/`

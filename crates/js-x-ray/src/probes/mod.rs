@@ -31,36 +31,36 @@ use crate::probe::Probe;
 /// execution and must match upstream exactly.
 pub fn default_probes() -> Vec<Box<dyn Probe>> {
     vec![
-        Box::new(is_fetch::IsFetch::default()),
-        Box::new(is_require::IsRequire::default()),
-        Box::new(is_esm_export::IsEsmExport::default()),
-        Box::new(is_unsafe_callee::IsUnsafeCallee::default()),
-        Box::new(is_literal::IsLiteral::default()),
-        Box::new(is_literal_regex::IsLiteralRegex::default()),
-        Box::new(is_regex_object::IsRegexObject::default()),
-        Box::new(is_import_declaration::IsImportDeclaration::default()),
-        Box::new(crypto::IsWeakAlgorithm::default()),
+        Box::new(is_fetch::IsFetch),
+        Box::new(is_require::IsRequire),
+        Box::new(is_esm_export::IsEsmExport),
+        Box::new(is_unsafe_callee::IsUnsafeCallee),
+        Box::new(is_literal::IsLiteral),
+        Box::new(is_literal_regex::IsLiteralRegex),
+        Box::new(is_regex_object::IsRegexObject),
+        Box::new(is_import_declaration::IsImportDeclaration),
+        Box::new(crypto::IsWeakAlgorithm),
         Box::new(unsafe_vm_context::UnsafeVmContext::default()),
-        Box::new(is_binary_expression::IsBinaryExpression::default()),
-        Box::new(is_array_expression::IsArrayExpression::default()),
-        Box::new(is_unsafe_command::IsUnsafeCommand::default()),
+        Box::new(is_binary_expression::IsBinaryExpression),
+        Box::new(is_array_expression::IsArrayExpression),
+        Box::new(is_unsafe_command::IsUnsafeCommand),
         Box::new(is_serialize_env::IsSerializeEnv::default()),
         Box::new(data_exfiltration::DataExfiltration::default()),
-        Box::new(sql_injection::SqlInjection::default()),
-        Box::new(is_monkey_patch::IsMonkeyPatch::default()),
-        Box::new(is_prototype_pollution::IsPrototypePollution::default()),
+        Box::new(sql_injection::SqlInjection),
+        Box::new(is_monkey_patch::IsMonkeyPatch),
+        Box::new(is_prototype_pollution::IsPrototypePollution),
     ]
 }
 
 /// Upstream `ProbeRunner.Optionals` keyed by `OptionalWarningName`.
 pub fn optional_probe(name: &str) -> Option<Box<dyn Probe>> {
     match name {
-        "synchronous-io" => Some(Box::new(is_sync_io::IsSyncIo::default())),
+        "synchronous-io" => Some(Box::new(is_sync_io::IsSyncIo)),
         "log-usage" => Some(Box::new(log_usage::LogUsage::default())),
-        "insecure-random" => Some(Box::new(is_random::IsRandom::default())),
-        "crypto.weak-scrypt" => Some(Box::new(crypto::IsWeakScrypt::default())),
+        "insecure-random" => Some(Box::new(is_random::IsRandom)),
+        "crypto.weak-scrypt" => Some(Box::new(crypto::IsWeakScrypt)),
         "crypto.unsafe-prehash" => Some(Box::new(crypto::IsUnsafePrehash::default())),
-        "crypto.weak-bcrypt" => Some(Box::new(crypto::IsWeakBcrypt::default())),
+        "crypto.weak-bcrypt" => Some(Box::new(crypto::IsWeakBcrypt)),
         "crypto.password-shucking" => Some(Box::new(crypto::IsPasswordShucking::default())),
         _ => None,
     }

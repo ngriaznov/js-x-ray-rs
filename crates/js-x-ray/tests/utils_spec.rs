@@ -43,7 +43,10 @@ fn given_a_member_expression_then_it_should_return_each_segments_except_the_last
 fn is_hex_must_return_true_for_random_4_character_hexadecimal_values() {
     let mut seed = 0x1234_5678_9abc_def0;
     let hex_value = random_hex_chars(4, &mut seed);
-    assert!(is_hex_str(&hex_value), "Hexadecimal value '{hex_value}' must return true");
+    assert!(
+        is_hex_str(&hex_value),
+        "Hexadecimal value '{hex_value}' must return true"
+    );
 }
 
 #[test]
@@ -51,21 +54,30 @@ fn is_hex_must_return_true_for_estree_literals_containing_random_4_character_hex
     let mut seed = 0x0fed_cba9_8765_4321;
     let hex_value = random_hex_chars(4, &mut seed);
     let literal = json!({ "type": "Literal", "value": hex_value });
-    assert!(is_hex(&literal), "Hexadecimal value '{hex_value}' must return true");
+    assert!(
+        is_hex(&literal),
+        "Hexadecimal value '{hex_value}' must return true"
+    );
 }
 
 #[test]
 fn is_hex_an_hexadecimal_value_must_be_at_least_4_chars_long() {
     let mut seed = 0x9999_1111_2222_3333;
     let hex_value = random_hex_chars(2, &mut seed);
-    assert!(!is_hex_str(&hex_value), "Hexadecimal value '{hex_value}' must return false");
+    assert!(
+        !is_hex_str(&hex_value),
+        "Hexadecimal value '{hex_value}' must return false"
+    );
 }
 
 #[test]
 fn is_hex_should_return_false_for_non_string_estree_literal_values() {
     // Adapted: `is_hex` takes `&serde_json::Value`, so the JS "typeof number"
     // input becomes a JSON number, which still isn't a string value.
-    assert!(!is_hex(&json!(100)), "100 is typeof number so it must always return false");
+    assert!(
+        !is_hex(&json!(100)),
+        "100 is typeof number so it must always return false"
+    );
 }
 
 #[test]
@@ -182,7 +194,9 @@ fn is_one_line_should_return_false_for_empty_body() {
 
 #[test]
 fn is_one_line_should_return_false_for_multiple_statements() {
-    let body = JsSourceParser.parse("require('a');\nrequire('b');\n").unwrap();
+    let body = JsSourceParser
+        .parse("require('a');\nrequire('b');\n")
+        .unwrap();
     assert!(!is_one_line_expression_export(&body));
 }
 
@@ -194,7 +208,9 @@ fn is_one_line_should_return_true_for_single_require_call() {
 
 #[test]
 fn is_one_line_should_return_true_for_module_exports_assignment_to_require() {
-    let body = JsSourceParser.parse("module.exports = require('a');").unwrap();
+    let body = JsSourceParser
+        .parse("module.exports = require('a');")
+        .unwrap();
     assert!(is_one_line_expression_export(&body));
 }
 
@@ -208,7 +224,9 @@ fn is_one_line_should_return_true_for_conditional_require_export() {
 
 #[test]
 fn is_one_line_should_return_true_for_logical_require_export() {
-    let body = JsSourceParser.parse("module.exports = condition && require('b');").unwrap();
+    let body = JsSourceParser
+        .parse("module.exports = condition && require('b');")
+        .unwrap();
     assert!(is_one_line_expression_export(&body));
 }
 
@@ -220,13 +238,17 @@ fn is_one_line_should_return_false_for_non_require_expression() {
 
 #[test]
 fn is_one_line_should_return_true_for_require_member_access() {
-    let body = JsSourceParser.parse("module.exports = require(\"foo\").bar.baz;").unwrap();
+    let body = JsSourceParser
+        .parse("module.exports = require(\"foo\").bar.baz;")
+        .unwrap();
     assert!(is_one_line_expression_export(&body));
 }
 
 #[test]
 fn is_one_line_should_return_false_for_non_require_member_access() {
-    let body = JsSourceParser.parse("module.exports = something.require(\"foo\");").unwrap();
+    let body = JsSourceParser
+        .parse("module.exports = something.require(\"foo\");")
+        .unwrap();
     assert!(!is_one_line_expression_export(&body));
 }
 
@@ -240,8 +262,14 @@ fn is_string_base64_matches_upstream_assertions() {
     let jpg_string_with_mime = format!("data:image/jpeg;base64,{jpg_string}");
 
     let no_opts = Base64Options::default();
-    let allow_mime = Base64Options { allow_mime: Some(true), ..Default::default() };
-    let mime_required = Base64Options { mime_required: Some(true), ..Default::default() };
+    let allow_mime = Base64Options {
+        allow_mime: Some(true),
+        ..Default::default()
+    };
+    let mime_required = Base64Options {
+        mime_required: Some(true),
+        ..Default::default()
+    };
 
     assert!(is_string_base64(png_string, no_opts));
     assert!(!is_string_base64(&png_string_with_mime, no_opts));
@@ -258,12 +286,18 @@ fn is_string_base64_matches_upstream_assertions() {
         &create_mime_string("application/vnd.apple.installer+xml"),
         allow_mime
     ));
-    assert!(is_string_base64(&create_mime_string("image/svg+xml"), allow_mime));
+    assert!(is_string_base64(
+        &create_mime_string("image/svg+xml"),
+        allow_mime
+    ));
     assert!(is_string_base64(
         &create_mime_string("application/set-payment-initiation"),
         allow_mime
     ));
-    assert!(is_string_base64(&create_mime_string("image/vnd.adobe.photoshop"), allow_mime));
+    assert!(is_string_base64(
+        &create_mime_string("image/vnd.adobe.photoshop"),
+        allow_mime
+    ));
 
     assert!(!is_string_base64("1342234", no_opts));
     assert!(!is_string_base64("afQ$%rfew", no_opts));
@@ -271,31 +305,56 @@ fn is_string_base64_matches_upstream_assertions() {
     assert!(!is_string_base64("uuLMhh", no_opts));
     assert!(is_string_base64(
         "uuLMhh",
-        Base64Options { padding_required: Some(false), ..Default::default() }
+        Base64Options {
+            padding_required: Some(false),
+            ..Default::default()
+        }
     ));
     assert!(!is_string_base64(
         "uuLMhh",
-        Base64Options { padding_required: Some(true), ..Default::default() }
+        Base64Options {
+            padding_required: Some(true),
+            ..Default::default()
+        }
     ));
     assert!(is_string_base64("uuLMhh==", no_opts));
     assert!(is_string_base64(
         "uuLMhh==",
-        Base64Options { padding_required: Some(false), ..Default::default() }
+        Base64Options {
+            padding_required: Some(false),
+            ..Default::default()
+        }
     ));
     assert!(is_string_base64(
         "uuLMhh==",
-        Base64Options { padding_required: Some(true), ..Default::default() }
+        Base64Options {
+            padding_required: Some(true),
+            ..Default::default()
+        }
     ));
     assert!(!is_string_base64(
         "data:image/png;base64,uuLMhh==",
-        Base64Options { padding_required: Some(true), ..Default::default() }
+        Base64Options {
+            padding_required: Some(true),
+            ..Default::default()
+        }
     ));
     assert!(is_string_base64(
         "data:image/png;base64,uuLMhh==",
-        Base64Options { padding_required: Some(true), allow_mime: Some(true), ..Default::default() }
+        Base64Options {
+            padding_required: Some(true),
+            allow_mime: Some(true),
+            ..Default::default()
+        }
     ));
     assert!(is_string_base64("", no_opts));
-    assert!(!is_string_base64("", Base64Options { allow_empty: Some(false), ..Default::default() }));
+    assert!(!is_string_base64(
+        "",
+        Base64Options {
+            allow_empty: Some(false),
+            ..Default::default()
+        }
+    ));
 }
 
 // --- isSvg.spec.ts -------------------------------------------------------------
@@ -406,7 +465,10 @@ fn common_string_prefix_must_return_null_for_two_strings_that_have_no_common_pre
 
 #[test]
 fn common_string_prefix_should_return_the_common_prefix_for_strings_with_a_shared_prefix() {
-    assert_eq!(common_string_prefix_str("bromance", "brother"), Some("bro".to_string()));
+    assert_eq!(
+        common_string_prefix_str("bromance", "brother"),
+        Some("bro".to_string())
+    );
 }
 
 #[test]
@@ -426,9 +488,20 @@ fn common_string_suffix_must_return_null_for_two_strings_with_no_common_suffix()
 #[test]
 fn common_hexadecimal_prefix_should_handle_only_hexadecimal_identifiers() {
     let data = [
-        "_0x3c0c55", "_0x1185d5", "_0x160fc8", "_0x18a66f", "_0x18a835", "_0x1a8356",
-        "_0x1adf3b", "_0x1e4510", "_0x1e9a2a", "_0x215558", "_0x2b0194", "_0x2fffe5",
-        "_0x32c822", "_0x33bb79",
+        "_0x3c0c55",
+        "_0x1185d5",
+        "_0x160fc8",
+        "_0x18a66f",
+        "_0x18a835",
+        "_0x1a8356",
+        "_0x1adf3b",
+        "_0x1e4510",
+        "_0x1e9a2a",
+        "_0x215558",
+        "_0x2b0194",
+        "_0x2fffe5",
+        "_0x32c822",
+        "_0x33bb79",
     ]
     .map(String::from);
 
@@ -441,9 +514,21 @@ fn common_hexadecimal_prefix_should_handle_only_hexadecimal_identifiers() {
 #[test]
 fn common_hexadecimal_prefix_should_add_one_non_hexadecimal_identifier() {
     let data = [
-        "_0x3c0c55", "_0x1185d5", "_0x160fc8", "_0x18a66f", "_0x18a835", "_0x1a8356",
-        "_0x1adf3b", "_0x1e4510", "_0x1e9a2a", "_0x215558", "_0x2b0194", "_0x2fffe5",
-        "_0x32c822", "_0x33bb79", "foo",
+        "_0x3c0c55",
+        "_0x1185d5",
+        "_0x160fc8",
+        "_0x18a66f",
+        "_0x18a835",
+        "_0x1a8356",
+        "_0x1adf3b",
+        "_0x1e4510",
+        "_0x1e9a2a",
+        "_0x215558",
+        "_0x2b0194",
+        "_0x2fffe5",
+        "_0x32c822",
+        "_0x33bb79",
+        "foo",
     ]
     .map(String::from);
 
@@ -482,10 +567,14 @@ fn string_suspicion_score_should_return_1_for_strings_between_45_and_200_with_no
 }
 
 #[test]
-fn string_suspicion_score_should_return_0_for_strings_between_45_and_200_with_a_space_in_first_45() {
+fn string_suspicion_score_should_return_0_for_strings_between_45_and_200_with_a_space_in_first_45()
+{
     let mut seed = 0x2468_ace0_1357_9bdf;
-    let random_str_with_spaces =
-        format!("{} -_- {}", random_hex_chars(20, &mut seed), random_hex_chars(60, &mut seed));
+    let random_str_with_spaces = format!(
+        "{} -_- {}",
+        random_hex_chars(20, &mut seed),
+        random_hex_chars(60, &mut seed)
+    );
     assert_eq!(string_suspicion_score(&random_str_with_spaces), 0);
 }
 

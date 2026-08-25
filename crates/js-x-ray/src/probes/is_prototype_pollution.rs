@@ -22,7 +22,8 @@ impl Probe for IsPrototypePollution {
     }
 
     fn validate_node(&mut self, node: &Node, _ctx: &mut ProbeCtx<'_>) -> Option<Value> {
-        if is_type(node, "Literal") && node.get("value").and_then(Value::as_str) == Some("__proto__")
+        if is_type(node, "Literal")
+            && node.get("value").and_then(Value::as_str) == Some("__proto__")
         {
             return Some(Value::String("literal".to_owned()));
         }
@@ -39,7 +40,11 @@ impl Probe for IsPrototypePollution {
 
     fn main(&mut self, node: &Node, data: &Value, ctx: &mut ProbeCtx<'_>) -> ProbeReturn {
         let data = data.as_str().unwrap_or_default();
-        let value = if data == "literal" { "__proto__".to_owned() } else { data.to_owned() };
+        let value = if data == "literal" {
+            "__proto__".to_owned()
+        } else {
+            data.to_owned()
+        };
 
         ctx.source_file.warnings.push(generate_warning(
             "prototype-pollution",
@@ -50,6 +55,10 @@ impl Probe for IsPrototypePollution {
             },
         ));
 
-        if data == "literal" { ProbeReturn::Matched } else { ProbeReturn::Skip }
+        if data == "literal" {
+            ProbeReturn::Matched
+        } else {
+            ProbeReturn::Skip
+        }
     }
 }

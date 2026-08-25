@@ -24,13 +24,19 @@ use js_x_ray::estree::{Node, SourceLocation, root_location};
 use js_x_ray::parser::{ParseError, SourceParser};
 use js_x_ray::probe::{Probe, ProbeCtx, ProbeReturn};
 use js_x_ray::utils::to_array_location;
-use js_x_ray::warnings::{GenerateWarningOptions, Severity, Warning, WarningLocation, generate_warning};
-use js_x_ray::{AstAnalyser, AstAnalyserOptions, OptionalWarnings, ReportOnFile, RuntimeOptions, SourceFile};
+use js_x_ray::warnings::{
+    GenerateWarningOptions, Severity, Warning, WarningLocation, generate_warning,
+};
+use js_x_ray::{
+    AstAnalyser, AstAnalyserOptions, OptionalWarnings, ReportOnFile, RuntimeOptions, SourceFile,
+};
 
 // --- shared fixtures and helpers --------------------------------------------
 
 fn fixture(name: &str) -> PathBuf {
-    Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/analyser_spec").join(name)
+    Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("tests/fixtures/analyser_spec")
+        .join(name)
 }
 
 fn warning_kinds(warnings: &[Warning]) -> Vec<String> {
@@ -78,8 +84,11 @@ impl Probe for CustomProbeUnsafeDanger {
     }
 
     fn validate_node(&mut self, node: &Node, _ctx: &mut ProbeCtx<'_>) -> Option<Value> {
-        (node.pointer("/declarations/0/init/value").and_then(Value::as_str) == Some("danger"))
-            .then_some(Value::Null)
+        (node
+            .pointer("/declarations/0/init/value")
+            .and_then(Value::as_str)
+            == Some("danger"))
+        .then_some(Value::Null)
     }
 
     fn main(&mut self, node: &Node, _data: &Value, ctx: &mut ProbeCtx<'_>) -> ProbeReturn {
@@ -98,7 +107,9 @@ impl Probe for CustomProbeUnsafeDanger {
 }
 
 fn custom_probes_factories() -> Vec<ProbeFactory> {
-    vec![Box::new(|| Box::new(CustomProbeUnsafeDanger) as Box<dyn Probe>)]
+    vec![Box::new(|| {
+        Box::new(CustomProbeUnsafeDanger) as Box<dyn Probe>
+    })]
 }
 
 const K_INCRIMINATED_CODE_SAMPLE_CUSTOM_PROBE: &str =
@@ -118,7 +129,9 @@ impl SourceParser for FakeSourceParser {
 
 #[test]
 fn analyse_returns_execution_time_as_a_non_negative_number() {
-    let report = AstAnalyser::default().analyse("const foo = 'bar';", RuntimeOptions::default()).unwrap();
+    let report = AstAnalyser::default()
+        .analyse("const foo = 'bar';", RuntimeOptions::default())
+        .unwrap();
     assert!(report.execution_time >= 0.0);
 }
 
@@ -144,13 +157,26 @@ fn analyse_returns_all_dependencies_required_at_runtime() {
 
     assert_eq!(report.warnings.len(), 0);
     let names: Vec<&str> = report.dependencies.keys().map(String::as_str).collect();
-    assert_eq!(names, vec!["http", "net", "fs", "assert", "timers", "./aFile.js", "path"]);
+    assert_eq!(
+        names,
+        vec![
+            "http",
+            "net",
+            "fs",
+            "assert",
+            "timers",
+            "./aFile.js",
+            "path"
+        ]
+    );
 }
 
 #[test]
 fn analyse_flags_a_suspicious_literal_warning() {
     let source = std::fs::read_to_string(fixture("suspect-string.js")).unwrap();
-    let report = AstAnalyser::default().analyse(&source, RuntimeOptions::default()).unwrap();
+    let report = AstAnalyser::default()
+        .analyse(&source, RuntimeOptions::default())
+        .unwrap();
 
     assert_eq!(warning_kinds(&report.warnings), vec!["suspicious-literal"]);
     assert_eq!(report.string_score, 8.0);
@@ -159,7 +185,9 @@ fn analyse_flags_a_suspicious_literal_warning() {
 #[test]
 fn analyse_flags_a_suspicious_file_because_it_has_too_many_encoded_literal_warnings() {
     let source = std::fs::read_to_string(fixture("suspiciousFile.js")).unwrap();
-    let report = AstAnalyser::default().analyse(&source, RuntimeOptions::default()).unwrap();
+    let report = AstAnalyser::default()
+        .analyse(&source, RuntimeOptions::default())
+        .unwrap();
 
     assert_eq!(warning_kinds(&report.warnings), vec!["suspicious-file"]);
 }
@@ -204,7 +232,10 @@ fn analyse_follows_malicious_code_with_hex_computation_and_reassignments() {
         )
         .unwrap();
 
-    assert_eq!(warning_kinds(&report.warnings), vec!["encoded-literal", "unsafe-import", "unsafe-stmt"]);
+    assert_eq!(
+        warning_kinds(&report.warnings),
+        vec!["encoded-literal", "unsafe-import", "unsafe-stmt"]
+    );
     let names: Vec<&str> = report.dependencies.keys().map(String::as_str).collect();
     assert_eq!(names, vec!["./test/data"]);
 }
@@ -242,13 +273,22 @@ fn analyse_detects_a_dependency_required_under_a_try_statement() {
         )
         .unwrap();
 
-    assert!(report.dependencies.get("http").is_some_and(|dep| dep.in_try));
+    assert!(
+        report
+            .dependencies
+            .get("http")
+            .is_some_and(|dep| dep.in_try)
+    );
 }
 
 #[test]
 fn analyse_sets_oneline_require_flag_given_a_single_line_cjs_export() {
-    let report =
-        AstAnalyser::default().analyse("module.exports = require('foo');", RuntimeOptions::default()).unwrap();
+    let report = AstAnalyser::default()
+        .analyse(
+            "module.exports = require('foo');",
+            RuntimeOptions::default(),
+        )
+        .unwrap();
 
     assert!(report.flags.contains("oneline-require"));
     let names: Vec<&str> = report.dependencies.keys().map(String::as_str).collect();
@@ -276,9 +316,15 @@ fn analyse_extracts_dependency_names_for_esm() {
 
 #[test]
 fn analyse_appends_custom_probes_to_the_default_list() {
-    let report = AstAnalyser::new(AstAnalyserOptions { custom_probes: custom_probes_factories(), ..Default::default() })
-        .analyse(K_INCRIMINATED_CODE_SAMPLE_CUSTOM_PROBE, RuntimeOptions::default())
-        .unwrap();
+    let report = AstAnalyser::new(AstAnalyserOptions {
+        custom_probes: custom_probes_factories(),
+        ..Default::default()
+    })
+    .analyse(
+        K_INCRIMINATED_CODE_SAMPLE_CUSTOM_PROBE,
+        RuntimeOptions::default(),
+    )
+    .unwrap();
 
     assert_eq!(report.warnings[0].kind, "unsafe-danger");
     assert_eq!(report.warnings[1].kind, "unsafe-import");
@@ -293,7 +339,10 @@ fn analyse_replaces_the_probe_list_when_skip_default_probes_is_set() {
         skip_default_probes: true,
         ..Default::default()
     })
-    .analyse(K_INCRIMINATED_CODE_SAMPLE_CUSTOM_PROBE, RuntimeOptions::default())
+    .analyse(
+        K_INCRIMINATED_CODE_SAMPLE_CUSTOM_PROBE,
+        RuntimeOptions::default(),
+    )
     .unwrap();
 
     assert_eq!(report.warnings[0].kind, "unsafe-danger");
@@ -357,8 +406,12 @@ fn analyse_calls_initialize_before_finalize() {
         .analyse(
             "const foo = 'bar';",
             RuntimeOptions {
-                initialize: Some(Box::new(move |_: &mut SourceFile| init_calls.borrow_mut().push("initialize"))),
-                finalize: Some(Box::new(move |_: &mut SourceFile| finalize_calls.borrow_mut().push("finalize"))),
+                initialize: Some(Box::new(move |_: &mut SourceFile| {
+                    init_calls.borrow_mut().push("initialize")
+                })),
+                finalize: Some(Box::new(move |_: &mut SourceFile| {
+                    finalize_calls.borrow_mut().push("finalize")
+                })),
                 ..Default::default()
             },
         )
@@ -372,7 +425,13 @@ fn analyse_calls_initialize_before_finalize() {
 #[test]
 fn analyse_file_returns_execution_time_as_a_non_negative_number_on_success() {
     let report = AstAnalyser::default()
-        .analyse_file(&fixture("depName.js"), RuntimeOptions { package_name: Some("foobar".to_owned()), ..Default::default() })
+        .analyse_file(
+            &fixture("depName.js"),
+            RuntimeOptions {
+                package_name: Some("foobar".to_owned()),
+                ..Default::default()
+            },
+        )
         .unwrap();
 
     match report {
@@ -384,7 +443,13 @@ fn analyse_file_returns_execution_time_as_a_non_negative_number_on_success() {
 #[test]
 fn analyse_file_returns_execution_time_as_a_non_negative_number_on_failure() {
     let report = AstAnalyser::default()
-        .analyse_file(&fixture("parsingError.js"), RuntimeOptions { package_name: Some("foobar".to_owned()), ..Default::default() })
+        .analyse_file(
+            &fixture("parsingError.js"),
+            RuntimeOptions {
+                package_name: Some("foobar".to_owned()),
+                ..Default::default()
+            },
+        )
         .unwrap();
 
     match report {
@@ -396,7 +461,13 @@ fn analyse_file_returns_execution_time_as_a_non_negative_number_on_failure() {
 #[test]
 fn analyse_file_detects_typescript_extension_and_uses_ts_source_parser_automatically() {
     let report = AstAnalyser::default()
-        .analyse_file(&fixture("test.ts"), RuntimeOptions { package_name: Some("foobar".to_owned()), ..Default::default() })
+        .analyse_file(
+            &fixture("test.ts"),
+            RuntimeOptions {
+                package_name: Some("foobar".to_owned()),
+                ..Default::default()
+            },
+        )
         .unwrap();
 
     match report {
@@ -410,7 +481,13 @@ fn analyse_file_errors_when_given_a_typescript_declaration_file() {
     // `test.d.ts` is checked by path before the file is read, so it need
     // not exist on disk (matching upstream, which never creates this file).
     let error = AstAnalyser::default()
-        .analyse_file(&fixture("test.d.ts"), RuntimeOptions { package_name: Some("foobar".to_owned()), ..Default::default() })
+        .analyse_file(
+            &fixture("test.d.ts"),
+            RuntimeOptions {
+                package_name: Some("foobar".to_owned()),
+                ..Default::default()
+            },
+        )
         .unwrap_err();
 
     assert_eq!(error.to_string(), "Declaration files are not supported");
@@ -423,7 +500,13 @@ fn analyse_file_removes_the_package_name_from_the_dependencies_list() {
         ..Default::default()
     });
     let report = analyser
-        .analyse_file(&fixture("depName.js"), RuntimeOptions { package_name: Some("foobar".to_owned()), ..Default::default() })
+        .analyse_file(
+            &fixture("depName.js"),
+            RuntimeOptions {
+                package_name: Some("foobar".to_owned()),
+                ..Default::default()
+            },
+        )
         .unwrap();
 
     match report {
@@ -438,7 +521,13 @@ fn analyse_file_removes_the_package_name_from_the_dependencies_list() {
 #[test]
 fn analyse_file_fails_with_a_parsing_error() {
     let report = AstAnalyser::default()
-        .analyse_file(&fixture("parsingError.js"), RuntimeOptions { package_name: Some("foobar".to_owned()), ..Default::default() })
+        .analyse_file(
+            &fixture("parsingError.js"),
+            RuntimeOptions {
+                package_name: Some("foobar".to_owned()),
+                ..Default::default()
+            },
+        )
         .unwrap();
 
     match report {
@@ -452,7 +541,10 @@ fn analyse_file_fails_with_a_parsing_error() {
 
 #[test]
 fn analyse_file_collects_the_full_url_and_the_ip_address() {
-    let temp = TempFile::new("temp-oneline.js", "const IPv4URL = 'http://127.0.0.1:80/script'");
+    let temp = TempFile::new(
+        "temp-oneline.js",
+        "const IPv4URL = 'http://127.0.0.1:80/script'",
+    );
     let expected_dir = temp.path().parent().unwrap().to_string_lossy().to_string();
 
     let mut metadata = Map::new();
@@ -466,7 +558,15 @@ fn analyse_file_collects_the_full_url_and_the_ip_address() {
         ],
         ..Default::default()
     });
-    analyser.analyse_file(temp.path(), RuntimeOptions { metadata: Some(metadata), ..Default::default() }).unwrap();
+    analyser
+        .analyse_file(
+            temp.path(),
+            RuntimeOptions {
+                metadata: Some(metadata),
+                ..Default::default()
+            },
+        )
+        .unwrap();
 
     let mut expected_metadata = Map::new();
     expected_metadata.insert("spec".to_owned(), json!("react@19.0.1"));
@@ -474,18 +574,43 @@ fn analyse_file_collects_the_full_url_and_the_ip_address() {
     let url_data = analyser.get_collectable_set("url").unwrap().to_json();
     assert_eq!(url_data.entries.len(), 1);
     assert_eq!(url_data.entries[0].value, "http://127.0.0.1/script");
-    assert_eq!(url_data.entries[0].locations[0].file.as_deref(), Some(expected_dir.as_str()));
-    assert_eq!(url_data.entries[0].locations[0].location, vec![[[1, 16], [1, 44]]]);
-    assert_eq!(url_data.entries[0].locations[0].metadata, Some(expected_metadata.clone()));
+    assert_eq!(
+        url_data.entries[0].locations[0].file.as_deref(),
+        Some(expected_dir.as_str())
+    );
+    assert_eq!(
+        url_data.entries[0].locations[0].location,
+        vec![[[1, 16], [1, 44]]]
+    );
+    assert_eq!(
+        url_data.entries[0].locations[0].metadata,
+        Some(expected_metadata.clone())
+    );
 
-    assert!(analyser.get_collectable_set("hostname").unwrap().to_json().entries.is_empty());
+    assert!(
+        analyser
+            .get_collectable_set("hostname")
+            .unwrap()
+            .to_json()
+            .entries
+            .is_empty()
+    );
 
     let ip_data = analyser.get_collectable_set("ip").unwrap().to_json();
     assert_eq!(ip_data.entries.len(), 1);
     assert_eq!(ip_data.entries[0].value, "127.0.0.1");
-    assert_eq!(ip_data.entries[0].locations[0].file.as_deref(), Some(expected_dir.as_str()));
-    assert_eq!(ip_data.entries[0].locations[0].location, vec![[[1, 16], [1, 44]]]);
-    assert_eq!(ip_data.entries[0].locations[0].metadata, Some(expected_metadata));
+    assert_eq!(
+        ip_data.entries[0].locations[0].file.as_deref(),
+        Some(expected_dir.as_str())
+    );
+    assert_eq!(
+        ip_data.entries[0].locations[0].location,
+        vec![[[1, 16], [1, 44]]]
+    );
+    assert_eq!(
+        ip_data.entries[0].locations[0].metadata,
+        Some(expected_metadata)
+    );
 }
 
 #[test]
@@ -504,7 +629,13 @@ fn analyse_collects_the_full_url_and_the_ip_address_with_a_null_file() {
         ..Default::default()
     });
     analyser
-        .analyse("const IPv4URL = 'http://127.0.0.1:80/script'", RuntimeOptions { metadata: Some(metadata), ..Default::default() })
+        .analyse(
+            "const IPv4URL = 'http://127.0.0.1:80/script'",
+            RuntimeOptions {
+                metadata: Some(metadata),
+                ..Default::default()
+            },
+        )
         .unwrap();
 
     let mut expected_metadata = Map::new();
@@ -513,10 +644,23 @@ fn analyse_collects_the_full_url_and_the_ip_address_with_a_null_file() {
     let url_data = analyser.get_collectable_set("url").unwrap().to_json();
     assert_eq!(url_data.entries[0].value, "http://127.0.0.1/script");
     assert_eq!(url_data.entries[0].locations[0].file, None);
-    assert_eq!(url_data.entries[0].locations[0].location, vec![[[1, 16], [1, 44]]]);
-    assert_eq!(url_data.entries[0].locations[0].metadata, Some(expected_metadata.clone()));
+    assert_eq!(
+        url_data.entries[0].locations[0].location,
+        vec![[[1, 16], [1, 44]]]
+    );
+    assert_eq!(
+        url_data.entries[0].locations[0].metadata,
+        Some(expected_metadata.clone())
+    );
 
-    assert!(analyser.get_collectable_set("hostname").unwrap().to_json().entries.is_empty());
+    assert!(
+        analyser
+            .get_collectable_set("hostname")
+            .unwrap()
+            .to_json()
+            .entries
+            .is_empty()
+    );
 
     let ip_data = analyser.get_collectable_set("ip").unwrap().to_json();
     assert_eq!(ip_data.entries[0].value, "127.0.0.1");
@@ -612,13 +756,21 @@ fn analyse_file_calls_initialize_and_finalize_of_every_probe_at_the_end() {
     let calls: Rc<RefCell<Vec<&'static str>>> = Rc::new(RefCell::new(Vec::new()));
     let hooked_calls = calls.clone();
     let custom_probes: Vec<ProbeFactory> = vec![
-        Box::new(move || Box::new(HookedProbe { calls: hooked_calls.clone() }) as Box<dyn Probe>),
+        Box::new(move || {
+            Box::new(HookedProbe {
+                calls: hooked_calls.clone(),
+            }) as Box<dyn Probe>
+        }),
         Box::new(|| Box::new(ClassicProbe) as Box<dyn Probe>),
     ];
 
-    AstAnalyser::new(AstAnalyserOptions { custom_probes, skip_default_probes: true, ..Default::default() })
-        .analyse_file(&fixture("customProbe.js"), RuntimeOptions::default())
-        .unwrap();
+    AstAnalyser::new(AstAnalyserOptions {
+        custom_probes,
+        skip_default_probes: true,
+        ..Default::default()
+    })
+    .analyse_file(&fixture("customProbe.js"), RuntimeOptions::default())
+    .unwrap();
 
     assert_eq!(*calls.borrow(), vec!["initialize", "finalize"]);
 }
@@ -681,8 +833,12 @@ fn analyse_file_calls_initialize_before_finalize() {
         .analyse_file(
             &fixture("depName.js"),
             RuntimeOptions {
-                initialize: Some(Box::new(move |_: &mut SourceFile| init_calls.borrow_mut().push("initialize"))),
-                finalize: Some(Box::new(move |_: &mut SourceFile| finalize_calls.borrow_mut().push("finalize"))),
+                initialize: Some(Box::new(move |_: &mut SourceFile| {
+                    init_calls.borrow_mut().push("initialize")
+                })),
+                finalize: Some(Box::new(move |_: &mut SourceFile| {
+                    finalize_calls.borrow_mut().push("finalize")
+                })),
                 ..Default::default()
             },
         )
@@ -697,7 +853,9 @@ fn analyse_file_adds_is_minified_flag_for_minified_files() {
         a.readFile(\"test.txt\",function(c,d){b.createServer().listen(3000)});";
     let temp = TempFile::new("temp-test.min.js", content);
 
-    let report = AstAnalyser::default().analyse_file(temp.path(), RuntimeOptions::default()).unwrap();
+    let report = AstAnalyser::default()
+        .analyse_file(temp.path(), RuntimeOptions::default())
+        .unwrap();
 
     match report {
         ReportOnFile::Ok { flags, .. } => {
@@ -716,7 +874,9 @@ fn analyse_file_adds_oneline_require_flag_for_one_line_exports() {
         collectables: vec![DefaultCollectableSet::new("dependency")],
         ..Default::default()
     });
-    let report = analyser.analyse_file(temp.path(), RuntimeOptions::default()).unwrap();
+    let report = analyser
+        .analyse_file(temp.path(), RuntimeOptions::default())
+        .unwrap();
 
     match report {
         ReportOnFile::Ok { flags, .. } => {
@@ -734,8 +894,8 @@ fn analyse_file_adds_oneline_require_flag_for_one_line_exports() {
 
 #[test]
 fn prepare_source_removes_a_shebang_at_the_start_of_the_file() {
-    let prepared =
-        AstAnalyser::default().prepare_source("#!/usr/bin/env node\nconst hello = \"world\";", false);
+    let prepared = AstAnalyser::default()
+        .prepare_source("#!/usr/bin/env node\nconst hello = \"world\";", false);
     assert_eq!(prepared, "const hello = \"world\";");
 }
 
@@ -774,7 +934,9 @@ fn prepare_source_removes_multiple_html_comments() {
 
 #[test]
 fn constructor_does_not_error_without_a_custom_parser() {
-    let report = AstAnalyser::default().analyse("const foo = 'bar';", RuntimeOptions::default()).unwrap();
+    let report = AstAnalyser::default()
+        .analyse("const foo = 'bar';", RuntimeOptions::default())
+        .unwrap();
     assert!(report.dependencies.is_empty());
 }
 
@@ -786,7 +948,10 @@ fn constructor_instantiates_with_the_default_probe_list() {
     // compared instead.
     let analyser = AstAnalyser::default();
     let names: Vec<&str> = analyser.probes().iter().map(|p| p.name()).collect();
-    let expected: Vec<&str> = js_x_ray::probes::default_probes().iter().map(|p| p.name()).collect();
+    let expected: Vec<&str> = js_x_ray::probes::default_probes()
+        .iter()
+        .map(|p| p.name())
+        .collect();
     assert_eq!(names, expected);
 }
 
@@ -798,7 +963,13 @@ fn constructor_uses_the_default_or_custom_parser_via_analyse_file() {
     // `FakeSourceParser` always returns a fixed dummy AST regardless of
     // input — succeeding here proves the custom parser was actually used.
     let ok = AstAnalyser::default()
-        .analyse_file(&fixture("depName.js"), RuntimeOptions { package_name: Some("foobar".to_owned()), ..Default::default() })
+        .analyse_file(
+            &fixture("depName.js"),
+            RuntimeOptions {
+                package_name: Some("foobar".to_owned()),
+                ..Default::default()
+            },
+        )
         .unwrap();
     assert!(matches!(ok, ReportOnFile::Ok { .. }));
 
@@ -820,8 +991,15 @@ fn constructor_uses_the_default_or_custom_parser_via_analyse() {
     // Same behavioral proof as above, via `analyse`: the default parser
     // finds the real `require("http")` dependency, while `FakeSourceParser`'s
     // fixed dummy AST contains no such call.
-    let default_report =
-        AstAnalyser::default().analyse("const http = require(\"http\");", RuntimeOptions { remove_html_comments: true, ..Default::default() }).unwrap();
+    let default_report = AstAnalyser::default()
+        .analyse(
+            "const http = require(\"http\");",
+            RuntimeOptions {
+                remove_html_comments: true,
+                ..Default::default()
+            },
+        )
+        .unwrap();
     assert!(default_report.dependencies.contains_key("http"));
 
     let fake_parser_report = AstAnalyser::default()
@@ -858,8 +1036,16 @@ fn optional_warnings_activates_all_crypto_probes_with_a_glob_pattern() {
     });
     let names: Vec<&str> = analyser.probes().iter().map(|p| p.name()).collect();
 
-    for expected in ["isWeakScrypt", "isUnsafePrehash", "isWeakBcrypt", "isPasswordShucking"] {
-        assert!(names.contains(&expected), "missing probe {expected} (have {names:?})");
+    for expected in [
+        "isWeakScrypt",
+        "isUnsafePrehash",
+        "isWeakBcrypt",
+        "isPasswordShucking",
+    ] {
+        assert!(
+            names.contains(&expected),
+            "missing probe {expected} (have {names:?})"
+        );
     }
 }
 
@@ -869,7 +1055,11 @@ fn optional_warnings_activates_all_crypto_probes_with_a_glob_pattern() {
 fn generate_warning_for_an_encoded_literal_kind_uses_a_deep_location_array() {
     let result = generate_warning(
         "encoded-literal",
-        GenerateWarningOptions { value: None, location: Some(root_location()), ..Default::default() },
+        GenerateWarningOptions {
+            value: None,
+            location: Some(root_location()),
+            ..Default::default()
+        },
     );
 
     assert_eq!(
@@ -916,10 +1106,20 @@ fn generate_warning_for_a_weak_crypto_kind_uses_a_simple_location_and_experiment
 
 #[test]
 fn generate_warning_severity_option_overrides_the_default_severity() {
-    let warning_a = generate_warning("parsing-error", GenerateWarningOptions { value: Some("test".to_owned()), ..Default::default() });
+    let warning_a = generate_warning(
+        "parsing-error",
+        GenerateWarningOptions {
+            value: Some("test".to_owned()),
+            ..Default::default()
+        },
+    );
     let warning_b = generate_warning(
         "parsing-error",
-        GenerateWarningOptions { value: Some("test".to_owned()), severity: Some(Severity::Critical), ..Default::default() },
+        GenerateWarningOptions {
+            value: Some("test".to_owned()),
+            severity: Some(Severity::Critical),
+            ..Default::default()
+        },
     );
 
     assert_eq!(warning_a.severity, Severity::Information);

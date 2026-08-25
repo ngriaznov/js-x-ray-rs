@@ -66,7 +66,11 @@ struct XmlScanner<'a> {
 
 impl<'a> XmlScanner<'a> {
     fn new(input: &'a str) -> Self {
-        Self { rest: input, stack: Vec::new(), root_name: None }
+        Self {
+            rest: input,
+            stack: Vec::new(),
+            root_name: None,
+        }
     }
 
     /// Returns the root element name if `rest` is a single well-formed XML

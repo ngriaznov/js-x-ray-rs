@@ -2,7 +2,10 @@
 
 use serde_json::Value;
 
-use crate::estree::{Node, SourceLocation, identifier_name, is_identifier, is_numeric_literal, is_string_literal, is_type};
+use crate::estree::{
+    Node, SourceLocation, identifier_name, is_identifier, is_numeric_literal, is_string_literal,
+    is_type,
+};
 use crate::probe::{Probe, ProbeCtx, ProbeReturn};
 use crate::source_file::SourceFile;
 use crate::variable_tracer::TraceOptions;
@@ -36,7 +39,9 @@ fn extract_numeric_param(properties: &[&Value], names: &[&str]) -> Option<f64> {
             return None;
         }
         let value = prop.get("value")?;
-        is_numeric_literal(value).then(|| value.get("value")?.as_f64()).flatten()
+        is_numeric_literal(value)
+            .then(|| value.get("value")?.as_f64())
+            .flatten()
     })
 }
 
@@ -108,9 +113,12 @@ impl Probe for IsWeakScrypt {
 
             let cost_value = extract_numeric_param(&properties, &["cost", "N"]);
             let block_size_value = extract_numeric_param(&properties, &["blockSize", "r"]);
-            let parallelization_value = extract_numeric_param(&properties, &["parallelization", "p"]);
+            let parallelization_value =
+                extract_numeric_param(&properties, &["parallelization", "p"]);
 
-            if (cost_value.is_some() || block_size_value.is_some() || parallelization_value.is_some())
+            if (cost_value.is_some()
+                || block_size_value.is_some()
+                || parallelization_value.is_some())
                 && is_weak_scrypt_params(
                     cost_value.unwrap_or(K_DEFAULT_COST),
                     block_size_value.unwrap_or(K_DEFAULT_BLOCK_SIZE),
@@ -132,7 +140,11 @@ impl Probe for IsWeakScrypt {
             && is_string_literal(salt)
         {
             let value = salt.get("value").and_then(Value::as_str).unwrap_or("");
-            let kind = if value.encode_utf16().count() < 16 { "short-salt" } else { "hardcoded-salt" };
+            let kind = if value.encode_utf16().count() < 16 {
+                "short-salt"
+            } else {
+                "hardcoded-salt"
+            };
 
             ctx.source_file.warnings.push(generate_warning(
                 "crypto.weak-scrypt",

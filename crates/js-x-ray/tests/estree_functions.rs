@@ -20,7 +20,12 @@ use serde_json::{Value, json};
 /// Upstream `parseScript` + `[astNode] = ...body` — parses and returns the
 /// first top-level statement.
 fn parse_first(code: &str) -> Value {
-    JsSourceParser.parse(code).unwrap().into_iter().next().unwrap()
+    JsSourceParser
+        .parse(code)
+        .unwrap()
+        .into_iter()
+        .next()
+        .unwrap()
 }
 
 /// Upstream `getExpressionFromStatement`: unwraps an `ExpressionStatement`,
@@ -44,8 +49,10 @@ fn expression_from_statement_if(node: &Value) -> Value {
 }
 
 fn lookup_from(pairs: &[(&str, &str)]) -> impl Fn(&str) -> Option<String> {
-    let map: std::collections::HashMap<String, String> =
-        pairs.iter().map(|(k, v)| (k.to_string(), v.to_string())).collect();
+    let map: std::collections::HashMap<String, String> = pairs
+        .iter()
+        .map(|(k, v)| (k.to_string(), v.to_string()))
+        .collect();
     move |name: &str| map.get(name).cloned()
 }
 
@@ -102,7 +109,10 @@ fn array_expression_to_string_non_array_expression_returns_immediately() {
 #[test]
 fn join_array_expression_returns_none_when_node_is_not_a_call_expression() {
     let ast = parse_first("const a = 1;");
-    assert_eq!(join_array_expression(&expression_from_statement_if(&ast), &noop), None);
+    assert_eq!(
+        join_array_expression(&expression_from_statement_if(&ast), &noop),
+        None
+    );
 }
 
 #[test]
@@ -149,7 +159,8 @@ fn join_array_expression_should_look_for_external_identifiers() {
 fn concat_binary_expression_two_literals_returns_literal_values() {
     let ast_node = parse_first("'foo' + 'bar' + 'xd'");
     let result =
-        concat_binary_expression_parts(&expression_from_statement(&ast_node), &noop, false).unwrap();
+        concat_binary_expression_parts(&expression_from_statement(&ast_node), &noop, false)
+            .unwrap();
 
     assert_eq!(result, vec!["foo", "bar", "xd"]);
 }
@@ -158,7 +169,8 @@ fn concat_binary_expression_two_literals_returns_literal_values() {
 fn concat_binary_expression_two_array_expressions_returns_array_values_as_string() {
     let ast_node = parse_first("['A'] + ['B']");
     let result =
-        concat_binary_expression_parts(&expression_from_statement(&ast_node), &noop, false).unwrap();
+        concat_binary_expression_parts(&expression_from_statement(&ast_node), &noop, false)
+            .unwrap();
 
     assert_eq!(result, vec!["A", "B"]);
 }
@@ -169,7 +181,8 @@ fn concat_binary_expression_two_identifiers_returns_tracer_values() {
 
     let ast_node = parse_first("foo + bar");
     let result =
-        concat_binary_expression_parts(&expression_from_statement(&ast_node), &lookup, false).unwrap();
+        concat_binary_expression_parts(&expression_from_statement(&ast_node), &lookup, false)
+            .unwrap();
 
     assert_eq!(result, vec!["A", "B"]);
 }

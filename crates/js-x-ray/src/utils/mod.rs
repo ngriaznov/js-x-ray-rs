@@ -1,7 +1,7 @@
 //! Upstream: `src/utils/` — one Rust module per upstream file.
 
-pub mod hex;
 mod get_sub_member_expression_segments;
+pub mod hex;
 mod is_evil_identifier;
 mod is_minified_code;
 mod is_one_line_expression_export;

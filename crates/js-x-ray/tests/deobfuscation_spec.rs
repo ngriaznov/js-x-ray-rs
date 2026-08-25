@@ -32,7 +32,10 @@ fn parse(code: &str) -> Vec<Value> {
 }
 
 fn identifier(name: &str, r#type: &str) -> ObfuscatedIdentifier {
-    ObfuscatedIdentifier { name: name.to_owned(), r#type: r#type.to_owned() }
+    ObfuscatedIdentifier {
+        name: name.to_owned(),
+        r#type: r#type.to_owned(),
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -49,7 +52,10 @@ fn should_detect_two_identifiers_class_name_and_superclass_name() {
     assert_eq!(counters.identifiers, 2);
     assert_eq!(
         deobfuscator.identifiers,
-        vec![identifier("File", "ClassDeclaration"), identifier("Blob", "ClassDeclaration")]
+        vec![
+            identifier("File", "ClassDeclaration"),
+            identifier("Blob", "ClassDeclaration")
+        ]
     );
 }
 
@@ -59,7 +65,10 @@ fn should_detect_one_identifier_because_there_is_no_superclass() {
     let body = parse("class File {}");
     walk_ast_body(body, |node| deobfuscator.walk(node));
 
-    assert_eq!(deobfuscator.identifiers, vec![identifier("File", "ClassDeclaration")]);
+    assert_eq!(
+        deobfuscator.identifiers,
+        vec![identifier("File", "ClassDeclaration")]
+    );
 }
 
 #[test]
@@ -68,7 +77,10 @@ fn should_detect_one_identifier_because_superclass_is_not_an_identifier_but_a_ca
     let body = parse("class File extends (foo()) {}");
     walk_ast_body(body, |node| deobfuscator.walk(node));
 
-    assert_eq!(deobfuscator.identifiers, vec![identifier("File", "ClassDeclaration")]);
+    assert_eq!(
+        deobfuscator.identifiers,
+        vec![identifier("File", "ClassDeclaration")]
+    );
 }
 
 #[test]
@@ -79,7 +91,10 @@ fn should_detect_one_function_declaration_node() {
 
     let counters = deobfuscator.aggregate_counters();
     assert_eq!(counters.function_declaration, 1);
-    assert_eq!(deobfuscator.identifiers, vec![identifier("foo", "FunctionDeclaration")]);
+    assert_eq!(
+        deobfuscator.identifiers,
+        vec![identifier("foo", "FunctionDeclaration")]
+    );
 }
 
 #[test]
@@ -129,7 +144,10 @@ fn should_detect_a_member_expression_with_two_no_computed_property() {
     walk_ast_body(body, |node| deobfuscator.walk(node));
 
     let counters = deobfuscator.aggregate_counters();
-    assert_eq!(counters.member_expression, IndexMap::from([("false".to_owned(), 2u32)]));
+    assert_eq!(
+        counters.member_expression,
+        IndexMap::from([("false".to_owned(), 2u32)])
+    );
 }
 
 #[test]
@@ -208,7 +226,10 @@ fn should_detect_one_assignment_expression_with_two_identifiers() {
     assert_eq!(counters.assignment_expression, 1);
     assert_eq!(
         deobfuscator.identifiers,
-        vec![identifier("obj", "AssignmentExpression"), identifier("foo", "Property")]
+        vec![
+            identifier("obj", "AssignmentExpression"),
+            identifier("foo", "Property")
+        ]
     );
 }
 
@@ -220,7 +241,10 @@ fn should_detect_zero_assignment_expression_but_one_identifier() {
 
     let counters = deobfuscator.aggregate_counters();
     assert_eq!(counters.assignment_expression, 0);
-    assert_eq!(deobfuscator.identifiers, vec![identifier("foo", "Property")]);
+    assert_eq!(
+        deobfuscator.identifiers,
+        vec![identifier("foo", "Property")]
+    );
 }
 
 #[test]
@@ -307,7 +331,10 @@ fn should_count_the_number_of_variable_declarator() {
 
     let counters = deobfuscator.aggregate_counters();
     assert_eq!(counters.variable_declarator, 3);
-    assert_eq!(counters.variable_declaration, IndexMap::from([("let".to_owned(), 1u32)]));
+    assert_eq!(
+        counters.variable_declaration,
+        IndexMap::from([("let".to_owned(), 1u32)])
+    );
     assert_eq!(
         deobfuscator.identifiers,
         vec![
@@ -352,7 +379,10 @@ fn should_detect_morse() {
 fn should_use_name_option_instead_of_type() {
     let nc = NodeCounter::with_options(
         "UnaryExpression",
-        NodeCounterOptions { name: Some("DoubleUnaryExpression"), ..Default::default() },
+        NodeCounterOptions {
+            name: Some("DoubleUnaryExpression"),
+            ..Default::default()
+        },
     );
 
     assert_eq!(nc.name, "DoubleUnaryExpression");
@@ -375,7 +405,10 @@ fn trigger_test_filter(_node: &Node) -> bool {
 fn should_trigger_filter_and_match_functions_when_node_type_is_matching() {
     let mut nc = NodeCounter::with_options(
         "FunctionDeclaration",
-        NodeCounterOptions { filter: Some(trigger_test_filter), ..Default::default() },
+        NodeCounterOptions {
+            filter: Some(trigger_test_filter),
+            ..Default::default()
+        },
     );
 
     let body = parse("function foo() {};");
@@ -424,7 +457,10 @@ fn function_expression_has_identifier(node: &Node) -> bool {
 fn should_count_zero_for_a_function_expression_with_no_identifier() {
     let mut nc = NodeCounter::with_options(
         "FunctionExpression",
-        NodeCounterOptions { filter: Some(function_expression_has_identifier), ..Default::default() },
+        NodeCounterOptions {
+            filter: Some(function_expression_has_identifier),
+            ..Default::default()
+        },
     );
     assert_eq!(nc.r#type, "FunctionExpression");
     assert_eq!(nc.lookup, None);
@@ -508,16 +544,25 @@ fn should_iterate_once_on_the_pipeline() {
 
     let make_factory = |calls: &Arc<Mutex<Vec<Vec<Value>>>>| {
         let calls = Arc::clone(calls);
-        move || Box::new(SpyPipeline { calls: Arc::clone(&calls) }) as Box<dyn Pipeline>
+        move || {
+            Box::new(SpyPipeline {
+                calls: Arc::clone(&calls),
+            }) as Box<dyn Pipeline>
+        }
     };
 
     let analyser = AstAnalyser::new(AstAnalyserOptions {
-        pipelines: vec![Box::new(make_factory(&calls)), Box::new(make_factory(&calls))],
+        pipelines: vec![
+            Box::new(make_factory(&calls)),
+            Box::new(make_factory(&calls)),
+        ],
         ..Default::default()
     });
 
     let code = "return \"Hello World\";";
-    analyser.analyse(code, RuntimeOptions::default()).expect("analyse");
+    analyser
+        .analyse(code, RuntimeOptions::default())
+        .expect("analyse");
 
     let recorded = calls.lock().unwrap();
     assert_eq!(recorded.len(), 1);
@@ -530,7 +575,10 @@ fn should_iterate_once_on_the_pipeline() {
 }
 
 fn warning_kinds(warnings: &[Warning]) -> Vec<String> {
-    let mut kinds: Vec<String> = warnings.iter().map(|warning| warning.kind.clone()).collect();
+    let mut kinds: Vec<String> = warnings
+        .iter()
+        .map(|warning| warning.kind.clone())
+        .collect();
     kinds.sort();
     kinds
 }
@@ -545,9 +593,14 @@ fn pipelines_deobfuscate_should_find_a_shady_url_by_deobfuscating_a_joined_array
     let code = r#"
       const URL = ["http://", ["77", "244", "210", "1"].join("."), "/script"].join("");
     "#;
-    let report = analyser.analyse(code, RuntimeOptions::default()).expect("analyse");
+    let report = analyser
+        .analyse(code, RuntimeOptions::default())
+        .expect("analyse");
 
-    assert_eq!(warning_kinds(&report.warnings), vec!["shady-link".to_owned()]);
+    assert_eq!(
+        warning_kinds(&report.warnings),
+        vec!["shady-link".to_owned()]
+    );
 }
 
 // ---------------------------------------------------------------------------
@@ -555,7 +608,9 @@ fn pipelines_deobfuscate_should_find_a_shady_url_by_deobfuscating_a_joined_array
 // ---------------------------------------------------------------------------
 
 fn fixture_path(name: &str) -> PathBuf {
-    Path::new(env!("CARGO_MANIFEST_DIR")).join("../../tests/etalon/fixtures/obfuscated").join(name)
+    Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../../tests/etalon/fixtures/obfuscated")
+        .join(name)
 }
 
 fn fixture(name: &str) -> String {
@@ -566,27 +621,39 @@ fn fixture(name: &str) -> String {
 #[test]
 fn should_detect_jsfuck_obfuscation() {
     let source = fixture("jsfuck.js");
-    let report = AstAnalyser::default().analyse(&source, RuntimeOptions::default()).expect("analyse");
+    let report = AstAnalyser::default()
+        .analyse(&source, RuntimeOptions::default())
+        .expect("analyse");
 
     assert_eq!(report.warnings.len(), 1);
-    assert_eq!(warning_kinds(&report.warnings), vec!["obfuscated-code".to_owned()]);
+    assert_eq!(
+        warning_kinds(&report.warnings),
+        vec!["obfuscated-code".to_owned()]
+    );
     assert_eq!(report.warnings[0].value, Some("jsfuck".to_owned()));
 }
 
 #[test]
 fn should_detect_morse_obfuscation() {
     let source = fixture("morse.js");
-    let report = AstAnalyser::default().analyse(&source, RuntimeOptions::default()).expect("analyse");
+    let report = AstAnalyser::default()
+        .analyse(&source, RuntimeOptions::default())
+        .expect("analyse");
 
     assert_eq!(report.warnings.len(), 1);
-    assert_eq!(warning_kinds(&report.warnings), vec!["obfuscated-code".to_owned()]);
+    assert_eq!(
+        warning_kinds(&report.warnings),
+        vec!["obfuscated-code".to_owned()]
+    );
     assert_eq!(report.warnings[0].value, Some("morse".to_owned()));
 }
 
 #[test]
 fn should_not_detect_morse_obfuscation() {
     let source = fixture("notMorse.js");
-    let report = AstAnalyser::default().analyse(&source, RuntimeOptions::default()).expect("analyse");
+    let report = AstAnalyser::default()
+        .analyse(&source, RuntimeOptions::default())
+        .expect("analyse");
 
     assert_eq!(report.warnings.len(), 0);
 }
@@ -595,7 +662,9 @@ fn should_not_detect_morse_obfuscation() {
 fn should_not_detect_morse_obfuscation_for_high_number_of_doubles_morse_symbols() {
     let repeated = "'.' + '..' +".repeat(37);
     let code = format!("const a = {repeated} '.'");
-    let report = AstAnalyser::default().analyse(&code, RuntimeOptions::default()).expect("analyse");
+    let report = AstAnalyser::default()
+        .analyse(&code, RuntimeOptions::default())
+        .expect("analyse");
 
     assert_eq!(report.warnings.len(), 0);
 }
@@ -603,31 +672,50 @@ fn should_not_detect_morse_obfuscation_for_high_number_of_doubles_morse_symbols(
 #[test]
 fn should_detect_jjencode_obfuscation() {
     let source = fixture("jjencode.js");
-    let report = AstAnalyser::default().analyse(&source, RuntimeOptions::default()).expect("analyse");
+    let report = AstAnalyser::default()
+        .analyse(&source, RuntimeOptions::default())
+        .expect("analyse");
 
     assert_eq!(report.warnings.len(), 1);
-    assert_eq!(warning_kinds(&report.warnings), vec!["obfuscated-code".to_owned()]);
+    assert_eq!(
+        warning_kinds(&report.warnings),
+        vec!["obfuscated-code".to_owned()]
+    );
     assert_eq!(report.warnings[0].value, Some("jjencode".to_owned()));
 }
 
 #[test]
 fn should_detect_freejsobfuscator_obfuscation() {
     let source = fixture("freejsobfuscator.js");
-    let report = AstAnalyser::default().analyse(&source, RuntimeOptions::default()).expect("analyse");
+    let report = AstAnalyser::default()
+        .analyse(&source, RuntimeOptions::default())
+        .expect("analyse");
 
-    let mut expected = vec!["encoded-literal".to_owned(), "encoded-literal".to_owned(), "obfuscated-code".to_owned()];
+    let mut expected = vec![
+        "encoded-literal".to_owned(),
+        "encoded-literal".to_owned(),
+        "obfuscated-code".to_owned(),
+    ];
     expected.sort();
     assert_eq!(warning_kinds(&report.warnings), expected);
-    assert_eq!(report.warnings[2].value, Some("freejsobfuscator".to_owned()));
+    assert_eq!(
+        report.warnings[2].value,
+        Some("freejsobfuscator".to_owned())
+    );
 }
 
 #[test]
 fn should_detect_obfuscator_io_obfuscation_with_hexadecimal_generator() {
     let source = fixture("obfuscatorio-hexa.js");
-    let report = AstAnalyser::default().analyse(&source, RuntimeOptions::default()).expect("analyse");
+    let report = AstAnalyser::default()
+        .analyse(&source, RuntimeOptions::default())
+        .expect("analyse");
 
     assert_eq!(report.warnings.len(), 1);
-    assert_eq!(warning_kinds(&report.warnings), vec!["obfuscated-code".to_owned()]);
+    assert_eq!(
+        warning_kinds(&report.warnings),
+        vec!["obfuscated-code".to_owned()]
+    );
     assert_eq!(report.warnings[0].value, Some("obfuscator.io".to_owned()));
 }
 
@@ -638,7 +726,9 @@ fn should_not_detect_trojan_source_when_providing_safe_control_character() {
     // literal interpolates its own `` escape), not the two-character
     // text `\`+`u0008`.
     let code = "\n    const simpleStringWithControlCharacters = \"Its only a \u{8}backspace\";\n  ";
-    let report = AstAnalyser::default().analyse(code, RuntimeOptions::default()).expect("analyse");
+    let report = AstAnalyser::default()
+        .analyse(code, RuntimeOptions::default())
+        .expect("analyse");
 
     assert!(report.warnings.is_empty());
 }
@@ -646,18 +736,24 @@ fn should_not_detect_trojan_source_when_providing_safe_control_character() {
 #[test]
 fn should_detect_trojan_source_when_there_is_one_unsafe_unicode_control_char() {
     let code = "\n    const role = \"ROLE_ADMIN\u{2066}\" // Dangerous control char;\n  ";
-    let report = AstAnalyser::default().analyse(code, RuntimeOptions::default()).expect("analyse");
+    let report = AstAnalyser::default()
+        .analyse(code, RuntimeOptions::default())
+        .expect("analyse");
 
     assert_eq!(report.warnings.len(), 1);
-    assert_eq!(warning_kinds(&report.warnings), vec!["obfuscated-code".to_owned()]);
+    assert_eq!(
+        warning_kinds(&report.warnings),
+        vec!["obfuscated-code".to_owned()]
+    );
     assert_eq!(report.warnings[0].value, Some("trojan-source".to_owned()));
 }
 
 #[test]
 fn should_detect_trojan_source_when_there_is_at_least_one_unsafe_unicode_control_char() {
     let path = fixture_path("unsafe-unicode-chars.js");
-    let report =
-        AstAnalyser::default().analyse_file(&path, RuntimeOptions::default()).expect("analyse_file");
+    let report = AstAnalyser::default()
+        .analyse_file(&path, RuntimeOptions::default())
+        .expect("analyse_file");
 
     let ReportOnFile::Ok { warnings, .. } = report else {
         panic!("expected a successfully parsed file, got {report:?}");

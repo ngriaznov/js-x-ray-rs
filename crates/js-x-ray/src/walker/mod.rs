@@ -142,11 +142,11 @@ impl SyncWalker<'_, '_> {
         let Value::Array(items) = value else { return };
         let mut i = 0;
         while i < items.len() {
-            if is_node(&items[i]) {
-                if let Outcome::Removed = self.visit(&mut items[i]) {
-                    items.remove(i);
-                    continue;
-                }
+            if is_node(&items[i])
+                && let Outcome::Removed = self.visit(&mut items[i])
+            {
+                items.remove(i);
+                continue;
             }
             i += 1;
         }

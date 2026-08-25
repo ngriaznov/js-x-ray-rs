@@ -47,7 +47,10 @@ impl Probe for IsRegexObject {
                 .unwrap_or("")
                 .to_owned()
         } else {
-            arg.get("value").and_then(Value::as_str).unwrap_or("").to_owned()
+            arg.get("value")
+                .and_then(Value::as_str)
+                .unwrap_or("")
+                .to_owned()
         };
 
         if !is_safe_regex(&pattern) {

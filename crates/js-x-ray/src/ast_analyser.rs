@@ -36,6 +36,8 @@ pub enum OptionalWarnings {
 /// their `context` from `kProbeOriginalContext` in `ProbeRunner.finalize`).
 pub type ProbeFactory = Box<dyn Fn() -> Box<dyn Probe>>;
 pub type PipelineFactory = Box<dyn Fn() -> Box<dyn Pipeline>>;
+/// Hook receiving the analysis' `SourceFile` (upstream `initialize`/`finalize`).
+pub type SourceFileHook = Box<dyn FnOnce(&mut SourceFile)>;
 
 #[derive(Default)]
 pub struct AstAnalyserOptions {
@@ -53,8 +55,8 @@ pub struct RuntimeOptions {
     pub remove_html_comments: bool,
     pub is_minified: bool,
     pub custom_parser: Option<Box<dyn SourceParser>>,
-    pub initialize: Option<Box<dyn FnOnce(&mut SourceFile)>>,
-    pub finalize: Option<Box<dyn FnOnce(&mut SourceFile)>>,
+    pub initialize: Option<SourceFileHook>,
+    pub finalize: Option<SourceFileHook>,
     pub metadata: Option<Map<String, Value>>,
     pub package_name: Option<String>,
 }
@@ -85,7 +87,6 @@ pub enum ReportOnFile {
         execution_time: f64,
     },
 }
-
 
 /// Monotonic timer for `executionTime`; `Instant::now` traps on
 /// wasm32-unknown-unknown, where the reported time is 0.
@@ -146,11 +147,12 @@ impl AstAnalyser {
     }
 
     fn build_probes(&self) -> Vec<Box<dyn Probe>> {
-        let mut probes = if !self.options.custom_probes.is_empty() && self.options.skip_default_probes {
-            Vec::new()
-        } else {
-            default_probes()
-        };
+        let mut probes =
+            if !self.options.custom_probes.is_empty() && self.options.skip_default_probes {
+                Vec::new()
+            } else {
+                default_probes()
+            };
         for factory in &self.options.custom_probes {
             probes.push(factory());
         }
@@ -181,8 +183,12 @@ impl AstAnalyser {
     }
 
     fn build_pipelines(&self) -> PipelineRunner {
-        let mut pipelines: Vec<Box<dyn Pipeline>> =
-            self.options.pipelines.iter().map(|factory| factory()).collect();
+        let mut pipelines: Vec<Box<dyn Pipeline>> = self
+            .options
+            .pipelines
+            .iter()
+            .map(|factory| factory())
+            .collect();
         pipelines.push(Box::new(Inline));
         PipelineRunner::new(pipelines)
     }
@@ -425,10 +431,7 @@ fn probe_and_recurse(
 
 fn is_eval_call_expr(node: &Node) -> bool {
     is_call_expression(node)
-        && get_call_expression_identifier(
-            node,
-            &GetCallExpressionIdentifierOptions::default(),
-        )
-        .as_deref()
+        && get_call_expression_identifier(node, &GetCallExpressionIdentifierOptions::default())
+            .as_deref()
             == Some("eval")
 }

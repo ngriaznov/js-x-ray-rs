@@ -39,7 +39,8 @@ fn validate_node_require(node: &Node, ctx: &mut ProbeCtx<'_>) -> Option<String> 
     )?;
 
     let data = ctx.source_file.tracer.get_data_from_identifier(&id, true);
-    data.is_some_and(|report| report.name == "require").then_some(id)
+    data.is_some_and(|report| report.name == "require")
+        .then_some(id)
 }
 
 // eval("require")("http")
@@ -98,7 +99,9 @@ impl Probe for IsRequire {
                     let value = literal.value.clone();
                     ctx.source_file.add_dependency(&value, location);
                 } else {
-                    ctx.source_file.warnings.push(unsafe_import_warning(location));
+                    ctx.source_file
+                        .warnings
+                        .push(unsafe_import_warning(location));
                 }
             }
 
@@ -120,7 +123,9 @@ impl Probe for IsRequire {
                     .to_owned();
 
                 if value.is_empty() {
-                    ctx.source_file.warnings.push(unsafe_import_warning(location));
+                    ctx.source_file
+                        .warnings
+                        .push(unsafe_import_warning(location));
                 } else {
                     ctx.source_file.add_dependency(&value, location);
                 }
@@ -129,13 +134,18 @@ impl Probe for IsRequire {
             // require("ht" + "tp");
             Some("BinaryExpression") => {
                 if arg.get("operator").and_then(Value::as_str) != Some("+") {
-                    ctx.source_file.warnings.push(unsafe_import_warning(location));
+                    ctx.source_file
+                        .warnings
+                        .push(unsafe_import_warning(location));
                 } else {
                     let tracer = &ctx.source_file.tracer;
                     let lookup = |name: &str| tracer.literal_identifier_lookup(name);
                     match concat_binary_expression_parts(arg, &lookup, true) {
                         Some(parts) => ctx.source_file.add_dependency(&parts.concat(), location),
-                        None => ctx.source_file.warnings.push(unsafe_import_warning(location)),
+                        None => ctx
+                            .source_file
+                            .warnings
+                            .push(unsafe_import_warning(location)),
                     }
                 }
             }
@@ -152,7 +162,9 @@ impl Probe for IsRequire {
                         .add_dependency_with(dependency_name, location, true);
                 }
                 if trigger_warning {
-                    ctx.source_file.warnings.push(unsafe_import_warning(location));
+                    ctx.source_file
+                        .warnings
+                        .push(unsafe_import_warning(location));
                 }
 
                 // We skip walking the tree to avoid anymore warnings...
@@ -160,7 +172,9 @@ impl Probe for IsRequire {
             }
 
             _ => {
-                ctx.source_file.warnings.push(unsafe_import_warning(location));
+                ctx.source_file
+                    .warnings
+                    .push(unsafe_import_warning(location));
             }
         }
 

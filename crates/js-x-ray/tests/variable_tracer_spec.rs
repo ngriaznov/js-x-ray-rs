@@ -33,7 +33,9 @@ impl Harness {
 
     /// Upstream `walkOnCode`.
     fn walk_on_code(&mut self, code: &str) -> Vec<TracerEvent> {
-        let body = JsSourceParser.parse(code).expect("upstream fixture must parse");
+        let body = JsSourceParser
+            .parse(code)
+            .expect("upstream fixture must parse");
         let mut root = Value::Array(body);
         let tracer = &mut self.tracer;
         walk_enter(&mut root, |_ctx, node| {
@@ -77,13 +79,16 @@ fn assignment_events(events: &[TracerEvent]) -> Vec<AssignmentEvt> {
     events
         .iter()
         .filter_map(|event| match event {
-            TracerEvent::Assignment { name, identifier_or_member_expr, id, .. } => {
-                Some(AssignmentEvt {
-                    name: name.clone(),
-                    identifier_or_member_expr: identifier_or_member_expr.clone(),
-                    id: id.clone(),
-                })
-            }
+            TracerEvent::Assignment {
+                name,
+                identifier_or_member_expr,
+                id,
+                ..
+            } => Some(AssignmentEvt {
+                name: name.clone(),
+                identifier_or_member_expr: identifier_or_member_expr.clone(),
+                id: id.clone(),
+            }),
             _ => None,
         })
         .collect()
@@ -94,7 +99,11 @@ fn import_events(events: &[TracerEvent]) -> Vec<ImportEvt> {
     events
         .iter()
         .filter_map(|event| match event {
-            TracerEvent::Import { module_name, value, location } => Some(ImportEvt {
+            TracerEvent::Import {
+                module_name,
+                value,
+                location,
+            } => Some(ImportEvt {
                 module_name: module_name.clone(),
                 value: value.clone(),
                 location: *location,
@@ -109,15 +118,19 @@ fn return_value_events(events: &[TracerEvent]) -> Vec<ReturnValueEvt> {
     events
         .iter()
         .filter_map(|event| match event {
-            TracerEvent::ReturnValue { name, identifier_or_member_expr, id, location, arguments } => {
-                Some(ReturnValueEvt {
-                    name: name.clone(),
-                    identifier_or_member_expr: identifier_or_member_expr.clone(),
-                    id: id.clone(),
-                    location: *location,
-                    arguments: arguments.clone(),
-                })
-            }
+            TracerEvent::ReturnValue {
+                name,
+                identifier_or_member_expr,
+                id,
+                location,
+                arguments,
+            } => Some(ReturnValueEvt {
+                name: name.clone(),
+                identifier_or_member_expr: identifier_or_member_expr.clone(),
+                id: id.clone(),
+                location: *location,
+                arguments: arguments.clone(),
+            }),
             _ => None,
         })
         .collect()
@@ -147,7 +160,12 @@ fn memory_tuples(report: &js_x_ray::TracedIdentifierReport) -> Vec<(&'static str
 fn get_data_from_identifier_must_return_primitive_null_if_there_is_no_known_traced_identifier() {
     let harness = Harness::new(true);
 
-    assert!(harness.tracer.get_data_from_identifier("foobar", false).is_none());
+    assert!(
+        harness
+            .tracer
+            .get_data_from_identifier("foobar", false)
+            .is_none()
+    );
 }
 
 #[test]
@@ -243,7 +261,8 @@ fn it_should_trace_a_namespace_import_aliased_to_a_different_local_name() {
 }
 
 #[test]
-fn it_should_be_able_to_trace_a_malicious_code_with_global_binaryexpr_assignments_and_hexadecimal() {
+fn it_should_be_able_to_trace_a_malicious_code_with_global_binaryexpr_assignments_and_hexadecimal()
+{
     let mut harness = Harness::new(true);
 
     let events = harness.walk_on_code(
@@ -264,17 +283,24 @@ fn it_should_be_able_to_trace_a_malicious_code_with_global_binaryexpr_assignment
         .expect("evil must be traced");
     assert_eq!(evil.name, "require");
     assert_eq!(evil.identifier_or_member_expr, "process.mainModule.require");
-    assert_eq!(memory_tuples(&evil), vec![("AliasBinding", "p"), ("AliasBinding", "evil")]);
+    assert_eq!(
+        memory_tuples(&evil),
+        vec![("AliasBinding", "p"), ("AliasBinding", "evil")]
+    );
 
     assert_eq!(assignments.len(), 2);
     assert_eq!(assignments[0].identifier_or_member_expr, "process");
     assert_eq!(assignments[0].id, "p");
-    assert_eq!(assignments[1].identifier_or_member_expr, "process.mainModule.require");
+    assert_eq!(
+        assignments[1].identifier_or_member_expr,
+        "process.mainModule.require"
+    );
     assert_eq!(assignments[1].id, "evil");
 }
 
 #[test]
-fn it_should_be_able_to_trace_a_malicious_callexpression_by_recombining_segments_of_the_memberexpression() {
+fn it_should_be_able_to_trace_a_malicious_callexpression_by_recombining_segments_of_the_memberexpression()
+ {
     let mut harness = Harness::new(true);
 
     let events = harness.walk_on_code(
@@ -296,15 +322,25 @@ fn it_should_be_able_to_trace_a_malicious_callexpression_by_recombining_segments
     assert_eq!(evil.identifier_or_member_expr, "process.mainModule.require");
     assert_eq!(
         memory_tuples(&evil),
-        vec![("AliasBinding", "g"), ("AliasBinding", "r"), ("AliasBinding", "c")]
+        vec![
+            ("AliasBinding", "g"),
+            ("AliasBinding", "r"),
+            ("AliasBinding", "c")
+        ]
     );
 
     assert_eq!(assignments.len(), 3);
     assert_eq!(assignments[0].identifier_or_member_expr, "process");
     assert_eq!(assignments[0].id, "g");
-    assert_eq!(assignments[1].identifier_or_member_expr, "process.mainModule");
+    assert_eq!(
+        assignments[1].identifier_or_member_expr,
+        "process.mainModule"
+    );
     assert_eq!(assignments[1].id, "r");
-    assert_eq!(assignments[2].identifier_or_member_expr, "process.mainModule.require");
+    assert_eq!(
+        assignments[2].identifier_or_member_expr,
+        "process.mainModule.require"
+    );
     assert_eq!(assignments[2].id, "c");
 }
 
@@ -312,7 +348,12 @@ fn it_should_be_able_to_trace_a_malicious_callexpression_by_recombining_segments
 fn given_a_memberexpression_segment_that_doesnt_match_anything_then_it_should_return_null() {
     let harness = Harness::new(true);
 
-    assert!(harness.tracer.get_data_from_identifier("foo.bar", false).is_none());
+    assert!(
+        harness
+            .tracer
+            .get_data_from_identifier("foo.bar", false)
+            .is_none()
+    );
 }
 
 #[test]
@@ -327,14 +368,20 @@ fn it_should_be_able_to_trace_a_require_using_function_prototype_call() {
     );
     let assignments = assignment_events(&events);
 
-    assert!(harness.tracer.get_data_from_identifier("proto", false).is_none());
+    assert!(
+        harness
+            .tracer
+            .get_data_from_identifier("proto", false)
+            .is_none()
+    );
     assert_eq!(assignments.len(), 1);
     assert_eq!(assignments[0].identifier_or_member_expr, "http");
     assert_eq!(assignments[0].id, "proto");
 }
 
 #[test]
-fn it_should_be_able_to_trace_an_unsafe_crypto_createhash_using_function_prototype_call_reassignment() {
+fn it_should_be_able_to_trace_an_unsafe_crypto_createhash_using_function_prototype_call_reassignment()
+ {
     let mut harness = Harness::new(true);
     harness.tracer.trace(
         "crypto.createHash",
@@ -361,7 +408,10 @@ fn it_should_be_able_to_trace_an_unsafe_crypto_createhash_using_function_prototy
         .get_data_from_identifier("createHashBis", false)
         .expect("createHashBis must be traced");
     assert_eq!(create_hash_bis.name, "crypto.createHash");
-    assert_eq!(create_hash_bis.identifier_or_member_expr, "crypto.createHash");
+    assert_eq!(
+        create_hash_bis.identifier_or_member_expr,
+        "crypto.createHash"
+    );
     assert_eq!(
         memory_tuples(&create_hash_bis),
         vec![("AliasBinding", "crr"), ("AliasBinding", "createHashBis")]
@@ -373,7 +423,10 @@ fn it_should_be_able_to_trace_an_unsafe_crypto_createhash_using_function_prototy
     assert_eq!(assignments[0].id, "bB");
     assert_eq!(assignments[1].identifier_or_member_expr, "crypto");
     assert_eq!(assignments[1].id, "crr");
-    assert_eq!(assignments[2].identifier_or_member_expr, "crypto.createHash");
+    assert_eq!(
+        assignments[2].identifier_or_member_expr,
+        "crypto.createHash"
+    );
     assert_eq!(assignments[2].id, "createHashBis");
 }
 
@@ -399,10 +452,16 @@ fn should_be_able_to_trace_the_return_value_of_a_traced_function() {
         "#,
     );
 
-    let report = harness.tracer.get_data_from_identifier("os.hostname", false).unwrap();
+    let report = harness
+        .tracer
+        .get_data_from_identifier("os.hostname", false)
+        .unwrap();
     assert_eq!(
         memory_tuples(&report),
-        vec![("AliasBinding", "hostname"), ("ReturnValueAssignment", "host")]
+        vec![
+            ("AliasBinding", "hostname"),
+            ("ReturnValueAssignment", "host")
+        ]
     );
 }
 
@@ -428,10 +487,16 @@ fn should_be_able_to_follow_the_return_value_of_a_traced_function_in_an_object()
         "#,
     );
 
-    let report = harness.tracer.get_data_from_identifier("os.hostname", false).unwrap();
+    let report = harness
+        .tracer
+        .get_data_from_identifier("os.hostname", false)
+        .unwrap();
     assert_eq!(
         memory_tuples(&report),
-        vec![("AliasBinding", "hostname"), ("ReturnValueAssignment", "host")]
+        vec![
+            ("AliasBinding", "hostname"),
+            ("ReturnValueAssignment", "host")
+        ]
     );
 }
 
@@ -457,15 +522,22 @@ fn it_should_be_able_to_trace_the_return_value_of_a_traced_function_in_a_nested_
         "#,
     );
 
-    let report = harness.tracer.get_data_from_identifier("os.hostname", false).unwrap();
+    let report = harness
+        .tracer
+        .get_data_from_identifier("os.hostname", false)
+        .unwrap();
     assert_eq!(
         memory_tuples(&report),
-        vec![("AliasBinding", "hostname"), ("ReturnValueAssignment", "host")]
+        vec![
+            ("AliasBinding", "hostname"),
+            ("ReturnValueAssignment", "host")
+        ]
     );
 }
 
 #[test]
-fn should_be_able_to_trace_the_return_value_of_a_traced_function_when_the_return_value_is_spreaded() {
+fn should_be_able_to_trace_the_return_value_of_a_traced_function_when_the_return_value_is_spreaded()
+{
     let mut harness = Harness::new(false);
     harness.tracer.trace(
         "os.userInfo",
@@ -486,8 +558,14 @@ fn should_be_able_to_trace_the_return_value_of_a_traced_function_when_the_return
         "#,
     );
 
-    let report = harness.tracer.get_data_from_identifier("os.userInfo", false).unwrap();
-    assert_eq!(memory_tuples(&report), vec![("ReturnValueAssignment", "user")]);
+    let report = harness
+        .tracer
+        .get_data_from_identifier("os.userInfo", false)
+        .unwrap();
+    assert_eq!(
+        memory_tuples(&report),
+        vec![("ReturnValueAssignment", "user")]
+    );
 }
 
 #[test]
@@ -513,8 +591,14 @@ fn should_be_able_to_trace_a_property_access_on_the_return_value_of_a_traced_fun
         "#,
     );
 
-    let report = harness.tracer.get_data_from_identifier("os.userInfo", false).unwrap();
-    assert_eq!(memory_tuples(&report), vec![("ReturnValueAssignment", "user")]);
+    let report = harness
+        .tracer
+        .get_data_from_identifier("os.userInfo", false)
+        .unwrap();
+    assert_eq!(
+        memory_tuples(&report),
+        vec![("ReturnValueAssignment", "user")]
+    );
 }
 
 #[test]
@@ -539,10 +623,16 @@ fn it_should_be_able_to_trace_the_return_value_of_a_traced_function_in_an_array(
         "#,
     );
 
-    let report = harness.tracer.get_data_from_identifier("os.hostname", false).unwrap();
+    let report = harness
+        .tracer
+        .get_data_from_identifier("os.hostname", false)
+        .unwrap();
     assert_eq!(
         memory_tuples(&report),
-        vec![("AliasBinding", "hostname"), ("ReturnValueAssignment", "host")]
+        vec![
+            ("AliasBinding", "hostname"),
+            ("ReturnValueAssignment", "host")
+        ]
     );
 }
 
@@ -568,15 +658,22 @@ fn should_be_able_to_trace_the_return_value_of_a_traced_function_in_a_nested_arr
         "#,
     );
 
-    let report = harness.tracer.get_data_from_identifier("os.hostname", false).unwrap();
+    let report = harness
+        .tracer
+        .get_data_from_identifier("os.hostname", false)
+        .unwrap();
     assert_eq!(
         memory_tuples(&report),
-        vec![("AliasBinding", "hostname"), ("ReturnValueAssignment", "host")]
+        vec![
+            ("AliasBinding", "hostname"),
+            ("ReturnValueAssignment", "host")
+        ]
     );
 }
 
 #[test]
-fn should_be_able_to_trace_the_return_value_of_a_traced_function_in_an_array_when_the_return_value_is_spreaded() {
+fn should_be_able_to_trace_the_return_value_of_a_traced_function_in_an_array_when_the_return_value_is_spreaded()
+ {
     let mut harness = Harness::new(false);
     harness.tracer.trace(
         "os.userInfo",
@@ -597,8 +694,14 @@ fn should_be_able_to_trace_the_return_value_of_a_traced_function_in_an_array_whe
         "#,
     );
 
-    let report = harness.tracer.get_data_from_identifier("os.userInfo", false).unwrap();
-    assert_eq!(memory_tuples(&report), vec![("ReturnValueAssignment", "user")]);
+    let report = harness
+        .tracer
+        .get_data_from_identifier("os.userInfo", false)
+        .unwrap();
+    assert_eq!(
+        memory_tuples(&report),
+        vec![("ReturnValueAssignment", "user")]
+    );
 }
 
 #[test]
@@ -624,10 +727,16 @@ fn should_be_able_to_follow_re_assignment_on_traced_return_values() {
         "#,
     );
 
-    let report = harness.tracer.get_data_from_identifier("os.userInfo", false).unwrap();
+    let report = harness
+        .tracer
+        .get_data_from_identifier("os.userInfo", false)
+        .unwrap();
     assert_eq!(
         memory_tuples(&report),
-        vec![("ReturnValueAssignment", "user"), ("ReturnValueAssignment", "userBis")]
+        vec![
+            ("ReturnValueAssignment", "user"),
+            ("ReturnValueAssignment", "userBis")
+        ]
     );
 }
 
@@ -655,7 +764,10 @@ fn should_be_able_to_follow_re_assignment_on_multiple_consecutive_traced_return_
         "#,
     );
 
-    let report = harness.tracer.get_data_from_identifier("os.userInfo", false).unwrap();
+    let report = harness
+        .tracer
+        .get_data_from_identifier("os.userInfo", false)
+        .unwrap();
     assert_eq!(
         memory_tuples(&report),
         vec![
@@ -667,7 +779,8 @@ fn should_be_able_to_follow_re_assignment_on_multiple_consecutive_traced_return_
 }
 
 #[test]
-fn should_not_be_able_to_follow_re_assignment_of_a_traced_return_value_when_follow_consecutive_assignment_is_not_on() {
+fn should_not_be_able_to_follow_re_assignment_of_a_traced_return_value_when_follow_consecutive_assignment_is_not_on()
+ {
     let mut harness = Harness::new(false);
     harness.tracer.trace(
         "os.userInfo",
@@ -688,8 +801,14 @@ fn should_not_be_able_to_follow_re_assignment_of_a_traced_return_value_when_foll
         "#,
     );
 
-    let report = harness.tracer.get_data_from_identifier("os.userInfo", false).unwrap();
-    assert_eq!(memory_tuples(&report), vec![("ReturnValueAssignment", "user")]);
+    let report = harness
+        .tracer
+        .get_data_from_identifier("os.userInfo", false)
+        .unwrap();
+    assert_eq!(
+        memory_tuples(&report),
+        vec![("ReturnValueAssignment", "user")]
+    );
 }
 
 #[test]
@@ -717,7 +836,10 @@ fn should_get_an_importevent_when_an_import_declaration_is_encountered() {
         imports[0].location,
         Some(SourceLocation {
             start: Position { line: 2, column: 4 },
-            end: Position { line: 2, column: 29 },
+            end: Position {
+                line: 2,
+                column: 29
+            },
         })
     );
 }
@@ -746,8 +868,14 @@ fn should_get_an_importevent_when_a_require_call_is_encountered() {
     assert_eq!(
         imports[0].location,
         Some(SourceLocation {
-            start: Position { line: 2, column: 23 },
-            end: Position { line: 2, column: 32 },
+            start: Position {
+                line: 2,
+                column: 23
+            },
+            end: Position {
+                line: 2,
+                column: 32
+            },
         })
     );
 }
@@ -895,7 +1023,10 @@ fn it_should_be_able_to_trace_a_require_assignment_using_a_global_variable() {
     );
     let assignments = assignment_events(&events);
 
-    let foo = harness.tracer.get_data_from_identifier("foo", false).unwrap();
+    let foo = harness
+        .tracer
+        .get_data_from_identifier("foo", false)
+        .unwrap();
     assert_eq!(foo.name, "require");
     assert_eq!(foo.identifier_or_member_expr, "require");
     assert_eq!(memory_tuples(&foo), vec![("AliasBinding", "foo")]);
@@ -917,7 +1048,10 @@ fn it_should_be_able_to_trace_a_require_assignment_using_a_memberexpression() {
     );
     let assignments = assignment_events(&events);
 
-    let foo = harness.tracer.get_data_from_identifier("foo", false).unwrap();
+    let foo = harness
+        .tracer
+        .get_data_from_identifier("foo", false)
+        .unwrap();
     assert_eq!(foo.name, "require");
     assert_eq!(foo.identifier_or_member_expr, "require.resolve");
     assert_eq!(memory_tuples(&foo), vec![("AliasBinding", "foo")]);
@@ -940,15 +1074,24 @@ fn it_should_be_able_to_trace_a_global_assignment_using_an_estree_objectpattern(
     );
     let assignments = assignment_events(&events);
 
-    let boo = harness.tracer.get_data_from_identifier("boo", false).unwrap();
+    let boo = harness
+        .tracer
+        .get_data_from_identifier("boo", false)
+        .unwrap();
     assert_eq!(boo.name, "require");
     assert_eq!(boo.identifier_or_member_expr, "process.mainModule.require");
-    assert_eq!(memory_tuples(&boo), vec![("AliasBinding", "yoo"), ("AliasBinding", "boo")]);
+    assert_eq!(
+        memory_tuples(&boo),
+        vec![("AliasBinding", "yoo"), ("AliasBinding", "boo")]
+    );
 
     assert_eq!(assignments.len(), 2);
     assert_eq!(assignments[0].identifier_or_member_expr, "process");
     assert_eq!(assignments[0].id, "yoo");
-    assert_eq!(assignments[1].identifier_or_member_expr, "process.mainModule.require");
+    assert_eq!(
+        assignments[1].identifier_or_member_expr,
+        "process.mainModule.require"
+    );
     assert_eq!(assignments[1].id, "boo");
 }
 
@@ -965,15 +1108,24 @@ fn it_should_be_able_to_trace_an_unsafe_function_assignment_using_an_estree_obje
     );
     let assignments = assignment_events(&events);
 
-    let boo = harness.tracer.get_data_from_identifier("boo", false).unwrap();
+    let boo = harness
+        .tracer
+        .get_data_from_identifier("boo", false)
+        .unwrap();
     assert_eq!(boo.name, "require");
     assert_eq!(boo.identifier_or_member_expr, "process.mainModule.require");
-    assert_eq!(memory_tuples(&boo), vec![("AliasBinding", "yoo"), ("AliasBinding", "boo")]);
+    assert_eq!(
+        memory_tuples(&boo),
+        vec![("AliasBinding", "yoo"), ("AliasBinding", "boo")]
+    );
 
     assert_eq!(assignments.len(), 2);
     assert_eq!(assignments[0].identifier_or_member_expr, "process");
     assert_eq!(assignments[0].id, "yoo");
-    assert_eq!(assignments[1].identifier_or_member_expr, "process.mainModule.require");
+    assert_eq!(
+        assignments[1].identifier_or_member_expr,
+        "process.mainModule.require"
+    );
     assert_eq!(assignments[1].id, "boo");
 }
 
@@ -994,7 +1146,11 @@ fn it_should_be_able_to_trace_a_require_assignment_with_atob() {
     assert_eq!(assignments[0].identifier_or_member_expr, "atob");
     assert_eq!(assignments[0].id, "xo");
 
-    let ff = harness.tracer.literal_identifiers.get("ff").expect("ff must be a literal identifier");
+    let ff = harness
+        .tracer
+        .literal_identifiers
+        .get("ff")
+        .expect("ff must be a literal identifier");
     assert_eq!(ff.value, "os");
     assert_eq!(ff.r#type, "Literal");
 }
@@ -1009,7 +1165,11 @@ fn it_should_be_able_to_trace_template_literals_who_has_being_assigned() {
         "#,
     );
 
-    let x = harness.tracer.literal_identifiers.get("x").expect("x must be a literal identifier");
+    let x = harness
+        .tracer
+        .literal_identifiers
+        .get("x")
+        .expect("x must be a literal identifier");
     assert_eq!(x.value, "hello ${0}");
     assert_eq!(x.r#type, "TemplateLiteral");
 }
@@ -1060,7 +1220,10 @@ fn it_should_be_able_to_trace_a_global_assignment_using_a_logicalexpression() {
     );
     let assignments = assignment_events(&events);
 
-    let foo = harness.tracer.get_data_from_identifier("foo", false).unwrap();
+    let foo = harness
+        .tracer
+        .get_data_from_identifier("foo", false)
+        .unwrap();
     assert_eq!(foo.name, "require");
     assert_eq!(foo.identifier_or_member_expr, "require");
     assert_eq!(memory_tuples(&foo), vec![("AliasBinding", "foo")]);
@@ -1084,13 +1247,19 @@ fn it_should_be_able_to_trace_assignment_of_process_get_builtin_module() {
     );
     let assignments = assignment_events(&events);
 
-    let foo = harness.tracer.get_data_from_identifier("foo", false).unwrap();
+    let foo = harness
+        .tracer
+        .get_data_from_identifier("foo", false)
+        .unwrap();
     assert_eq!(foo.name, "require");
     assert_eq!(foo.identifier_or_member_expr, "process.getBuiltinModule");
     assert_eq!(memory_tuples(&foo), vec![("AliasBinding", "foo")]);
 
     assert_eq!(assignments.len(), 1);
-    assert_eq!(assignments[0].identifier_or_member_expr, "process.getBuiltinModule");
+    assert_eq!(
+        assignments[0].identifier_or_member_expr,
+        "process.getBuiltinModule"
+    );
     assert_eq!(assignments[0].id, "foo");
 
     assert!(
@@ -1105,8 +1274,14 @@ fn it_should_be_able_to_trace_assignment_of_process_get_builtin_module() {
         .get_data_from_identifier("globalThis.process.getBuiltinModule", true)
         .expect("must resolve once the globalThis prefix is stripped");
     assert_eq!(get_builtin_module.name, "require");
-    assert_eq!(get_builtin_module.identifier_or_member_expr, "process.getBuiltinModule");
-    assert_eq!(memory_tuples(&get_builtin_module), vec![("AliasBinding", "foo")]);
+    assert_eq!(
+        get_builtin_module.identifier_or_member_expr,
+        "process.getBuiltinModule"
+    );
+    assert_eq!(
+        memory_tuples(&get_builtin_module),
+        vec![("AliasBinding", "foo")]
+    );
 }
 
 // =============================================================================
@@ -1114,7 +1289,8 @@ fn it_should_be_able_to_trace_assignment_of_process_get_builtin_module() {
 // =============================================================================
 
 #[test]
-fn it_should_be_able_to_trace_crypto_createhash_when_imported_with_an_importnamespacespecifier_esm() {
+fn it_should_be_able_to_trace_crypto_createhash_when_imported_with_an_importnamespacespecifier_esm()
+{
     let mut harness = Harness::new(false);
     harness.tracer.trace(
         "crypto.createHash",
@@ -1136,23 +1312,36 @@ fn it_should_be_able_to_trace_crypto_createhash_when_imported_with_an_importname
     );
     let assignments = assignment_events(&events);
 
-    let create_hash_bis = harness.tracer.get_data_from_identifier("createHashBis", false).unwrap();
+    let create_hash_bis = harness
+        .tracer
+        .get_data_from_identifier("createHashBis", false)
+        .unwrap();
     assert_eq!(create_hash_bis.name, "crypto.createHash");
-    assert_eq!(create_hash_bis.identifier_or_member_expr, "crypto.createHash");
+    assert_eq!(
+        create_hash_bis.identifier_or_member_expr,
+        "crypto.createHash"
+    );
     assert_eq!(
         memory_tuples(&create_hash_bis),
-        vec![("AliasBinding", "cryptoBis"), ("AliasBinding", "createHashBis")]
+        vec![
+            ("AliasBinding", "cryptoBis"),
+            ("AliasBinding", "createHashBis")
+        ]
     );
 
     assert_eq!(assignments.len(), 2);
     assert_eq!(assignments[0].identifier_or_member_expr, "crypto");
     assert_eq!(assignments[0].id, "cryptoBis");
-    assert_eq!(assignments[1].identifier_or_member_expr, "crypto.createHash");
+    assert_eq!(
+        assignments[1].identifier_or_member_expr,
+        "crypto.createHash"
+    );
     assert_eq!(assignments[1].id, "createHashBis");
 }
 
 #[test]
-fn it_should_be_able_to_trace_createhash_when_required_commonjs_and_destructured_with_an_estree_objectpattern() {
+fn it_should_be_able_to_trace_createhash_when_required_commonjs_and_destructured_with_an_estree_objectpattern()
+ {
     let mut harness = Harness::new(false);
     harness.tracer.trace(
         "crypto.createHash",
@@ -1174,18 +1363,33 @@ fn it_should_be_able_to_trace_createhash_when_required_commonjs_and_destructured
     );
     let assignments = assignment_events(&events);
 
-    let create_hash_bis = harness.tracer.get_data_from_identifier("createHashBis", false).unwrap();
+    let create_hash_bis = harness
+        .tracer
+        .get_data_from_identifier("createHashBis", false)
+        .unwrap();
     assert_eq!(create_hash_bis.name, "crypto.createHash");
-    assert_eq!(create_hash_bis.identifier_or_member_expr, "crypto.createHash");
+    assert_eq!(
+        create_hash_bis.identifier_or_member_expr,
+        "crypto.createHash"
+    );
     assert_eq!(
         memory_tuples(&create_hash_bis),
-        vec![("AliasBinding", "createHash"), ("AliasBinding", "createHashBis")]
+        vec![
+            ("AliasBinding", "createHash"),
+            ("AliasBinding", "createHashBis")
+        ]
     );
 
     assert_eq!(assignments.len(), 2);
-    assert_eq!(assignments[0].identifier_or_member_expr, "crypto.createHash");
+    assert_eq!(
+        assignments[0].identifier_or_member_expr,
+        "crypto.createHash"
+    );
     assert_eq!(assignments[0].id, "createHash");
-    assert_eq!(assignments[1].identifier_or_member_expr, "crypto.createHash");
+    assert_eq!(
+        assignments[1].identifier_or_member_expr,
+        "crypto.createHash"
+    );
     assert_eq!(assignments[1].id, "createHashBis");
 }
 
@@ -1211,23 +1415,39 @@ fn it_should_be_able_to_trace_crypto_createhash_when_imported_with_an_importspec
     );
     let assignments = assignment_events(&events);
 
-    let create_hash_bis = harness.tracer.get_data_from_identifier("createHashBis", false).unwrap();
+    let create_hash_bis = harness
+        .tracer
+        .get_data_from_identifier("createHashBis", false)
+        .unwrap();
     assert_eq!(create_hash_bis.name, "crypto.createHash");
-    assert_eq!(create_hash_bis.identifier_or_member_expr, "crypto.createHash");
+    assert_eq!(
+        create_hash_bis.identifier_or_member_expr,
+        "crypto.createHash"
+    );
     assert_eq!(
         memory_tuples(&create_hash_bis),
-        vec![("AliasBinding", "createHash"), ("AliasBinding", "createHashBis")]
+        vec![
+            ("AliasBinding", "createHash"),
+            ("AliasBinding", "createHashBis")
+        ]
     );
 
     assert_eq!(assignments.len(), 2);
-    assert_eq!(assignments[0].identifier_or_member_expr, "crypto.createHash");
+    assert_eq!(
+        assignments[0].identifier_or_member_expr,
+        "crypto.createHash"
+    );
     assert_eq!(assignments[0].id, "createHash");
-    assert_eq!(assignments[1].identifier_or_member_expr, "crypto.createHash");
+    assert_eq!(
+        assignments[1].identifier_or_member_expr,
+        "crypto.createHash"
+    );
     assert_eq!(assignments[1].id, "createHashBis");
 }
 
 #[test]
-fn it_should_be_able_to_trace_crypto_createhash_with_commonjs_require_and_a_computed_method_with_a_literal() {
+fn it_should_be_able_to_trace_crypto_createhash_with_commonjs_require_and_a_computed_method_with_a_literal()
+ {
     let mut harness = Harness::new(false);
     harness.tracer.trace(
         "crypto.createHash",
@@ -1251,16 +1471,28 @@ fn it_should_be_able_to_trace_crypto_createhash_with_commonjs_require_and_a_comp
 
     assert!(harness.tracer.imported_modules.contains("crypto"));
 
-    let create_hash_bis = harness.tracer.get_data_from_identifier("createHashBis", false).unwrap();
+    let create_hash_bis = harness
+        .tracer
+        .get_data_from_identifier("createHashBis", false)
+        .unwrap();
     assert_eq!(create_hash_bis.name, "crypto.createHash");
-    assert_eq!(create_hash_bis.identifier_or_member_expr, "crypto.createHash");
-    assert_eq!(memory_tuples(&create_hash_bis), vec![("AliasBinding", "createHashBis")]);
+    assert_eq!(
+        create_hash_bis.identifier_or_member_expr,
+        "crypto.createHash"
+    );
+    assert_eq!(
+        memory_tuples(&create_hash_bis),
+        vec![("AliasBinding", "createHashBis")]
+    );
 
     let assignments = assignment_events(&events);
     assert_eq!(assignments.len(), 2);
     assert_eq!(assignments[0].identifier_or_member_expr, "crypto");
     assert_eq!(assignments[0].id, "crypto");
-    assert_eq!(assignments[1].identifier_or_member_expr, "crypto.createHash");
+    assert_eq!(
+        assignments[1].identifier_or_member_expr,
+        "crypto.createHash"
+    );
     assert_eq!(assignments[1].id, "createHashBis");
 }
 
@@ -1312,5 +1544,10 @@ fn it_should_return_null_because_crypto_createhash_is_not_imported_from_a_module
         "#,
     );
 
-    assert!(harness.tracer.get_data_from_identifier("crypto.createHash", false).is_none());
+    assert!(
+        harness
+            .tracer
+            .get_data_from_identifier("crypto.createHash", false)
+            .is_none()
+    );
 }

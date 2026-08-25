@@ -64,7 +64,10 @@ impl DefaultCollectableSet {
             location,
             metadata,
         };
-        self.entries.entry(value.to_owned()).or_default().push(entry);
+        self.entries
+            .entry(value.to_owned())
+            .or_default()
+            .push(entry);
     }
 
     pub fn values(&self) -> impl Iterator<Item = &str> {

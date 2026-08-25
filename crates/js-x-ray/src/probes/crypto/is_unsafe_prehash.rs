@@ -35,22 +35,33 @@ fn resolve_digest_encoding_arguments(hash_node: Option<&Value>) -> Option<&[Valu
     let hash_node = hash_node?;
 
     if let Some(digest_call) = get_member_call_expression(hash_node, "digest") {
-        return digest_call.get("arguments").and_then(Value::as_array).map(Vec::as_slice);
+        return digest_call
+            .get("arguments")
+            .and_then(Value::as_array)
+            .map(Vec::as_slice);
     }
 
     let to_string_call = get_member_call_expression(hash_node, "toString")?;
     let inner_object = to_string_call.pointer("/callee/object")?;
     let inner_digest_call = get_member_call_expression(inner_object, "digest")?;
-    let inner_args = inner_digest_call.get("arguments").and_then(Value::as_array)?;
+    let inner_args = inner_digest_call
+        .get("arguments")
+        .and_then(Value::as_array)?;
 
     if inner_args.is_empty() {
-        to_string_call.get("arguments").and_then(Value::as_array).map(Vec::as_slice)
+        to_string_call
+            .get("arguments")
+            .and_then(Value::as_array)
+            .map(Vec::as_slice)
     } else {
         Some(inner_args.as_slice())
     }
 }
 
-fn is_safe_encoding_arg(node: Option<&Value>, literal_identifiers: &IndexMap<String, LiteralIdentifier>) -> bool {
+fn is_safe_encoding_arg(
+    node: Option<&Value>,
+    literal_identifiers: &IndexMap<String, LiteralIdentifier>,
+) -> bool {
     let Some(node) = node else {
         return false;
     };
@@ -71,7 +82,10 @@ fn is_safe_encoding_arg(node: Option<&Value>, literal_identifiers: &IndexMap<Str
     false
 }
 
-fn has_unsafe_digest_encoding(hash_node: Option<&Value>, literal_identifiers: &IndexMap<String, LiteralIdentifier>) -> bool {
+fn has_unsafe_digest_encoding(
+    hash_node: Option<&Value>,
+    literal_identifiers: &IndexMap<String, LiteralIdentifier>,
+) -> bool {
     let Some(encoding_args) = resolve_digest_encoding_arguments(hash_node) else {
         return false;
     };
@@ -100,7 +114,10 @@ fn is_unsafe_hash_argument(
         && !ambiguous.contains(callee_name)
         && unsafe_digest.contains(callee_name)
     {
-        let encoding_arg = arg.get("arguments").and_then(Value::as_array).and_then(|args| args.first());
+        let encoding_arg = arg
+            .get("arguments")
+            .and_then(Value::as_array)
+            .and_then(|args| args.first());
 
         return !is_safe_encoding_arg(encoding_arg, literal_identifiers);
     }
@@ -126,7 +143,12 @@ pub struct IsUnsafePrehash {
 
 impl IsUnsafePrehash {
     fn mark_ambiguous_params(&mut self, data: &Value) -> ProbeReturn {
-        for name in data.as_array().into_iter().flatten().filter_map(Value::as_str) {
+        for name in data
+            .as_array()
+            .into_iter()
+            .flatten()
+            .filter_map(Value::as_str)
+        {
             self.ambiguous_variable_names.insert(name.to_owned());
         }
 
@@ -134,7 +156,10 @@ impl IsUnsafePrehash {
     }
 
     fn bcrypt_hash_call(&mut self, bcrypt_node: &Node, ctx: &mut ProbeCtx<'_>) -> ProbeReturn {
-        let hash_argument = bcrypt_node.get("arguments").and_then(Value::as_array).and_then(|args| args.first());
+        let hash_argument = bcrypt_node
+            .get("arguments")
+            .and_then(Value::as_array)
+            .and_then(|args| args.first());
 
         let is_unsafe = is_unsafe_hash_argument(
             hash_argument,
@@ -164,7 +189,12 @@ impl Probe for IsUnsafePrehash {
     }
 
     fn node_types(&self) -> Option<&'static [&'static str]> {
-        Some(&["CallExpression", "FunctionDeclaration", "FunctionExpression", "ArrowFunctionExpression"])
+        Some(&[
+            "CallExpression",
+            "FunctionDeclaration",
+            "FunctionExpression",
+            "ArrowFunctionExpression",
+        ])
     }
 
     fn initialize(&mut self, source_file: &mut SourceFile) {
@@ -193,7 +223,13 @@ impl Probe for IsUnsafePrehash {
     }
 
     fn on_tracer_event(&mut self, event: &TracerEvent, source_file: &mut SourceFile) {
-        let TracerEvent::ReturnValue { identifier_or_member_expr, id, arguments, .. } = event else {
+        let TracerEvent::ReturnValue {
+            identifier_or_member_expr,
+            id,
+            arguments,
+            ..
+        } = event
+        else {
             return;
         };
         if !K_DIGEST_CHAINS.contains(&identifier_or_member_expr.as_str()) {
@@ -207,7 +243,11 @@ impl Probe for IsUnsafePrehash {
     }
 
     fn validate_node(&mut self, node: &Node, ctx: &mut ProbeCtx<'_>) -> Option<Value> {
-        if !ctx.source_file.tracer.imported_modules.contains(K_MODULE_NAME)
+        if !ctx
+            .source_file
+            .tracer
+            .imported_modules
+            .contains(K_MODULE_NAME)
             || !ctx.source_file.tracer.imported_modules.contains("crypto")
         {
             return None;
@@ -220,9 +260,14 @@ impl Probe for IsUnsafePrehash {
                 .map(|params| get_param_names(params))
                 .unwrap_or_default();
 
-            if param_names.iter().any(|name| self.unsafe_digest_variables.contains(name)) {
+            if param_names
+                .iter()
+                .any(|name| self.unsafe_digest_variables.contains(name))
+            {
                 self.entry_point = EntryPoint::MarkAmbiguousParams;
-                return Some(Value::Array(param_names.into_iter().map(Value::String).collect()));
+                return Some(Value::Array(
+                    param_names.into_iter().map(Value::String).collect(),
+                ));
             }
 
             return None;
@@ -230,7 +275,9 @@ impl Probe for IsUnsafePrehash {
 
         self.entry_point = EntryPoint::Default;
         ctx.traced_data
-            .is_some_and(|data| K_TRACED_FUNCTIONS.contains(&data.identifier_or_member_expr.as_str()))
+            .is_some_and(|data| {
+                K_TRACED_FUNCTIONS.contains(&data.identifier_or_member_expr.as_str())
+            })
             .then_some(Value::Null)
     }
 

@@ -35,14 +35,83 @@ static SHADY_LINK_REGEXPS: LazyLock<[Regex; 2]> = LazyLock::new(|| {
 /// trailing `:` that JS's `URL.protocol` carries.
 static KNOWN_PROTOCOLS: LazyLock<HashSet<&'static str>> = LazyLock::new(|| {
     [
-        "http", "https", "file", "data", "blob", "ftp", "ftps", "sftp", "tftp", "mailto", "xmpp",
-        "irc", "ircs", "sip", "sips", "tel", "sms", "mms", "ssh", "telnet", "vnc", "rdp", "git",
-        "svn", "cvs", "hg", "magnet", "ed2k", "torrent", "bitcoin", "ethereum", "ipfs", "ipns",
-        "slack", "discord", "spotify", "steam", "skype", "zoommtg", "msteams", "vscode",
-        "vscode-insiders", "jetbrains", "intent", "market", "itms", "itms-apps", "fb", "twitter",
-        "instagram", "whatsapp", "tg", "ws", "wss", "ldap", "ldaps", "nntp", "news", "rtsp",
-        "rtspu", "rtsps", "webcal", "feed", "podcast", "javascript", "about", "view-source",
-        "acap", "cap", "cid", "mid", "urn", "tag", "dns", "geo", "ni", "nih",
+        "http",
+        "https",
+        "file",
+        "data",
+        "blob",
+        "ftp",
+        "ftps",
+        "sftp",
+        "tftp",
+        "mailto",
+        "xmpp",
+        "irc",
+        "ircs",
+        "sip",
+        "sips",
+        "tel",
+        "sms",
+        "mms",
+        "ssh",
+        "telnet",
+        "vnc",
+        "rdp",
+        "git",
+        "svn",
+        "cvs",
+        "hg",
+        "magnet",
+        "ed2k",
+        "torrent",
+        "bitcoin",
+        "ethereum",
+        "ipfs",
+        "ipns",
+        "slack",
+        "discord",
+        "spotify",
+        "steam",
+        "skype",
+        "zoommtg",
+        "msteams",
+        "vscode",
+        "vscode-insiders",
+        "jetbrains",
+        "intent",
+        "market",
+        "itms",
+        "itms-apps",
+        "fb",
+        "twitter",
+        "instagram",
+        "whatsapp",
+        "tg",
+        "ws",
+        "wss",
+        "ldap",
+        "ldaps",
+        "nntp",
+        "news",
+        "rtsp",
+        "rtspu",
+        "rtsps",
+        "webcal",
+        "feed",
+        "podcast",
+        "javascript",
+        "about",
+        "view-source",
+        "acap",
+        "cap",
+        "cid",
+        "mid",
+        "urn",
+        "tag",
+        "dns",
+        "geo",
+        "ni",
+        "nih",
     ]
     .into_iter()
     .collect()
@@ -142,15 +211,24 @@ pub struct ShadyLinkResult {
 
 impl ShadyLinkResult {
     const fn safe() -> Self {
-        Self { safe: true, is_local_address: false }
+        Self {
+            safe: true,
+            is_local_address: false,
+        }
     }
 
     const fn unsafe_() -> Self {
-        Self { safe: false, is_local_address: false }
+        Self {
+            safe: false,
+            is_local_address: false,
+        }
     }
 
     const fn local_address() -> Self {
-        Self { safe: false, is_local_address: true }
+        Self {
+            safe: false,
+            is_local_address: true,
+        }
     }
 }
 
@@ -172,7 +250,12 @@ pub struct ShadyLink;
 
 impl ShadyLink {
     pub fn is_url_safe(input: &str, options: IsUrlSafeOptions<'_>) -> ShadyLinkResult {
-        let IsUrlSafeOptions { collectable_set_registry, file, location, metadata } = options;
+        let IsUrlSafeOptions {
+            collectable_set_registry,
+            file,
+            location,
+            metadata,
+        } = options;
 
         let Ok(parsed_url) = Url::parse(input) else {
             return ShadyLinkResult::safe();
@@ -250,7 +333,10 @@ impl ShadyLink {
 
         let is_shady_link = SHADY_LINK_REGEXPS.iter().any(|regex| regex.is_match(input));
 
-        ShadyLinkResult { safe: !is_shady_link, is_local_address: false }
+        ShadyLinkResult {
+            safe: !is_shady_link,
+            is_local_address: false,
+        }
     }
 
     /// JS `\s` (no `u` flag) matches a slightly different Unicode set than
@@ -265,16 +351,23 @@ impl ShadyLink {
         }
 
         if let Some(captures) = IPV4_REGEX.captures(input) {
-            return (1..=4)
-                .all(|group| captures[group].parse::<u32>().is_ok_and(|octet| octet <= 255));
+            return (1..=4).all(|group| {
+                captures[group]
+                    .parse::<u32>()
+                    .is_ok_and(|octet| octet <= 255)
+            });
         }
 
         input.contains(':') && input.parse::<Ipv6Addr>().is_ok()
     }
 
     pub fn is_ip_address_safe(input: &str, options: IsIpAddressSafeOptions<'_>) -> ShadyLinkResult {
-        let IsIpAddressSafeOptions { collectable_set_registry, file, location, metadata } =
-            options;
+        let IsIpAddressSafeOptions {
+            collectable_set_registry,
+            file,
+            location,
+            metadata,
+        } = options;
         let source_array_location = to_array_location(location);
 
         Self::is_ip_address_safe_at(

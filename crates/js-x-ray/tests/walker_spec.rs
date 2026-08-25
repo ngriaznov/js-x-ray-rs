@@ -88,7 +88,9 @@ fn walks_an_ast() {
     );
     assert_eq!(
         left,
-        vec![decl0_id, decl0_init, decl0, decl1_id, decl1_init, decl1, body0, root]
+        vec![
+            decl0_id, decl0_init, decl0, decl1_id, decl1_init, decl1, body0, root
+        ]
     );
 }
 
@@ -112,7 +114,11 @@ fn handles_null_literals() {
     // Only asserts that walking a `Literal` whose `value` is JSON `null`
     // does not panic (a null value is not itself a node, so it must not be
     // mistaken for a removed child).
-    walk(&mut ast, Some(&mut |_ctx, _node| {}), Some(&mut |_ctx, _node| {}));
+    walk(
+        &mut ast,
+        Some(&mut |_ctx, _node| {}),
+        Some(&mut |_ctx, _node| {}),
+    );
 }
 
 #[test]
@@ -236,7 +242,10 @@ fn removes_a_node_property() {
         // Adaptation: JS deletes the property, leaving it `undefined`; the
         // Rust walker has no "absent key" concept for object fields, so a
         // removed child becomes JSON `null` (see `walker::visit_children`).
-        assert_eq!(ast.pointer("/body/0/expression/right").unwrap(), &Value::Null);
+        assert_eq!(
+            ast.pointer("/body/0/expression/right").unwrap(),
+            &Value::Null
+        );
     }
 }
 
@@ -282,7 +291,11 @@ fn removes_a_node_from_array() {
             walk(&mut ast, None, Some(&mut handler));
         }
 
-        let declarations = ast.pointer("/body/0/declarations").unwrap().as_array().unwrap();
+        let declarations = ast
+            .pointer("/body/0/declarations")
+            .unwrap()
+            .as_array()
+            .unwrap();
         assert_eq!(declarations.len(), 1);
         assert_eq!(declarations[0].pointer("/id/name").unwrap(), "c");
         assert_eq!(visited_count, 3);

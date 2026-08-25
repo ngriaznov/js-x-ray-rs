@@ -7,7 +7,10 @@ pub fn make_prefix_remover(prefixes: Vec<String>) -> impl Fn(&str) -> String {
         if !expr.contains('.') {
             return expr.to_owned();
         }
-        match prefixes.iter().find(|global_id| expr.starts_with(global_id.as_str())) {
+        match prefixes
+            .iter()
+            .find(|global_id| expr.starts_with(global_id.as_str()))
+        {
             Some(matched_prefix) => expr
                 .get(matched_prefix.len() + 1..)
                 .unwrap_or("")

@@ -47,7 +47,10 @@ impl Probe for IsWeakAlgorithm {
     }
 
     fn main(&mut self, node: &Node, _data: &Value, ctx: &mut ProbeCtx<'_>) -> ProbeReturn {
-        if let Some(arg) = node.get("arguments").and_then(Value::as_array).and_then(|args| args.first())
+        if let Some(arg) = node
+            .get("arguments")
+            .and_then(Value::as_array)
+            .and_then(|args| args.first())
             && is_string_literal(arg)
             && let Some(value) = arg.get("value").and_then(Value::as_str)
             && K_WEAK_ALGORITHMS.contains(&value)

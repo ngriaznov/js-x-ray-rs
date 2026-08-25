@@ -328,7 +328,14 @@ fn etalon_corpus_matches_upstream_snapshots() {
 
 fn summarize_diff(expected: &Value, actual: &Value) -> String {
     let mut parts = Vec::new();
-    for key in ["ok", "warnings", "flags", "idsLengthAvg", "stringScore", "dependencies"] {
+    for key in [
+        "ok",
+        "warnings",
+        "flags",
+        "idsLengthAvg",
+        "stringScore",
+        "dependencies",
+    ] {
         let (e, a) = (expected.get(key), actual.get(key));
         if e != a {
             match key {

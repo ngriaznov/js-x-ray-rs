@@ -30,7 +30,8 @@ use crate::utils::{
 };
 
 // CONSTANTS (upstream: kGlobalIdentifiersToTrace, kRequirePatterns, kUnsafeGlobalCallExpression)
-const K_GLOBAL_IDENTIFIERS_TO_TRACE: [&str; 5] = ["globalThis", "global", "root", "GLOBAL", "window"];
+const K_GLOBAL_IDENTIFIERS_TO_TRACE: [&str; 5] =
+    ["globalThis", "global", "root", "GLOBAL", "window"];
 const K_REQUIRE_PATTERNS: [&str; 5] = [
     "require",
     "require.resolve",
@@ -265,7 +266,9 @@ impl VariableTracer {
 
     /// Lookup for `externalIdentifierLookup` closures.
     pub fn literal_identifier_lookup(&self, name: &str) -> Option<String> {
-        self.literal_identifiers.get(name).map(|id| id.value.clone())
+        self.literal_identifiers
+            .get(name)
+            .map(|id| id.value.clone())
     }
 
     /// Upstream `#getTracedName`.
@@ -314,10 +317,13 @@ impl VariableTracer {
 
         if follow_consecutive_assignment && !self.traced.contains_key(&new_identifier_name) {
             if let Some(named_entry) = self.traced.get(&name).cloned() {
-                named_entry.borrow_mut().assignment_memory.push(AssignmentMemory {
-                    r#type: AssignmentKind::AliasBinding,
-                    name: new_identifier_name.clone(),
-                });
+                named_entry
+                    .borrow_mut()
+                    .assignment_memory
+                    .push(AssignmentMemory {
+                        r#type: AssignmentKind::AliasBinding,
+                        name: new_identifier_name.clone(),
+                    });
             }
             self.traced.insert(new_identifier_name, traced_variant);
         }
@@ -369,8 +375,7 @@ impl VariableTracer {
     fn reverse_atob(&mut self, node: &Value, id: &Value) {
         let call_expr_arguments = {
             let literal_identifiers = &self.literal_identifiers;
-            let lookup =
-                move |name: &str| literal_identifiers.get(name).map(|id| id.value.clone());
+            let lookup = move |name: &str| literal_identifiers.get(name).map(|id| id.value.clone());
             get_call_expression_arguments(node, &lookup)
         };
         let Some(call_expr_arguments) = call_expr_arguments else {
@@ -592,10 +597,7 @@ impl VariableTracer {
                     .flatten()
                     .collect();
                 for element in elements {
-                    self.walk_variable_declarator_initialization(
-                        variable_declarator_node,
-                        element,
-                    );
+                    self.walk_variable_declarator_initialization(variable_declarator_node, element);
                 }
             }
 
@@ -709,20 +711,18 @@ impl VariableTracer {
                     .assigned_return_value_to_traced
                     .get(&identifier_name_str)
                     .cloned()
-                {
-                    if let Some(traced_variant) =
+                    && let Some(traced_variant) =
                         self.traced.get(&traced_full_identifier_name).cloned()
-                    {
-                        traced_variant
-                            .borrow_mut()
-                            .assignment_memory
-                            .push(AssignmentMemory {
-                                r#type: AssignmentKind::ReturnValueAssignment,
-                                name: id_name.clone(),
-                            });
-                        self.assigned_return_value_to_traced
-                            .insert(id_name, traced_full_identifier_name);
-                    }
+                {
+                    traced_variant
+                        .borrow_mut()
+                        .assignment_memory
+                        .push(AssignmentMemory {
+                            r#type: AssignmentKind::ReturnValueAssignment,
+                            name: id_name.clone(),
+                        });
+                    self.assigned_return_value_to_traced
+                        .insert(id_name, traced_full_identifier_name);
                 }
             }
 
@@ -731,9 +731,8 @@ impl VariableTracer {
                 // Example: ["process", "mainModule"]
                 let member_expr_parts = {
                     let literal_identifiers = &self.literal_identifiers;
-                    let lookup = move |name: &str| {
-                        literal_identifiers.get(name).map(|id| id.value.clone())
-                    };
+                    let lookup =
+                        move |name: &str| literal_identifiers.get(name).map(|id| id.value.clone());
                     get_member_expression_identifier(child_node, &lookup)
                 };
                 let member_expr_fullname = member_expr_parts.join(".");
@@ -756,10 +755,7 @@ impl VariableTracer {
                 if let Some(object) = child_node.get("object")
                     && is_call_expression(object)
                 {
-                    self.walk_variable_declarator_initialization(
-                        variable_declarator_node,
-                        object,
-                    );
+                    self.walk_variable_declarator_initialization(variable_declarator_node, object);
                 }
             }
 
@@ -785,8 +781,7 @@ impl VariableTracer {
                 let Some(full_identifier_path) = call_expression_identifier(init) else {
                     return;
                 };
-                let identifier_name_segment =
-                    full_identifier_path.split('.').next().unwrap_or("");
+                let identifier_name_segment = full_identifier_path.split('.').next().unwrap_or("");
                 // const {} = Function.prototype.call.call(require, require, "http");
                 if is_evil_identifier_path(&full_identifier_path) {
                     self.walk_require_call_expression(init, id);

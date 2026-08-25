@@ -22,7 +22,11 @@ fn zero_location() -> SourceLocation {
 fn new_source_file() -> SourceFile {
     SourceFile::new(
         None,
-        SourceFileOptions { metadata: None, package_name: None, collectable_registry: None },
+        SourceFileOptions {
+            metadata: None,
+            package_name: None,
+            collectable_registry: None,
+        },
     )
 }
 
@@ -32,10 +36,17 @@ fn new_source_file() -> SourceFile {
 fn constructor_with_source_location_sets_the_path_location() {
     let source_file = SourceFile::new(
         Some("/path/to/file.js".to_owned()),
-        SourceFileOptions { metadata: None, package_name: None, collectable_registry: None },
+        SourceFileOptions {
+            metadata: None,
+            package_name: None,
+            collectable_registry: None,
+        },
     );
 
-    assert_eq!(source_file.path.location.as_deref(), Some("/path/to/file.js"));
+    assert_eq!(
+        source_file.path.location.as_deref(),
+        Some("/path/to/file.js")
+    );
 }
 
 #[test]
@@ -58,7 +69,10 @@ fn add_dependency_without_an_unsafe_import_warning() {
 
     assert_eq!(source_file.warnings, vec![]);
 
-    let dependency_set = source_file.collectables_set_registry.get("dependency").unwrap();
+    let dependency_set = source_file
+        .collectables_set_registry
+        .get("dependency")
+        .unwrap();
     let data = dependency_set.to_json();
     assert_eq!(data.entries.len(), 1);
     assert_eq!(data.entries[0].value, "package");
@@ -104,14 +118,20 @@ fn add_dependency_with_an_unsafe_import_warning() {
         }]
     );
 
-    let dependency_set = source_file.collectables_set_registry.get("dependency").unwrap();
+    let dependency_set = source_file
+        .collectables_set_registry
+        .get("dependency")
+        .unwrap();
     let data = dependency_set.to_json();
     assert_eq!(data.entries[0].value, "package");
     let mut expected_metadata = Map::new();
     expected_metadata.insert("spec".to_owned(), json!("react@19.0.1"));
     expected_metadata.insert("inTry".to_owned(), json!(false));
     expected_metadata.insert("unsafe".to_owned(), json!(true));
-    assert_eq!(data.entries[0].locations[0].metadata, Some(expected_metadata));
+    assert_eq!(
+        data.entries[0].locations[0].metadata,
+        Some(expected_metadata)
+    );
 }
 
 #[test]
@@ -132,7 +152,15 @@ fn add_dependency_does_not_add_any_dependency_for_an_empty_string() {
     source_file.add_dependency("  ", Some(zero_location()));
 
     assert_eq!(source_file.warnings, vec![]);
-    assert!(source_file.collectables_set_registry.get("dependency").unwrap().to_json().entries.is_empty());
+    assert!(
+        source_file
+            .collectables_set_registry
+            .get("dependency")
+            .unwrap()
+            .to_json()
+            .entries
+            .is_empty()
+    );
 }
 
 #[test]
@@ -153,7 +181,15 @@ fn add_dependency_does_not_add_the_dependency_when_the_package_name_is_the_same(
     source_file.add_dependency("package", Some(zero_location()));
 
     assert_eq!(source_file.warnings, vec![]);
-    assert!(source_file.collectables_set_registry.get("dependency").unwrap().to_json().entries.is_empty());
+    assert!(
+        source_file
+            .collectables_set_registry
+            .get("dependency")
+            .unwrap()
+            .to_json()
+            .entries
+            .is_empty()
+    );
 }
 
 // --- SourceFilePath ----------------------------------------------------------
@@ -221,9 +257,11 @@ struct RecordingState {
 /// A `Probe` whose validator and observed calls are exposed through a shared
 /// handle, standing in for `t.mock.fn()` (there is no method-mocking
 /// mechanism for trait objects in Rust).
+type ValidateNodeFn = Box<dyn FnMut(&Node) -> Option<Value>>;
+
 struct RecordingProbe {
     state: Rc<RefCell<RecordingState>>,
-    validate_node_fn: Box<dyn FnMut(&Node) -> Option<Value>>,
+    validate_node_fn: ValidateNodeFn,
     main_return: ProbeReturn,
 }
 
@@ -232,7 +270,11 @@ fn recording_probe(
     main_return: ProbeReturn,
 ) -> (Box<dyn Probe>, Rc<RefCell<RecordingState>>) {
     let state = Rc::new(RefCell::new(RecordingState::default()));
-    let probe = RecordingProbe { state: state.clone(), validate_node_fn: Box::new(validate_node_fn), main_return };
+    let probe = RecordingProbe {
+        state: state.clone(),
+        validate_node_fn: Box::new(validate_node_fn),
+        main_return,
+    };
     (Box::new(probe), state)
 }
 
@@ -276,8 +318,10 @@ fn constructor_uses_the_default_probes_when_given_that_list() {
     // Adaptation: `ProbeRunner::new` always takes an explicit probe list
     // (there is no "Defaults when none given" overload); this checks that
     // `probes::default_probes()` populates `ProbeRunner.probes` faithfully.
-    let expected_names: Vec<&'static str> =
-        js_x_ray::probes::default_probes().iter().map(|p| p.name()).collect();
+    let expected_names: Vec<&'static str> = js_x_ray::probes::default_probes()
+        .iter()
+        .map(|p| p.name())
+        .collect();
     let runner = ProbeRunner::new(&mut source_file, js_x_ray::probes::default_probes());
 
     let names: Vec<&'static str> = runner.probes.iter().map(|p| p.name()).collect();
@@ -357,9 +401,12 @@ fn finalize_calls_the_finalize_method_of_every_probe() {
     let mut source_file = new_source_file();
     let (skip_probe, skip_state) = recording_probe(|_| Some(Value::Null), ProbeReturn::Skip);
     let (break_probe, break_state) = recording_probe(|_| Some(Value::Null), ProbeReturn::Break);
-    let (other_skip_probe, other_skip_state) = recording_probe(|_| Some(Value::Null), ProbeReturn::Skip);
-    let mut runner =
-        ProbeRunner::new(&mut source_file, vec![skip_probe, break_probe, other_skip_probe]);
+    let (other_skip_probe, other_skip_state) =
+        recording_probe(|_| Some(Value::Null), ProbeReturn::Skip);
+    let mut runner = ProbeRunner::new(
+        &mut source_file,
+        vec![skip_probe, break_probe, other_skip_probe],
+    );
 
     runner.finalize(&mut source_file);
 

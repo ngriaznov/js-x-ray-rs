@@ -162,14 +162,12 @@ impl ProbeRunner {
             match signal {
                 ProbeReturn::Continue => continue,
                 ProbeReturn::Skip => return WalkAction::Skip,
-                ProbeReturn::Break => {
-                    match probe.break_group() {
-                        None => break,
-                        Some(group) => {
-                            self.break_groups.insert(group);
-                        }
+                ProbeReturn::Break => match probe.break_group() {
+                    None => break,
+                    Some(group) => {
+                        self.break_groups.insert(group);
                     }
-                }
+                },
                 ProbeReturn::Matched => {
                     if probe.break_on_match() {
                         match probe.break_group() {

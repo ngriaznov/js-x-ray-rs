@@ -21,7 +21,11 @@ pub fn common_string_prefix_str(left_str: &str, right_str: &str) -> Option<Strin
         .take_while(|(l, r)| l == r)
         .map(|(l, _)| l)
         .collect();
-    if prefix.is_empty() { None } else { Some(prefix) }
+    if prefix.is_empty() {
+        None
+    } else {
+        Some(prefix)
+    }
 }
 
 fn reverse_string(string: &str) -> String {

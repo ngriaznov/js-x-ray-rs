@@ -66,12 +66,20 @@ pub fn is_member_expression(node: &Value) -> bool {
 
 /// The string `value` of a `Literal` node.
 pub fn literal_str(node: &Node) -> Option<&str> {
-    if is_literal(node) { node.get("value")?.as_str() } else { None }
+    if is_literal(node) {
+        node.get("value")?.as_str()
+    } else {
+        None
+    }
 }
 
 /// The `name` of an `Identifier` node.
 pub fn identifier_name(node: &Node) -> Option<&str> {
-    if is_identifier(node) { node.get("name")?.as_str() } else { None }
+    if is_identifier(node) {
+        node.get("name")?.as_str()
+    } else {
+        None
+    }
 }
 
 /// Lookup used by `getCallExpressionIdentifier` and friends to resolve

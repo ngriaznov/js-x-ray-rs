@@ -22,8 +22,9 @@ use crate::variable_tracer::{TraceOptions, TracerEvent};
 use crate::warnings::{GenerateWarningOptions, WarningLocation, generate_warning};
 
 const K_PINO_LOG_METHODS: [&str; 6] = ["info", "warn", "error", "fatal", "debug", "trace"];
-const K_WINSTON_LOG_METHODS: [&str; 8] =
-    ["info", "warn", "error", "http", "debug", "verbose", "silly", "log"];
+const K_WINSTON_LOG_METHODS: [&str; 8] = [
+    "info", "warn", "error", "http", "debug", "verbose", "silly", "log",
+];
 
 #[derive(Debug, Default)]
 pub struct LogUsage {
@@ -71,9 +72,11 @@ impl Probe for LogUsage {
             );
         }
 
-        for (identifier, module_name) in
-            [("winston.createLogger", "winston"), ("winston", "winston"), ("pino", "pino")]
-        {
+        for (identifier, module_name) in [
+            ("winston.createLogger", "winston"),
+            ("winston", "winston"),
+            ("pino", "pino"),
+        ] {
             source_file.tracer.trace(
                 identifier,
                 TraceOptions {
@@ -106,13 +109,21 @@ impl Probe for LogUsage {
             );
         }
 
-        self.winston_child_sources.insert("winston.child".to_owned());
-        self.winston_create_logger_sources.insert("winston.createLogger".to_owned());
+        self.winston_child_sources
+            .insert("winston.child".to_owned());
+        self.winston_create_logger_sources
+            .insert("winston.createLogger".to_owned());
         self.pino_sources.insert("pino".to_owned());
     }
 
     fn on_tracer_event(&mut self, event: &TracerEvent, source_file: &mut SourceFile) {
-        let TracerEvent::ReturnValue { name, id, arguments, .. } = event else {
+        let TracerEvent::ReturnValue {
+            name,
+            id,
+            arguments,
+            ..
+        } = event
+        else {
             return;
         };
 
@@ -138,7 +149,10 @@ impl Probe for LogUsage {
     fn main(&mut self, node: &Node, data: &Value, _ctx: &mut ProbeCtx<'_>) -> ProbeReturn {
         if let Some(log_identifier) = data.as_str() {
             let location = to_array_location(SourceLocation::from_node(node));
-            self.context.entry(log_identifier.to_owned()).or_default().push(location);
+            self.context
+                .entry(log_identifier.to_owned())
+                .or_default()
+                .push(location);
         }
 
         ProbeReturn::Matched
@@ -166,7 +180,8 @@ impl Probe for LogUsage {
                 ..Default::default()
             },
         );
-        warning.location = WarningLocation::Multiple(self.context.values().flatten().copied().collect());
+        warning.location =
+            WarningLocation::Multiple(self.context.values().flatten().copied().collect());
         source_file.warnings.push(warning);
     }
 }
@@ -211,7 +226,12 @@ impl LogUsage {
             .winston_create_logger_methods
             .get(name)
             .cloned()
-            .unwrap_or_else(|| K_WINSTON_LOG_METHODS.iter().map(|s| (*s).to_owned()).collect());
+            .unwrap_or_else(|| {
+                K_WINSTON_LOG_METHODS
+                    .iter()
+                    .map(|s| (*s).to_owned())
+                    .collect()
+            });
 
         if name == "winston.createLogger"
             && let Some(levels) = resolve_call_context(arguments, source_file)
@@ -243,12 +263,19 @@ impl LogUsage {
                 ..Default::default()
             },
         );
-        self.winston_create_logger_methods.insert(child_logger.clone(), methods);
+        self.winston_create_logger_methods
+            .insert(child_logger.clone(), methods);
         self.winston_create_logger_sources.insert(child_logger);
     }
 
     /// Upstream `createPinoTracerListener`'s dynamic listener body.
-    fn handle_pino(&mut self, name: &str, id: &str, arguments: &[Value], source_file: &mut SourceFile) {
+    fn handle_pino(
+        &mut self,
+        name: &str,
+        id: &str,
+        arguments: &[Value],
+        source_file: &mut SourceFile,
+    ) {
         let mut methods = self
             .pino_methods
             .get(name)
@@ -297,10 +324,16 @@ impl LogUsage {
 
 /// Resolves a traced function's first call argument to an `ObjectExpression`,
 /// following an `Identifier` back through `tracer.objectIdentifiers` when needed.
-fn resolve_call_context<'a>(arguments: &'a [Value], source_file: &'a SourceFile) -> Option<&'a Value> {
+fn resolve_call_context<'a>(
+    arguments: &'a [Value],
+    source_file: &'a SourceFile,
+) -> Option<&'a Value> {
     let arg = arguments.first()?;
     let context = if is_identifier(arg) {
-        source_file.tracer.object_identifiers.get(identifier_name(arg)?)?
+        source_file
+            .tracer
+            .object_identifiers
+            .get(identifier_name(arg)?)?
     } else {
         arg
     };
@@ -309,12 +342,16 @@ fn resolve_call_context<'a>(arguments: &'a [Value], source_file: &'a SourceFile)
 }
 
 fn find_object_property<'a>(object_expr: &'a Value, key_name: &str) -> Option<&'a Value> {
-    object_expr.get("properties")?.as_array()?.iter().find(|property| {
-        is_type(property, "Property")
-            && property
-                .get("key")
-                .is_some_and(|key| is_identifier(key) && identifier_name(key) == Some(key_name))
-    })
+    object_expr
+        .get("properties")?
+        .as_array()?
+        .iter()
+        .find(|property| {
+            is_type(property, "Property")
+                && property
+                    .get("key")
+                    .is_some_and(|key| is_identifier(key) && identifier_name(key) == Some(key_name))
+        })
 }
 
 /// Resolves a `Property` node's value to its literal source text, following
@@ -340,12 +377,19 @@ fn add_log_methods(property: Option<&Value>, methods: &mut Vec<String>) {
     if !is_type(property, "Property") {
         return;
     }
-    let Some(value) = property.get("value") else { return };
+    let Some(value) = property.get("value") else {
+        return;
+    };
     if !is_type(value, "ObjectExpression") {
         return;
     }
 
-    for level in value.get("properties").and_then(Value::as_array).into_iter().flatten() {
+    for level in value
+        .get("properties")
+        .and_then(Value::as_array)
+        .into_iter()
+        .flatten()
+    {
         if is_type(level, "Property")
             && let Some(key) = level.get("key")
             && is_identifier(key)

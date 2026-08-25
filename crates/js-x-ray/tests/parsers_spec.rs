@@ -32,7 +32,11 @@ const Dropzone = forwardRef(({ children, ...params }, ref) => {
 
 #[test]
 fn js_source_parser_should_not_crash_when_using_import_keyword() {
-    assert!(JsSourceParser.parse("import * as foo from \"foo\";").is_ok());
+    assert!(
+        JsSourceParser
+            .parse("import * as foo from \"foo\";")
+            .is_ok()
+    );
 }
 
 #[test]

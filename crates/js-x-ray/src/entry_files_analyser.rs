@@ -317,8 +317,7 @@ impl EntryFilesAnalyser {
         match file_path.extension().and_then(|ext| ext.to_str()) {
             None => {
                 for ext in &self.allowed_extensions {
-                    let dep_path_with_ext =
-                        PathBuf::from(format!("{}.{ext}", file_path.display()));
+                    let dep_path_with_ext = PathBuf::from(format!("{}.{ext}", file_path.display()));
                     if self.file_exists(&dep_path_with_ext)? {
                         return Ok(Some(dep_path_with_ext));
                     }
@@ -558,7 +557,9 @@ impl DiGraph {
         }
 
         let mut seen = HashSet::new();
-        path.into_iter().filter(|id| seen.insert(id.clone())).collect()
+        path.into_iter()
+            .filter(|id| seen.insert(id.clone()))
+            .collect()
     }
 }
 

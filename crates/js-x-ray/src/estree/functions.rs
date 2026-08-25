@@ -67,10 +67,7 @@ pub fn get_call_expression_identifier(
                 member_object,
                 &GetCallExpressionIdentifierOptions::default(),
             );
-            return Some(format!(
-                "{}.{last_id}",
-                inner.as_deref().unwrap_or("null")
-            ));
+            return Some(format!("{}.{last_id}", inner.as_deref().unwrap_or("null")));
         }
 
         return Some(last_id);
@@ -171,7 +168,12 @@ fn collect_member_expression_identifier(node: &Value, lookup: Lookup<'_>, out: &
 // concatBinaryExpression.ts
 // ---------------------------------------------------------------------------
 
-const BINARY_EXPR_TYPES: &[&str] = &["Literal", "BinaryExpression", "ArrayExpression", "Identifier"];
+const BINARY_EXPR_TYPES: &[&str] = &[
+    "Literal",
+    "BinaryExpression",
+    "ArrayExpression",
+    "Identifier",
+];
 
 /// Upstream `concatBinaryExpression`. Returns `None` when
 /// `stop_on_unsupported_node` is set and an unsupported node is found
@@ -302,7 +304,11 @@ pub fn get_call_expression_arguments(node: &Value, lookup: Lookup<'_>) -> Option
         }
     }
 
-    if literals_node.is_empty() { None } else { Some(literals_node) }
+    if literals_node.is_empty() {
+        None
+    } else {
+        Some(literals_node)
+    }
 }
 
 fn hex_to_string(value: &str) -> String {
@@ -351,7 +357,11 @@ pub fn array_expression_to_string_with(
                         Value::Number(n) => n.as_f64(),
                         Value::String(s) => {
                             let t = s.trim();
-                            if t.is_empty() { Some(0.0) } else { t.parse::<f64>().ok() }
+                            if t.is_empty() {
+                                Some(0.0)
+                            } else {
+                                t.parse::<f64>().ok()
+                            }
                         }
                         Value::Bool(b) => Some(if *b { 1.0 } else { 0.0 }),
                         Value::Null => Some(0.0),
@@ -438,7 +448,9 @@ fn extract_logical_inner(node: &Value, out: &mut Vec<(String, Value)>) {
         .unwrap_or("")
         .to_owned();
     for side in ["left", "right"] {
-        let Some(child) = node.get(side) else { continue };
+        let Some(child) = node.get(side) else {
+            continue;
+        };
         if is_type(child, "LogicalExpression") {
             extract_logical_inner(child, out);
         } else {
@@ -504,7 +516,12 @@ fn collect_variable_declaration_identifiers(
 ) {
     match node_type(node) {
         Some("VariableDeclaration") => {
-            for declarator in node.get("declarations").and_then(Value::as_array).into_iter().flatten() {
+            for declarator in node
+                .get("declarations")
+                .and_then(Value::as_array)
+                .into_iter()
+                .flatten()
+            {
                 collect_variable_declaration_identifiers(declarator, prefix, out);
             }
         }
@@ -559,12 +576,22 @@ fn collect_variable_declaration_identifiers(
             }
         }
         Some("ObjectExpression") => {
-            for property in node.get("properties").and_then(Value::as_array).into_iter().flatten() {
+            for property in node
+                .get("properties")
+                .and_then(Value::as_array)
+                .into_iter()
+                .flatten()
+            {
                 collect_variable_declaration_identifiers(property, prefix, out);
             }
         }
         Some("SequenceExpression") => {
-            for expr in node.get("expressions").and_then(Value::as_array).into_iter().flatten() {
+            for expr in node
+                .get("expressions")
+                .and_then(Value::as_array)
+                .into_iter()
+                .flatten()
+            {
                 collect_variable_declaration_identifiers(expr, prefix, out);
             }
         }
@@ -583,14 +610,24 @@ fn collect_variable_declaration_identifiers(
             }
         }
         Some("ArrayPattern") => {
-            for element in node.get("elements").and_then(Value::as_array).into_iter().flatten() {
+            for element in node
+                .get("elements")
+                .and_then(Value::as_array)
+                .into_iter()
+                .flatten()
+            {
                 if !element.is_null() {
                     collect_variable_declaration_identifiers(element, prefix, out);
                 }
             }
         }
         Some("ObjectPattern") => {
-            for property in node.get("properties").and_then(Value::as_array).into_iter().flatten() {
+            for property in node
+                .get("properties")
+                .and_then(Value::as_array)
+                .into_iter()
+                .flatten()
+            {
                 if !property.is_null() {
                     collect_variable_declaration_identifiers(property, prefix, out);
                 }

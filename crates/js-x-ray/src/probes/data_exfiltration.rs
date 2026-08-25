@@ -88,7 +88,11 @@ impl DataExfiltration {
 
     /// Upstream `sensitiveMethodsHandler`.
     fn sensitive_methods_handler(&mut self, node: &Node, ctx: &mut ProbeCtx<'_>) -> ProbeReturn {
-        let Some(first_arg) = node.get("arguments").and_then(Value::as_array).and_then(|args| args.first()) else {
+        let Some(first_arg) = node
+            .get("arguments")
+            .and_then(Value::as_array)
+            .and_then(|args| args.first())
+        else {
             return ProbeReturn::Matched;
         };
         if !is_call_expression(first_arg) {
@@ -235,9 +239,8 @@ impl Probe for DataExfiltration {
                 ..Default::default()
             },
         );
-        warning.location = WarningLocation::Multiple(
-            self.context.values().flatten().copied().collect(),
-        );
+        warning.location =
+            WarningLocation::Multiple(self.context.values().flatten().copied().collect());
         source_file.warnings.push(warning);
     }
 }

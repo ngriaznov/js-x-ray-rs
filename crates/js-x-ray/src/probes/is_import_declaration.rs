@@ -31,7 +31,10 @@ impl Probe for IsImportDeclaration {
     }
 
     fn validate_node(&mut self, node: &Node, _ctx: &mut ProbeCtx<'_>) -> Option<Value> {
-        if !matches!(node_type(node), Some("ImportDeclaration" | "ImportExpression")) {
+        if !matches!(
+            node_type(node),
+            Some("ImportDeclaration" | "ImportExpression")
+        ) {
             return None;
         }
 

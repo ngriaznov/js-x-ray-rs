@@ -2,7 +2,9 @@
 
 use serde_json::Value;
 
-use crate::estree::{Node, SourceLocation, identifier_name, is_identifier, is_numeric_literal, is_string_literal};
+use crate::estree::{
+    Node, SourceLocation, identifier_name, is_identifier, is_numeric_literal, is_string_literal,
+};
 use crate::probe::{Probe, ProbeCtx, ProbeReturn};
 use crate::source_file::SourceFile;
 use crate::variable_tracer::TraceOptions;
@@ -13,8 +15,12 @@ const K_MODULE_NAME: &str = "bcryptjs";
 
 /// Maps a traced bcrypt function name to the argument index holding the
 /// rounds/cost value.
-const K_TRACED_FUNCTIONS_WITH_ARG_INDEX: [(&str, usize); 4] =
-    [("hash", 1), ("hashSync", 1), ("genSalt", 0), ("genSaltSync", 0)];
+const K_TRACED_FUNCTIONS_WITH_ARG_INDEX: [(&str, usize); 4] = [
+    ("hash", 1),
+    ("hashSync", 1),
+    ("genSalt", 0),
+    ("genSaltSync", 0),
+];
 
 fn arg_index_for(function_name: &str) -> Option<usize> {
     K_TRACED_FUNCTIONS_WITH_ARG_INDEX
@@ -27,7 +33,11 @@ fn arg_index_for(function_name: &str) -> Option<usize> {
 /// trimmed-empty coerces to `0`, otherwise a failed parse is `NaN`.
 fn js_number(value: &str) -> f64 {
     let trimmed = value.trim();
-    if trimmed.is_empty() { 0.0 } else { trimmed.parse().unwrap_or(f64::NAN) }
+    if trimmed.is_empty() {
+        0.0
+    } else {
+        trimmed.parse().unwrap_or(f64::NAN)
+    }
 }
 
 #[derive(Debug, Default)]
@@ -56,7 +66,12 @@ impl Probe for IsWeakBcrypt {
     }
 
     fn validate_node(&mut self, _node: &Node, ctx: &mut ProbeCtx<'_>) -> Option<Value> {
-        if !ctx.source_file.tracer.imported_modules.contains(K_MODULE_NAME) {
+        if !ctx
+            .source_file
+            .tracer
+            .imported_modules
+            .contains(K_MODULE_NAME)
+        {
             return None;
         }
 
@@ -71,12 +86,18 @@ impl Probe for IsWeakBcrypt {
         let Some(arg_index) = data.as_str().and_then(arg_index_for) else {
             return ProbeReturn::Matched;
         };
-        let Some(arg) = node.get("arguments").and_then(Value::as_array).and_then(|args| args.get(arg_index)) else {
+        let Some(arg) = node
+            .get("arguments")
+            .and_then(Value::as_array)
+            .and_then(|args| args.get(arg_index))
+        else {
             return ProbeReturn::Matched;
         };
 
         let low_work_factor = if is_numeric_literal(arg) {
-            arg.get("value").and_then(Value::as_f64).is_some_and(|value| value < K_MIN_ROUNDS)
+            arg.get("value")
+                .and_then(Value::as_f64)
+                .is_some_and(|value| value < K_MIN_ROUNDS)
         } else if is_identifier(arg) {
             let name = identifier_name(arg).unwrap_or("");
             ctx.source_file

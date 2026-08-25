@@ -5,7 +5,9 @@
 
 use serde_json::Value;
 
-use crate::estree::{Node, SourceLocation, is_string_literal, is_template_literal, node_type, to_literal};
+use crate::estree::{
+    Node, SourceLocation, is_string_literal, is_template_literal, node_type, to_literal,
+};
 use crate::probe::{Probe, ProbeCtx, ProbeReturn};
 use crate::source_file::{Sensitivity, SourceFile};
 use crate::variable_tracer::TraceOptions;
@@ -57,7 +59,10 @@ fn concat_array_args(command: String, node: &Node) -> String {
         .flatten()
         .filter(|element| is_string_literal(element))
         .fold(command, |mut acc, element| {
-            let value = element.get("value").and_then(Value::as_str).unwrap_or_default();
+            let value = element
+                .get("value")
+                .and_then(Value::as_str)
+                .unwrap_or_default();
             acc.push(' ');
             acc.push_str(value);
             acc

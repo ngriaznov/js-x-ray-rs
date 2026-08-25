@@ -58,7 +58,10 @@ fn should_analyze_internal_dependencies_recursively() {
     let deep_entry = fixtures_dir().join("deps/deepEntry.js");
 
     let reports = entry_files_analyser
-        .analyse([entry.clone(), deep_entry.clone()], EntryFilesRuntimeOptions::default())
+        .analyse(
+            [entry.clone(), deep_entry.clone()],
+            EntryFilesRuntimeOptions::default(),
+        )
         .unwrap();
 
     let mut files: Vec<String> = reports.iter().map(|report| report.file.clone()).collect();
@@ -92,7 +95,10 @@ fn should_analyze_esm_export_statements_recursively() {
         .unwrap();
 
     let files: Vec<String> = reports.iter().map(|report| report.file.clone()).collect();
-    assert_eq!(files, to_file_strings([entry, fixtures_dir().join("shared.js")]));
+    assert_eq!(
+        files,
+        to_file_strings([entry, fixtures_dir().join("shared.js")])
+    );
 
     assert_eq!(entry_files_analyser.stats.number_of_files_processed, 2);
 }
@@ -199,16 +205,28 @@ fn should_detect_recursive_dependencies_using_di_graph_with_root_path() {
         .analyse([entry], EntryFilesRuntimeOptions::default())
         .unwrap();
 
-    let a = Path::new("recursive").join("A.js").to_string_lossy().into_owned();
-    let b = Path::new("recursive").join("B.js").to_string_lossy().into_owned();
+    let a = Path::new("recursive")
+        .join("A.js")
+        .to_string_lossy()
+        .into_owned();
+    let b = Path::new("recursive")
+        .join("B.js")
+        .to_string_lossy()
+        .into_owned();
 
-    assert_eq!(entry_files_analyser.dependencies.find_cycles(), vec![vec![a.clone(), b.clone()]]);
-    assert_eq!(entry_files_analyser.dependencies.get_deep_children(&a, 1), vec![b]);
+    assert_eq!(
+        entry_files_analyser.dependencies.find_cycles(),
+        vec![vec![a.clone(), b.clone()]]
+    );
+    assert_eq!(
+        entry_files_analyser.dependencies.get_deep_children(&a, 1),
+        vec![b]
+    );
 }
 
 #[test]
 fn should_detect_recursive_dependencies_using_di_graph_but_without_root_path_everything_is_absolute()
-{
+ {
     let mut entry_files_analyser =
         EntryFilesAnalyser::new(EntryFilesAnalyserOptions::default()).unwrap();
     let entry = fixtures_dir().join("recursive/A.js");
@@ -242,8 +260,14 @@ fn should_automatically_build_absolute_path_for_entry_files_when_root_path_is_pr
     assert_eq!(
         files,
         vec![
-            Path::new("recursive").join("A.js").to_string_lossy().into_owned(),
-            Path::new("recursive").join("B.js").to_string_lossy().into_owned(),
+            Path::new("recursive")
+                .join("A.js")
+                .to_string_lossy()
+                .into_owned(),
+            Path::new("recursive")
+                .join("B.js")
+                .to_string_lossy()
+                .into_owned(),
         ]
     );
 }
@@ -263,7 +287,11 @@ fn should_ignore_file_that_does_not_exist_when_option_ignore_enoent_is_provided(
         .unwrap();
 
     assert_eq!(reports.len(), 0);
-    assert!(!entry_files_analyser.dependencies.has_vertex("does-not-exists.js"));
+    assert!(
+        !entry_files_analyser
+            .dependencies
+            .has_vertex("does-not-exists.js")
+    );
 }
 
 #[test]
@@ -333,9 +361,10 @@ fn should_pass_file_metadata_per_file_to_the_dependency_collectable() {
         .ast_analyzer()
         .get_collectable_set("dependency")
         .unwrap();
-    assert!(dependency_collectable_locations_have(&dep_set, |metadata| {
-        metadata.contains_key("customFile")
-    }));
+    assert!(dependency_collectable_locations_have(
+        &dep_set,
+        |metadata| { metadata.contains_key("customFile") }
+    ));
 }
 
 #[test]
@@ -353,7 +382,10 @@ fn should_merge_file_metadata_with_global_metadata_in_collectables() {
     let entry = fixtures_dir().join("entry.js");
 
     let mut metadata = Map::new();
-    metadata.insert("project".to_owned(), Value::String("test-project".to_owned()));
+    metadata.insert(
+        "project".to_owned(),
+        Value::String("test-project".to_owned()),
+    );
 
     entry_files_analyser
         .analyse(
@@ -378,10 +410,13 @@ fn should_merge_file_metadata_with_global_metadata_in_collectables() {
         .ast_analyzer()
         .get_collectable_set("dependency")
         .unwrap();
-    assert!(dependency_collectable_locations_have(&dep_set, |metadata| {
-        metadata.get("project").and_then(Value::as_str) == Some("test-project")
-            && metadata.contains_key("customFile")
-    }));
+    assert!(dependency_collectable_locations_have(
+        &dep_set,
+        |metadata| {
+            metadata.get("project").and_then(Value::as_str) == Some("test-project")
+                && metadata.contains_key("customFile")
+        }
+    ));
 }
 
 #[test]
@@ -420,9 +455,10 @@ fn should_allow_file_metadata_to_override_global_metadata_in_collectables() {
         .ast_analyzer()
         .get_collectable_set("dependency")
         .unwrap();
-    assert!(dependency_collectable_locations_have(&dep_set, |metadata| {
-        metadata.get("origin").and_then(Value::as_str) == Some("per-file")
-    }));
+    assert!(dependency_collectable_locations_have(
+        &dep_set,
+        |metadata| { metadata.get("origin").and_then(Value::as_str) == Some("per-file") }
+    ));
 }
 
 #[test]
@@ -440,7 +476,10 @@ fn should_not_mutate_global_metadata_when_using_file_metadata() {
     let entry = fixtures_dir().join("entry.js");
 
     let mut global_metadata = Map::new();
-    global_metadata.insert("project".to_owned(), Value::String("test-project".to_owned()));
+    global_metadata.insert(
+        "project".to_owned(),
+        Value::String("test-project".to_owned()),
+    );
     // Adaptation: upstream mutates a shared JS object and re-inspects it by
     // reference after the call; Rust's `metadata` is moved into `analyse`, so
     // there is no aliasing to observe. We keep a clone made before the call
@@ -464,7 +503,10 @@ fn should_not_mutate_global_metadata_when_using_file_metadata() {
         .unwrap();
 
     let mut expected = Map::new();
-    expected.insert("project".to_owned(), Value::String("test-project".to_owned()));
+    expected.insert(
+        "project".to_owned(),
+        Value::String("test-project".to_owned()),
+    );
     assert_eq!(saved_global_metadata, expected);
     assert!(!saved_global_metadata.contains_key("extra"));
 }

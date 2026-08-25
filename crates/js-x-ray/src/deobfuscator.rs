@@ -9,7 +9,9 @@ use serde_json::Value;
 use crate::estree::{Node, get_variable_declaration_identifiers, is_identifier, node_type};
 use crate::node_counter::{NodeCounter, NodeCounterOptions};
 use crate::obfuscators::{freejsobfuscator, jjencode, jsfuck, obfuscator_io};
-use crate::utils::{CommonHexadecimalPrefixResult, common_hexadecimal_prefix, string_suspicion_score};
+use crate::utils::{
+    CommonHexadecimalPrefixResult, common_hexadecimal_prefix, string_suspicion_score,
+};
 
 // CONSTANTS
 const K_DICTIONARY_STR_PARTS: [&str; 3] = [
@@ -139,9 +141,7 @@ impl Deobfuscator {
                 NodeCounter::with_options(
                     "Property",
                     NodeCounterOptions {
-                        filter: Some(|node| {
-                            is_identifier(node.get("key").unwrap_or(&Value::Null))
-                        }),
+                        filter: Some(|node| is_identifier(node.get("key").unwrap_or(&Value::Null))),
                         ..Default::default()
                     },
                 ),
@@ -301,11 +301,7 @@ impl Deobfuscator {
                 _ => None,
             };
             if let Some(target) = target {
-                Self::extract_counter_identifiers(
-                    &mut self.identifiers,
-                    &counter.r#type,
-                    target,
-                );
+                Self::extract_counter_identifiers(&mut self.identifiers, &counter.r#type, target);
             }
         }
     }

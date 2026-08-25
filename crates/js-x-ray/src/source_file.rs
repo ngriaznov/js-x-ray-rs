@@ -9,7 +9,7 @@ use serde_json::{Map, Value};
 use crate::collectable_set::CollectableSetRegistry;
 use crate::deobfuscator::Deobfuscator;
 use crate::estree::{Node, SourceLocation, node_type, root_location};
-use crate::utils::{is_string_base64, is_svg, to_array_location, Base64Options};
+use crate::utils::{Base64Options, is_string_base64, is_svg, to_array_location};
 use crate::variable_tracer::VariableTracer;
 use crate::warnings::{GenerateWarningOptions, Warning, WarningLocation, generate_warning};
 
@@ -72,7 +72,11 @@ fn posix_join(parts: &[&str]) -> String {
     if parts.first().is_some_and(|p| p.starts_with('/')) {
         joined = format!("/{joined}");
     }
-    if joined.is_empty() { ".".to_owned() } else { joined }
+    if joined.is_empty() {
+        ".".to_owned()
+    } else {
+        joined
+    }
 }
 
 pub struct SourceFile {
@@ -286,7 +290,8 @@ impl SourceFile {
                 "suspicious-file",
                 GenerateWarningOptions::default(),
             ));
-            self.warnings.retain(|warning| warning.kind != "encoded-literal");
+            self.warnings
+                .retain(|warning| warning.kind != "encoded-literal");
         }
 
         (ids_length_avg, string_score)

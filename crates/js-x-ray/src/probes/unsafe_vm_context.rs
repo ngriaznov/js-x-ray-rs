@@ -63,7 +63,8 @@ impl Probe for UnsafeVmContext {
         }
 
         let traced_fn = format!("{id}.runInContext");
-        self.run_in_context_traced_functions.insert(traced_fn.clone());
+        self.run_in_context_traced_functions
+            .insert(traced_fn.clone());
         source_file.tracer.trace(
             &traced_fn,
             TraceOptions {

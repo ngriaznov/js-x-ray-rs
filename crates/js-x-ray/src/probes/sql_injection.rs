@@ -5,7 +5,9 @@ use std::sync::LazyLock;
 use regex::Regex;
 use serde_json::Value;
 
-use crate::estree::{Node, SourceLocation, identifier_name, is_call_expression, node_type, to_literal};
+use crate::estree::{
+    Node, SourceLocation, identifier_name, is_call_expression, node_type, to_literal,
+};
 use crate::probe::{Probe, ProbeCtx, ProbeReturn};
 use crate::warnings::{GenerateWarningOptions, generate_warning};
 
