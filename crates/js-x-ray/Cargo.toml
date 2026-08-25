@@ -1,0 +1,28 @@
+# Upstream reference: https://github.com/NodeSecure/js-x-ray (workspaces/js-x-ray)
+[package]
+name = "js-x-ray"
+description = "JavaScript AST X-Ray analysis — Rust port of @nodesecure/js-x-ray powered by oxc"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+keywords = ["ast", "security", "analysis", "nodesecure", "sast"]
+categories = ["development-tools", "parser-implementations"]
+
+[features]
+default = ["fs"]
+# Filesystem-backed APIs (analyse_file, EntryFilesAnalyser). Disable for WASM.
+fs = []
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+oxc_allocator.workspace = true
+oxc_ast.workspace = true
+oxc_parser.workspace = true
+oxc_span.workspace = true
+regex.workspace = true
+regex-syntax.workspace = true
+thiserror.workspace = true
+indexmap.workspace = true

@@ -1,0 +1,29 @@
+[workspace]
+resolver = "3"
+members = [
+  "crates/js-x-ray",
+  "crates/js-x-ray-wasm",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.94"
+license = "MIT"
+repository = "https://github.com/ngriaznov/js-x-ray-rs"
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order"] }
+oxc_allocator = "0.139"
+oxc_ast = { version = "0.139", features = ["serialize"] }
+oxc_parser = "0.139"
+oxc_span = "0.139"
+regex = "1"
+regex-syntax = "0.8"
+thiserror = "2"
+indexmap = "2"
+
+[profile.release]
+lto = true
+codegen-units = 1
