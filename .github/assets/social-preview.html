@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1280px; height: 640px; }
+  body {
+    font-family: "DejaVu Sans", "Liberation Sans", Arial, sans-serif;
+    background:
+      radial-gradient(1100px 700px at 82% -12%, rgba(222,165,132,0.16), transparent 60%),
+      radial-gradient(900px 600px at 6% 118%, rgba(120,170,255,0.10), transparent 55%),
+      linear-gradient(155deg, #0b0f16 0%, #0d1420 55%, #0a0e15 100%);
+    color: #e8edf4;
+    position: relative;
+    overflow: hidden;
+  }
+  .grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.028) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.028) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(1000px 620px at 70% 0%, #000 30%, transparent 78%);
+  }
+  .frame { position: absolute; inset: 0; padding: 72px 80px; display: flex; flex-direction: column; }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 12px;
+    font: 600 20px/1 "DejaVu Sans Mono", "Liberation Mono", monospace;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: #dea584;
+  }
+  .eyebrow .dot { width: 9px; height: 9px; border-radius: 50%; background: #dea584; box-shadow: 0 0 16px 3px rgba(222,165,132,0.6); }
+
+  h1 {
+    margin-top: 26px;
+    font-size: 96px; line-height: 0.98; font-weight: 800; letter-spacing: -2.5px;
+    color: #f6f8fc;
+  }
+  h1 .rs { color: #dea584; }
+
+  .tag {
+    margin-top: 24px; max-width: 900px;
+    font-size: 33px; line-height: 1.32; font-weight: 500; color: #aeb9c9;
+  }
+  .tag b { color: #e8edf4; font-weight: 700; }
+
+  .chips { margin-top: auto; display: flex; gap: 14px; flex-wrap: wrap; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 13px 20px; border-radius: 999px;
+    background: rgba(255,255,255,0.045); border: 1px solid rgba(255,255,255,0.09);
+    font: 600 22px/1 "DejaVu Sans", Arial, sans-serif; color: #d6dee9;
+  }
+  .chip.key { background: rgba(222,165,132,0.13); border-color: rgba(222,165,132,0.4); color: #f0d6c4; }
+  .chip .g { color: #7ee2a8; font-family: "DejaVu Sans Mono", monospace; font-weight: 700; }
+
+  .foot {
+    margin-top: 30px; display: flex; align-items: center; gap: 18px;
+    font: 500 22px/1 "DejaVu Sans Mono", monospace; color: #6f7d90;
+  }
+  .foot .sep { color: #33404f; }
+  .foot .crate { color: #9fb0c4; }
+
+  .scan {
+    position: absolute; right: 74px; top: 92px;
+    width: 150px; height: 150px; border-radius: 30px;
+    background: linear-gradient(150deg, rgba(222,165,132,0.20), rgba(222,165,132,0.04));
+    border: 1px solid rgba(222,165,132,0.35);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .scan svg { width: 92px; height: 92px; }
+</style>
+</head>
+<body>
+  <div class="grid"></div>
+  <div class="scan">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#dea584" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2.5 5 5.2v5.3c0 4.3 2.9 7.6 7 8.9 4.1-1.3 7-4.6 7-8.9V5.2L12 2.5Z"/>
+      <path d="M9.2 12.2 11 14l4-4.3"/>
+    </svg>
+  </div>
+
+  <div class="frame">
+    <div class="eyebrow"><span class="dot"></span>Rust · WASM · security SAST</div>
+    <h1>js-x-ray<span class="rs">-rs</span></h1>
+    <div class="tag">
+      Static security analysis of <b>JavaScript &amp; TypeScript</b>, in Rust.
+      Detect malicious code, obfuscation and supply-chain patterns in
+      <b>untrusted JS</b> — without executing it, without a Node.js runtime.
+    </div>
+
+    <div class="chips">
+      <div class="chip key"><span class="g">691/691</span> verified vs. upstream</div>
+      <div class="chip">powered by oxc</div>
+      <div class="chip">compiles to WebAssembly</div>
+      <div class="chip">zero-panic on hostile input</div>
+    </div>
+
+    <div class="foot">
+      <span class="crate">crates.io: js-x-ray-rs</span>
+      <span class="sep">•</span>
+      <span>a Rust port of @nodesecure/js-x-ray</span>
+    </div>
+  </div>
+</body>
+</html>
