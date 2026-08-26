@@ -66,6 +66,12 @@ fn collect_seed_sources() -> Vec<String> {
     let etalon_dir = root.join("tests/etalon");
     let corpus_dir = etalon_dir.join("corpus");
 
+    // Absent when running from a published/vendored tarball (the corpus lives
+    // at the workspace root, outside the packaged crate); the caller skips.
+    if !corpus_dir.is_dir() {
+        return Vec::new();
+    }
+
     let mut case_paths = Vec::new();
     collect_json_files(&corpus_dir, &mut case_paths);
     assert!(
@@ -281,8 +287,13 @@ fn analyser() -> AstAnalyser {
 #[test]
 fn mutation_fuzz_never_panics() {
     let sources = collect_seed_sources();
+    // Corpus absent (published/vendored crate): nothing to fuzz, and the
+    // pinned edge-case smoke tests still run. CI runs the full sweep.
+    if sources.is_empty() {
+        eprintln!("panic_safety: corpus not present (packaged crate) — skipping mutation sweep");
+        return;
+    }
     let total = sources.len() * VARIANTS_PER_SEED;
-    assert!(total > 0, "no seed sources collected");
 
     // Deterministic striding down to MAX_MUTATIONS, indexed over the full
     // (seed, variant) flattened space so the selection never depends on

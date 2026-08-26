@@ -609,7 +609,7 @@ fn pipelines_deobfuscate_should_find_a_shady_url_by_deobfuscating_a_joined_array
 
 fn fixture_path(name: &str) -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("../../tests/etalon/fixtures/obfuscated")
+        .join("tests/fixtures/obfuscated")
         .join(name)
 }
 

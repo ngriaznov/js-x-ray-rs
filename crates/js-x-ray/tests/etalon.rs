@@ -239,6 +239,14 @@ fn etalon_corpus_matches_upstream_snapshots() {
     let corpus_dir = etalon_dir.join("corpus");
     let snapshots_dir = etalon_dir.join("snapshots");
 
+    // The corpus lives at the workspace root, outside the packaged crate, so
+    // it is absent when this test runs from a published/vendored tarball.
+    // Skip cleanly there; CI always runs it against the full corpus.
+    if !corpus_dir.is_dir() {
+        eprintln!("etalon: corpus not present at {corpus_dir:?} (packaged crate) — skipping");
+        return;
+    }
+
     let mut cases = Vec::new();
     collect_cases(&corpus_dir, &mut cases);
     assert!(
