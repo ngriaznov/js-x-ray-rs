@@ -4,7 +4,30 @@ Only the `js-x-ray-rs` library crate is published. `js-x-ray-wasm` is
 `publish = false` — it ships as a WASM/npm artifact via `wasm-pack`, not to
 crates.io.
 
-## One-time
+## Automated releases (recommended)
+
+CI publishes automatically. The `publish` job in
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on every push to
+`main`, after the test and wasm jobs pass, and:
+
+1. reads the crate version from `Cargo.toml`,
+2. queries crates.io, and
+3. runs `cargo publish` **only if that version isn't already published**,
+   then tags the commit `v<version>`.
+
+So cutting a release is just: bump `version` under `[workspace.package]` in
+the root `Cargo.toml`, add a `CHANGELOG.md` entry, and merge to `main`.
+Re-runs on an already-published version are a no-op.
+
+**One-time setup:** add a crates.io API token (from
+<https://crates.io/settings/tokens>, scope publish-new + publish-update) as
+the repository secret **`CARGO_REGISTRY_TOKEN`**
+(Settings → Secrets and variables → Actions). Until it is set, the publish
+job skips cleanly and CI stays green.
+
+## Manual publishing
+
+For a local release (or the very first publish before the secret exists):
 
 1. A crates.io account (log in with GitHub at <https://crates.io>).
 2. `cargo login <token>` with a token from

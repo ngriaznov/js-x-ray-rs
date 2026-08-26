@@ -41,3 +41,64 @@ jobs:
         # profile the WASM build uses) without needing wasm-bindgen-cli /
         # a JS runtime to execute the actual .wasm artifact.
         run: cargo test -p js-x-ray-rs --test etalon --release
+
+  # Publish js-x-ray-rs to crates.io whenever the version in Cargo.toml is not
+  # already published. Runs only on pushes to main, only after test + wasm are
+  # green. To cut a release: bump [workspace.package] version, land on main.
+  # Requires the CARGO_REGISTRY_TOKEN repository secret (a crates.io API token).
+  publish:
+    needs: [test, wasm]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: 1.98.0
+      - uses: Swatinem/rust-cache@v2
+      - name: Resolve version and check crates.io
+        id: check
+        env:
+          # 'true' only when the repository secret is configured; lets the job
+          # skip cleanly (green) until a token is added.
+          token_present: ${{ secrets.CARGO_REGISTRY_TOKEN != '' }}
+        run: |
+          set -euo pipefail
+          version=$(cargo metadata --format-version=1 --no-deps \
+            | jq -r '.packages[] | select(.name=="js-x-ray-rs") | .version')
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if [ "$token_present" != "true" ]; then
+            echo "CARGO_REGISTRY_TOKEN is not set — skipping publish (add the secret to enable)."
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          status=$(curl -sS -o /dev/null -w '%{http_code}' \
+            -H 'User-Agent: js-x-ray-rs-release (github-actions; ngriaznov)' \
+            "https://crates.io/api/v1/crates/js-x-ray-rs/$version")
+          if [ "$status" = "200" ]; then
+            echo "js-x-ray-rs $version is already published — skipping."
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+          elif [ "$status" = "404" ]; then
+            echo "js-x-ray-rs $version is not published — will publish."
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Unexpected crates.io status $status for version query." >&2
+            exit 1
+          fi
+      - name: Publish to crates.io
+        if: steps.check.outputs.publish == 'true'
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: cargo publish -p js-x-ray-rs
+      - name: Tag the release
+        if: steps.check.outputs.publish == 'true'
+        env:
+          VERSION: ${{ steps.check.outputs.version }}
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "v$VERSION" -m "js-x-ray-rs $VERSION"
+          git push origin "v$VERSION"
