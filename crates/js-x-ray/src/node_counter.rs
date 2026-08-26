@@ -47,10 +47,12 @@ impl NodeCounter {
     ///
     /// # Panics
     /// Panics when the type argument syntax is invalid (upstream throws).
+    #[must_use]
     pub fn new(type_expr: &str) -> Self {
         Self::with_options(type_expr, NodeCounterOptions::default())
     }
 
+    #[must_use]
     pub fn with_options(type_expr: &str, options: NodeCounterOptions) -> Self {
         // Upstream: /([A-Za-z]+)(\[[a-zA-Z]+\])?/g
         let alpha_end = type_expr
@@ -74,12 +76,14 @@ impl NodeCounter {
         }
     }
 
+    #[must_use]
     pub fn count(&self) -> u32 {
         self.count
     }
 
     /// Lookup properties as a map (JS object key coercion applied — e.g.
     /// booleans become `"true"` / `"false"`).
+    #[must_use]
     pub fn properties(&self) -> &IndexMap<String, u32> {
         &self.properties
     }

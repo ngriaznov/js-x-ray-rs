@@ -6,7 +6,7 @@
 
 use serde_json::Value;
 
-use crate::estree::{Node, identifier_name};
+use crate::estree::{Node, SourceLocation, identifier_name};
 use crate::probe::{Probe, ProbeCtx, ProbeReturn};
 use crate::source_file::SourceFile;
 use crate::variable_tracer::TraceOptions;
@@ -104,7 +104,7 @@ impl Probe for IsSyncIo {
             "synchronous-io",
             GenerateWarningOptions {
                 value,
-                location: crate::estree::SourceLocation::from_node(node),
+                location: SourceLocation::from_node(node),
                 ..Default::default()
             },
         );

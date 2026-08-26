@@ -277,7 +277,8 @@ fn analyse_detects_a_dependency_required_under_a_try_statement() {
         report
             .dependencies
             .get("http")
-            .is_some_and(|dep| dep.in_try)
+            .is_some_and(|dep| dep.in_try),
+        "\"http\" dependency should be flagged as required under a try statement"
     );
 }
 
@@ -593,7 +594,8 @@ fn analyse_file_collects_the_full_url_and_the_ip_address() {
             .unwrap()
             .to_json()
             .entries
-            .is_empty()
+            .is_empty(),
+        "\"hostname\" collectable set should stay empty"
     );
 
     let ip_data = analyser.get_collectable_set("ip").unwrap().to_json();
@@ -659,7 +661,8 @@ fn analyse_collects_the_full_url_and_the_ip_address_with_a_null_file() {
             .unwrap()
             .to_json()
             .entries
-            .is_empty()
+            .is_empty(),
+        "\"hostname\" collectable set should stay empty"
     );
 
     let ip_data = analyser.get_collectable_set("ip").unwrap().to_json();

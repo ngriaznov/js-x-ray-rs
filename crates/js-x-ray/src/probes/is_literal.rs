@@ -5,7 +5,7 @@ use std::sync::LazyLock;
 use regex::Regex;
 use serde_json::Value;
 
-use crate::estree::{Node, SourceLocation};
+use crate::estree::{Node, SourceLocation, is_string_literal};
 use crate::probe::{Probe, ProbeCtx, ProbeReturn};
 use crate::shady_link::{IsIpAddressSafeOptions, IsUrlSafeOptions, ShadyLink};
 use crate::utils::hex;
@@ -100,9 +100,7 @@ impl Probe for IsLiteral {
     }
 
     fn validate_node(&mut self, node: &Node, _ctx: &mut ProbeCtx<'_>) -> Option<Value> {
-        (node.get("type").and_then(Value::as_str) == Some("Literal")
-            && node.get("value").is_some_and(Value::is_string))
-        .then_some(Value::Null)
+        is_string_literal(node).then_some(Value::Null)
     }
 
     fn main(&mut self, node: &Node, _data: &Value, ctx: &mut ProbeCtx<'_>) -> ProbeReturn {

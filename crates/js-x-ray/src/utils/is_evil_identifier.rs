@@ -9,8 +9,10 @@ pub fn is_neutral_callable(identifier: &str) -> bool {
 }
 
 fn is_function_prototype(identifier: &str) -> bool {
-    identifier.starts_with("Function.prototype")
-        && ["call", "apply", "bind"]
+    identifier.starts_with("Function.prototype") && {
+        let lowered = identifier.to_lowercase();
+        ["call", "apply", "bind"]
             .iter()
-            .any(|needle| identifier.to_lowercase().contains(needle))
+            .any(|needle| lowered.contains(needle))
+    }
 }

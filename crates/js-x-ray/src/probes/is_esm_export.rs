@@ -5,7 +5,7 @@
 
 use serde_json::Value;
 
-use crate::estree::{Node, SourceLocation, is_type, node_type};
+use crate::estree::{Node, SourceLocation, is_string_literal, node_type};
 use crate::probe::{Probe, ProbeCtx, ProbeReturn};
 
 #[derive(Debug, Default)]
@@ -29,8 +29,7 @@ impl Probe for IsEsmExport {
         }
 
         let source = node.get("source")?;
-        (!source.is_null() && is_type(source, "Literal") && source.get("value")?.is_string())
-            .then_some(Value::Null)
+        is_string_literal(source).then_some(Value::Null)
     }
 
     fn main(&mut self, node: &Node, _data: &Value, ctx: &mut ProbeCtx<'_>) -> ProbeReturn {

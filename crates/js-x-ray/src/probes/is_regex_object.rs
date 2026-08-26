@@ -2,16 +2,14 @@
 
 use serde_json::Value;
 
-use crate::estree::{Node, SourceLocation, node_type};
+use crate::estree::{Node, SourceLocation, is_identifier, is_type, node_type};
 use crate::probe::{Probe, ProbeCtx, ProbeReturn};
 use crate::utils::safe_regex::is_safe_regex;
 use crate::warnings::{GenerateWarningOptions, generate_warning};
 
 fn is_regex_constructor(node: &Node) -> bool {
-    node_type(node) == Some("NewExpression")
-        && node
-            .get("callee")
-            .is_some_and(|callee| node_type(callee) == Some("Identifier"))
+    is_type(node, "NewExpression")
+        && node.get("callee").is_some_and(is_identifier)
         && node.pointer("/callee/name").and_then(Value::as_str) == Some("RegExp")
 }
 

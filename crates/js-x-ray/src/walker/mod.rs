@@ -46,6 +46,28 @@ impl WalkerContext {
             self.replacement.take(),
         )
     }
+
+    fn restore(&mut self, saved: (bool, bool, Option<Value>)) {
+        (self.should_skip, self.should_remove, self.replacement) = saved;
+    }
+}
+
+/// Invoke `handler` (if any) on `node` with a freshly reset `context`,
+/// restoring the caller's in-flight context afterwards, and hand back
+/// whatever the handler requested. Reentrant: `handler` may itself recurse
+/// into `visit`, which nests another save/reset/restore around `context`.
+fn run_handler(
+    handler: Option<&mut SyncHandler<'_>>,
+    context: &mut WalkerContext,
+    node: &mut Value,
+) -> (bool, bool, Option<Value>) {
+    let saved = context.take();
+    if let Some(handler) = handler {
+        handler(context, node);
+    }
+    let result = context.take();
+    context.restore(saved);
+    result
 }
 
 pub type SyncHandler<'a> = dyn FnMut(&mut WalkerContext, &mut Value) + 'a;
@@ -76,17 +98,8 @@ impl SyncWalker<'_, '_> {
 
     fn visit_inner(&mut self, node: &mut Value) -> Outcome {
         if self.enter.is_some() {
-            let saved = self.context.take();
-            if let Some(enter) = self.enter.as_deref_mut() {
-                enter(&mut self.context, node);
-            }
-            let (skipped, removed, replacement) = self.context.take();
-            (
-                self.context.should_skip,
-                self.context.should_remove,
-                self.context.replacement,
-            ) = saved;
-
+            let (skipped, removed, replacement) =
+                run_handler(self.enter.as_deref_mut(), &mut self.context, node);
             if let Some(replacement) = replacement {
                 *node = replacement;
             }
@@ -101,17 +114,8 @@ impl SyncWalker<'_, '_> {
         self.visit_children(node);
 
         if self.leave.is_some() {
-            let saved = self.context.take();
-            if let Some(leave) = self.leave.as_deref_mut() {
-                leave(&mut self.context, node);
-            }
-            let (_, removed, replacement) = self.context.take();
-            (
-                self.context.should_skip,
-                self.context.should_remove,
-                self.context.replacement,
-            ) = saved;
-
+            let (_, removed, replacement) =
+                run_handler(self.leave.as_deref_mut(), &mut self.context, node);
             if let Some(replacement) = replacement {
                 *node = replacement;
             }
@@ -175,22 +179,19 @@ pub fn walk<'a>(
     // Upstream visits the root through the same code path; a removed root is
     // left untouched (there is no parent to remove it from).
     if ast.is_array() {
-        if let Some(enter) = walker.enter.as_deref_mut() {
-            let mut ctx = WalkerContext::default();
-            enter(&mut ctx, ast);
-            let (skipped, _, replacement) = ctx.take();
-            if let Some(replacement) = replacement {
-                *ast = replacement;
-            }
-            if skipped {
-                return;
-            }
+        let mut ctx = WalkerContext::default();
+        let (skipped, _, replacement) = run_handler(walker.enter.as_deref_mut(), &mut ctx, ast);
+        if let Some(replacement) = replacement {
+            *ast = replacement;
         }
+        if skipped {
+            return;
+        }
+
         walker.visit_children(ast);
-        if let Some(leave) = walker.leave.as_deref_mut() {
-            let mut ctx = WalkerContext::default();
-            leave(&mut ctx, ast);
-        }
+
+        let mut ctx = WalkerContext::default();
+        run_handler(walker.leave.as_deref_mut(), &mut ctx, ast);
     } else {
         walker.visit(ast);
     }

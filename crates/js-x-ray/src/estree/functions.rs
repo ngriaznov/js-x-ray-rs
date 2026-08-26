@@ -51,14 +51,8 @@ pub fn get_call_expression_identifier(
     }
     if is_member_expression(callee) {
         let member_object = callee.get("object")?;
-        let mut last_id = String::new();
-        for part in get_member_expression_identifier(callee, options.external_identifier_lookup) {
-            if last_id.is_empty() {
-                last_id = part;
-            } else {
-                last_id = format!("{last_id}.{part}");
-            }
-        }
+        let last_id =
+            get_member_expression_identifier(callee, options.external_identifier_lookup).join(".");
 
         if options.resolve_call_expression && is_call_expression(member_object) {
             // Upstream concatenates even when the inner lookup returns null,

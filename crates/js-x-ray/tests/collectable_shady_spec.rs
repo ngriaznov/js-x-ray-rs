@@ -669,7 +669,8 @@ mod shady_link_is_url_safe {
                     .expect("url set")
                     .to_json()
                     .entries
-                    .is_empty()
+                    .is_empty(),
+                "\"not-a-url\" is not a real URL, so nothing should be collected into \"url\""
             );
             assert!(
                 registry
@@ -677,7 +678,8 @@ mod shady_link_is_url_safe {
                     .expect("hostname set")
                     .to_json()
                     .entries
-                    .is_empty()
+                    .is_empty(),
+                "\"not-a-url\" is not a real URL, so nothing should be collected into \"hostname\""
             );
             assert!(
                 registry
@@ -685,7 +687,8 @@ mod shady_link_is_url_safe {
                     .expect("ip set")
                     .to_json()
                     .entries
-                    .is_empty()
+                    .is_empty(),
+                "\"not-a-url\" is not a real URL, so nothing should be collected into \"ip\""
             );
         }
 
@@ -735,7 +738,8 @@ mod shady_link_is_url_safe {
                     .expect("ip set")
                     .to_json()
                     .entries
-                    .is_empty()
+                    .is_empty(),
+                "a hostname, not an IP, should not be collected into \"ip\""
             );
         }
 
@@ -774,7 +778,8 @@ mod shady_link_is_url_safe {
                     .expect("hostname set")
                     .to_json()
                     .entries
-                    .is_empty()
+                    .is_empty(),
+                "an IP address, not a hostname, should not be collected into \"hostname\""
             );
             assert_eq!(
                 registry.get("ip").expect("ip set").to_json().entries,

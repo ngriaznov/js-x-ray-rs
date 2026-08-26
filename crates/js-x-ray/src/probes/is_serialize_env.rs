@@ -6,8 +6,8 @@
 use serde_json::Value;
 
 use crate::estree::{
-    Node, get_member_expression_identifier, identifier_name, is_identifier, is_member_expression,
-    noop,
+    Node, SourceLocation, get_member_expression_identifier, identifier_name, is_identifier,
+    is_member_expression, noop,
 };
 use crate::probe::{Probe, ProbeCtx, ProbeReturn};
 use crate::source_file::{Sensitivity, SourceFile};
@@ -80,7 +80,7 @@ impl IsSerializeEnv {
             "serialize-environment",
             GenerateWarningOptions {
                 value: Some("JSON.stringify(process.env)".to_owned()),
-                location: crate::estree::SourceLocation::from_node(node),
+                location: SourceLocation::from_node(node),
                 ..Default::default()
             },
         );
@@ -99,7 +99,7 @@ impl IsSerializeEnv {
             "serialize-environment",
             GenerateWarningOptions {
                 value: Some("process.env".to_owned()),
-                location: crate::estree::SourceLocation::from_node(node),
+                location: SourceLocation::from_node(node),
                 ..Default::default()
             },
         );

@@ -6,7 +6,7 @@ use serde_json::Value;
 
 use crate::estree::{
     GetCallExpressionIdentifierOptions, Node, SourceLocation, get_call_expression_identifier,
-    is_call_expression, node_type,
+    is_call_expression,
 };
 use crate::probe::{Probe, ProbeCtx, ProbeReturn};
 use crate::warnings::{GenerateWarningOptions, generate_warning};
@@ -24,8 +24,9 @@ fn is_function_callee(node: &Node, identifier: Option<&str>) -> bool {
 
 /// Upstream `isUnsafeCallee`. Exposed for `ast_analyser`/other probes that
 /// may want the same classification.
+#[must_use]
 pub fn is_unsafe_callee(node: &Node, ctx: &ProbeCtx<'_>) -> Option<&'static str> {
-    if node_type(node) != Some("CallExpression") {
+    if !is_call_expression(node) {
         return None;
     }
 

@@ -7,7 +7,7 @@
 
 use serde_json::Value;
 
-use crate::estree::{Node, SourceLocation, node_type};
+use crate::estree::{Node, SourceLocation, is_string_literal, node_type};
 use crate::probe::{Probe, ProbeCtx, ProbeReturn};
 use crate::warnings::{GenerateWarningOptions, generate_warning};
 
@@ -39,9 +39,7 @@ impl Probe for IsImportDeclaration {
         }
 
         let source = node.get("source")?;
-        (source.get("type").and_then(Value::as_str) == Some("Literal")
-            && source.get("value").is_some_and(Value::is_string))
-        .then_some(Value::Null)
+        is_string_literal(source).then_some(Value::Null)
     }
 
     fn main(&mut self, node: &Node, _data: &Value, ctx: &mut ProbeCtx<'_>) -> ProbeReturn {

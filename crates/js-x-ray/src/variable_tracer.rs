@@ -26,7 +26,7 @@ use crate::estree::{
 };
 use crate::utils::{
     get_sub_member_expression_segments, is_evil_identifier_path, is_neutral_callable,
-    make_prefix_remover, strip_node_prefix,
+    strip_node_prefix,
 };
 
 // CONSTANTS (upstream: kGlobalIdentifiersToTrace, kRequirePatterns, kUnsafeGlobalCallExpression)
@@ -77,10 +77,22 @@ struct Traced {
     name: String,
     identifier_or_member_expr: String,
     follow_consecutive_assignment: bool,
-    #[allow(dead_code)]
     follow_return_value_assignement: bool,
     module_name: Option<String>,
     assignment_memory: Vec<AssignmentMemory>,
+}
+
+impl Traced {
+    /// Snapshot of the fields an emitted event needs, taken while the
+    /// `RefCell` is still borrowed so callers can drop the borrow before
+    /// pushing to `self.events` or re-borrowing mutably.
+    fn event_snapshot(&self) -> (String, String, bool) {
+        (
+            self.name.clone(),
+            self.identifier_or_member_expr.clone(),
+            self.follow_consecutive_assignment,
+        )
+    }
 }
 
 type SharedTraced = Rc<RefCell<Traced>>;
@@ -214,13 +226,7 @@ impl VariableTracer {
         remove_global_identifier: bool,
     ) -> Option<TracedIdentifierReport> {
         let identifier_or_member_expr = if remove_global_identifier {
-            let remover = make_prefix_remover(
-                K_GLOBAL_IDENTIFIERS_TO_TRACE
-                    .iter()
-                    .map(|s| (*s).to_owned())
-                    .collect(),
-            );
-            remover(identifier_or_member_expr)
+            strip_global_identifier_prefix(identifier_or_member_expr)
         } else {
             identifier_or_member_expr.to_owned()
         };
@@ -299,14 +305,8 @@ impl VariableTracer {
 
         let new_identifier_name = identifier_name(id).unwrap_or("").to_owned();
 
-        let (name, identifier_or_member_expr_value, follow_consecutive_assignment) = {
-            let traced = traced_variant.borrow();
-            (
-                traced.name.clone(),
-                traced.identifier_or_member_expr.clone(),
-                traced.follow_consecutive_assignment,
-            )
-        };
+        let (name, identifier_or_member_expr_value, follow_consecutive_assignment) =
+            traced_variant.borrow().event_snapshot();
 
         self.events.push(TracerEvent::Assignment {
             name: name.clone(),
@@ -662,14 +662,8 @@ impl VariableTracer {
                             r#type: AssignmentKind::ReturnValueAssignment,
                             name: id_name.clone(),
                         });
-                    let (name, identifier_or_member_expr, follow_consecutive_assignment) = {
-                        let traced = traced_variant.borrow();
-                        (
-                            traced.name.clone(),
-                            traced.identifier_or_member_expr.clone(),
-                            traced.follow_consecutive_assignment,
-                        )
-                    };
+                    let (name, identifier_or_member_expr, follow_consecutive_assignment) =
+                        traced_variant.borrow().event_snapshot();
                     self.events.push(TracerEvent::ReturnValue {
                         name,
                         identifier_or_member_expr,
@@ -879,6 +873,26 @@ impl VariableTracer {
     /// Drain queued events (Rust replacement for EventEmitter dispatch).
     pub fn drain_events(&mut self) -> Vec<TracerEvent> {
         std::mem::take(&mut self.events)
+    }
+}
+
+/// `make_prefix_remover(K_GLOBAL_IDENTIFIERS_TO_TRACE)`, specialized against
+/// the fixed `&str` table so this hot lookup path no longer allocates a
+/// `Vec<String>` of prefixes on every call.
+fn strip_global_identifier_prefix(expr: &str) -> String {
+    if !expr.contains('.') {
+        return expr.to_owned();
+    }
+
+    match K_GLOBAL_IDENTIFIERS_TO_TRACE
+        .iter()
+        .find(|global_id| expr.starts_with(*global_id))
+    {
+        Some(matched_prefix) => expr
+            .get(matched_prefix.len() + 1..)
+            .unwrap_or("")
+            .to_owned(),
+        None => expr.to_owned(),
     }
 }
 

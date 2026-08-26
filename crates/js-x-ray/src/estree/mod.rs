@@ -32,12 +32,15 @@ pub struct SourceLocation {
 
 impl SourceLocation {
     /// Extract the `loc` field of a node, when present and well-formed.
+    #[must_use]
     pub fn from_node(node: &Node) -> Option<Self> {
-        serde_json::from_value(node.get("loc")?.clone()).ok()
+        use serde::Deserialize;
+        Self::deserialize(node.get("loc")?).ok()
     }
 }
 
 /// Upstream `rootLocation()`: an all-zero location.
+#[must_use]
 pub fn root_location() -> SourceLocation {
     SourceLocation {
         start: Position { line: 0, column: 0 },

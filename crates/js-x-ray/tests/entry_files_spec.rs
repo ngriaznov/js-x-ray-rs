@@ -290,7 +290,8 @@ fn should_ignore_file_that_does_not_exist_when_option_ignore_enoent_is_provided(
     assert!(
         !entry_files_analyser
             .dependencies
-            .has_vertex("does-not-exists.js")
+            .has_vertex("does-not-exists.js"),
+        "an ignored ENOENT entry should not be added to the dependency graph"
     );
 }
 

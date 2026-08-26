@@ -5,6 +5,7 @@ use serde_json::Value;
 use super::Node;
 
 /// `isNode`: a JSON object with a string `type` field.
+#[must_use]
 pub fn is_node(value: &Value) -> bool {
     value
         .as_object()
@@ -12,26 +13,32 @@ pub fn is_node(value: &Value) -> bool {
 }
 
 /// The `type` field of a node, when it is one.
+#[must_use]
 pub fn node_type(value: &Value) -> Option<&str> {
     value.as_object()?.get("type")?.as_str()
 }
 
+#[must_use]
 pub fn is_type(value: &Value, ty: &str) -> bool {
     node_type(value) == Some(ty)
 }
 
+#[must_use]
 pub fn is_literal(node: &Value) -> bool {
     is_type(node, "Literal")
 }
 
+#[must_use]
 pub fn is_string_literal(node: &Value) -> bool {
     is_literal(node) && node.get("value").is_some_and(Value::is_string)
 }
 
+#[must_use]
 pub fn is_numeric_literal(node: &Value) -> bool {
     is_literal(node) && node.get("value").is_some_and(Value::is_number)
 }
 
+#[must_use]
 pub fn is_template_literal(node: &Value) -> bool {
     if !is_type(node, "TemplateLiteral") {
         return false;
@@ -45,6 +52,7 @@ pub fn is_template_literal(node: &Value) -> bool {
             .is_some_and(Value::is_string)
 }
 
+#[must_use]
 pub fn is_function_node(node: &Value) -> bool {
     matches!(
         node_type(node),
@@ -52,19 +60,23 @@ pub fn is_function_node(node: &Value) -> bool {
     )
 }
 
+#[must_use]
 pub fn is_call_expression(node: &Value) -> bool {
     is_type(node, "CallExpression")
 }
 
+#[must_use]
 pub fn is_identifier(node: &Value) -> bool {
     is_type(node, "Identifier")
 }
 
+#[must_use]
 pub fn is_member_expression(node: &Value) -> bool {
     is_type(node, "MemberExpression")
 }
 
 /// The string `value` of a `Literal` node.
+#[must_use]
 pub fn literal_str(node: &Node) -> Option<&str> {
     if is_literal(node) {
         node.get("value")?.as_str()
@@ -74,6 +86,7 @@ pub fn literal_str(node: &Node) -> Option<&str> {
 }
 
 /// The `name` of an `Identifier` node.
+#[must_use]
 pub fn identifier_name(node: &Node) -> Option<&str> {
     if is_identifier(node) {
         node.get("name")?.as_str()

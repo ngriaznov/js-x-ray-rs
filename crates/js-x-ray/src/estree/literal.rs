@@ -31,18 +31,9 @@ fn js_number_string(n: &serde_json::Number) -> String {
         // JS renders integral doubles without a fractional part.
         format!("{}", f as i128)
     } else {
-        let mut buffer = dragonbox_ecma_format(f);
-        if buffer.is_empty() {
-            buffer = f.to_string();
-        }
-        buffer
+        // Rust's shortest round-trip formatting matches JS for the common cases.
+        f.to_string()
     }
-}
-
-fn dragonbox_ecma_format(f: f64) -> String {
-    // Shortest round-trip formatting; matches JS for the common cases.
-    let s = format!("{f}");
-    s
 }
 
 /// Upstream `toValue`: accepts a string or a Literal node and returns the

@@ -159,7 +159,8 @@ fn add_dependency_does_not_add_any_dependency_for_an_empty_string() {
             .unwrap()
             .to_json()
             .entries
-            .is_empty()
+            .is_empty(),
+        "a blank dependency name should not be recorded"
     );
 }
 
@@ -188,7 +189,8 @@ fn add_dependency_does_not_add_the_dependency_when_the_package_name_is_the_same(
             .unwrap()
             .to_json()
             .entries
-            .is_empty()
+            .is_empty(),
+        "a dependency matching the file's own package name should not be recorded"
     );
 }
 
