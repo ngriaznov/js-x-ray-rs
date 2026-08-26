@@ -1,15 +1,15 @@
 # Upstream reference: https://github.com/NodeSecure/js-x-ray (workspaces/js-x-ray)
 [package]
 name = "js-x-ray"
-description = "JavaScript AST X-Ray analysis — Rust port of @nodesecure/js-x-ray powered by oxc"
+description = "Static security analysis of JavaScript/TypeScript: detect malicious code, obfuscation and supply-chain patterns in untrusted JS. Rust port of @nodesecure/js-x-ray, powered by oxc"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
 readme = "../../README.md"
-keywords = ["ast", "security", "analysis", "nodesecure", "sast"]
-categories = ["development-tools", "parser-implementations"]
+keywords = ["security", "javascript", "static-analysis", "malware", "sast"]
+categories = ["development-tools", "parser-implementations", "wasm"]
 
 [features]
 default = ["fs"]

