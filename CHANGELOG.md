@@ -4,7 +4,7 @@ All notable changes to `js-x-ray-rs` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/); versions follow
 [SemVer](https://semver.org/).
 
-## [0.1.0] — Unreleased
+## [0.1.0] — 2026-08-26
 
 First release. A verified behavioral clone of `@nodesecure/js-x-ray` v16
 ([pinned commit](UPSTREAM.lock)) in Rust, powered by [oxc](https://oxc.rs).
