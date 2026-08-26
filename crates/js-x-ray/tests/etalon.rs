@@ -14,9 +14,11 @@ use std::path::{Path, PathBuf};
 
 use serde_json::{Map, Value, json};
 
-use js_x_ray::ast_analyser::{AstAnalyser, AstAnalyserOptions, OptionalWarnings, RuntimeOptions};
-use js_x_ray::collectable_set::DefaultCollectableSet;
-use js_x_ray::source_file::Sensitivity;
+use js_x_ray_rs::ast_analyser::{
+    AstAnalyser, AstAnalyserOptions, OptionalWarnings, RuntimeOptions,
+};
+use js_x_ray_rs::collectable_set::DefaultCollectableSet;
+use js_x_ray_rs::source_file::Sensitivity;
 
 fn repo_root() -> PathBuf {
     // crates/js-x-ray → repo root
@@ -99,13 +101,13 @@ fn run_case(case: &Value, etalon_dir: &Path) -> Value {
     let outcome = if let Some(file) = case.get("file").and_then(Value::as_str) {
         let path = etalon_dir.join(file);
         match analyser.analyse_file(&path, runtime) {
-            Ok(js_x_ray::ReportOnFile::Ok {
+            Ok(js_x_ray_rs::ReportOnFile::Ok {
                 warnings, flags, ..
             }) => Ok((warnings, flags, None, None)),
-            Ok(js_x_ray::ReportOnFile::Failed { warnings, .. }) => Err(warnings),
-            Err(io) => Err(vec![js_x_ray::generate_warning(
+            Ok(js_x_ray_rs::ReportOnFile::Failed { warnings, .. }) => Err(warnings),
+            Err(io) => Err(vec![js_x_ray_rs::generate_warning(
                 "parsing-error",
-                js_x_ray::warnings::GenerateWarningOptions {
+                js_x_ray_rs::warnings::GenerateWarningOptions {
                     value: Some(io.to_string()),
                     ..Default::default()
                 },

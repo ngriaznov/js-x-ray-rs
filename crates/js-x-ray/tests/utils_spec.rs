@@ -2,10 +2,10 @@
 
 use serde_json::json;
 
-use js_x_ray::estree::{Position, SourceLocation};
-use js_x_ray::parser::{JsSourceParser, SourceParser};
-use js_x_ray::utils::hex::{SAFE_HEX_VALUES, encode_hex, is_hex, is_hex_str, is_safe};
-use js_x_ray::utils::{
+use js_x_ray_rs::estree::{Position, SourceLocation};
+use js_x_ray_rs::parser::{JsSourceParser, SourceParser};
+use js_x_ray_rs::utils::hex::{SAFE_HEX_VALUES, encode_hex, is_hex, is_hex_str, is_safe};
+use js_x_ray_rs::utils::{
     Base64Options, common_hexadecimal_prefix, common_string_prefix_str, common_string_suffix,
     get_sub_member_expression_segments, is_evil_identifier_path, is_minified_code,
     is_one_line_expression_export, is_string_base64, is_svg, is_svg_path, make_prefix_remover,

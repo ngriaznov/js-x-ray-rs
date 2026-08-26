@@ -1,11 +1,11 @@
 //! Upstream: `test/CollectableSet.spec.ts`, `test/ShadyLink.spec.ts`.
 
-use js_x_ray::collectable_set::{
+use js_x_ray_rs::collectable_set::{
     CollectableEntry, CollectableLocation, CollectableSetData, CollectableSetRegistry,
     DefaultCollectableSet,
 };
-use js_x_ray::estree::{Position, SourceLocation};
-use js_x_ray::shady_link::{IsUrlSafeOptions, ShadyLink, ShadyLinkResult};
+use js_x_ray_rs::estree::{Position, SourceLocation};
+use js_x_ray_rs::shady_link::{IsUrlSafeOptions, ShadyLink, ShadyLinkResult};
 use serde_json::Map;
 
 fn spec_metadata() -> Map<String, serde_json::Value> {

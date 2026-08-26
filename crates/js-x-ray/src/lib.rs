@@ -12,7 +12,7 @@
 //! # Example
 //!
 //! ```
-//! use js_x_ray::{AstAnalyser, RuntimeOptions};
+//! use js_x_ray_rs::{AstAnalyser, RuntimeOptions};
 //!
 //! let analyser = AstAnalyser::default();
 //! let report = analyser

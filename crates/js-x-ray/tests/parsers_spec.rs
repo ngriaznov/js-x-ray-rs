@@ -20,7 +20,7 @@
 //!   default, contradicting upstream's `jsx: true` default; see
 //!   `should_not_crash_parsing_jsx_by_default` below and `src/parser.rs`.)
 
-use js_x_ray::{JsSourceParser, SourceParser, TsSourceParser};
+use js_x_ray_rs::{JsSourceParser, SourceParser, TsSourceParser};
 
 const JSX_COMPONENT_SOURCE: &str = r#"
 const Dropzone = forwardRef(({ children, ...params }, ref) => {

@@ -8,13 +8,13 @@
 //! `test/estree/getVariableDeclarationIdentifiers.spec.ts`,
 //! `test/estree/toLiteral.spec.ts`
 
-use js_x_ray::estree::{
+use js_x_ray_rs::estree::{
     GetCallExpressionIdentifierOptions, array_expression_to_string, concat_binary_expression_parts,
     extract_logical_expression, get_call_expression_arguments, get_call_expression_identifier,
     get_member_call_expression, get_member_expression_identifier,
     get_variable_declaration_identifiers, join_array_expression, noop, to_literal,
 };
-use js_x_ray::parser::{JsSourceParser, SourceParser};
+use js_x_ray_rs::parser::{JsSourceParser, SourceParser};
 use serde_json::{Value, json};
 
 /// Upstream `parseScript` + `[astNode] = ...body` — parses and returns the

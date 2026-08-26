@@ -12,6 +12,6 @@ publish = false
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-js-x-ray = { path = "../js-x-ray", default-features = false }
+js-x-ray-rs = { path = "../js-x-ray", default-features = false }
 serde_json.workspace = true
 wasm-bindgen = "0.2"

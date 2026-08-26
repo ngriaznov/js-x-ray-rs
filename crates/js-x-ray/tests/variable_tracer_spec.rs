@@ -5,10 +5,10 @@
 
 use serde_json::Value;
 
-use js_x_ray::estree::{Position, SourceLocation};
-use js_x_ray::parser::{JsSourceParser, SourceParser};
-use js_x_ray::variable_tracer::{AssignmentKind, TraceOptions, TracerEvent, VariableTracer};
-use js_x_ray::walker::walk_enter;
+use js_x_ray_rs::estree::{Position, SourceLocation};
+use js_x_ray_rs::parser::{JsSourceParser, SourceParser};
+use js_x_ray_rs::variable_tracer::{AssignmentKind, TraceOptions, TracerEvent, VariableTracer};
+use js_x_ray_rs::walker::walk_enter;
 
 // --- test harness (upstream: test/VariableTracer/utils.ts) ------------------
 //
@@ -138,7 +138,7 @@ fn return_value_events(events: &[TracerEvent]) -> Vec<ReturnValueEvt> {
 
 /// `assignmentMemory` entries compared as `(kind, name)` pairs — `TracedIdentifierReport`
 /// intentionally has no `PartialEq` derive, so tests compare fields explicitly instead.
-fn memory_tuples(report: &js_x_ray::TracedIdentifierReport) -> Vec<(&'static str, &str)> {
+fn memory_tuples(report: &js_x_ray_rs::TracedIdentifierReport) -> Vec<(&'static str, &str)> {
     report
         .assignment_memory
         .iter()

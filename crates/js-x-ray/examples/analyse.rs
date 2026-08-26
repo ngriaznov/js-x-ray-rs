@@ -7,7 +7,9 @@
 
 use std::io::Read;
 
-use js_x_ray::ast_analyser::{AstAnalyser, AstAnalyserOptions, OptionalWarnings, RuntimeOptions};
+use js_x_ray_rs::ast_analyser::{
+    AstAnalyser, AstAnalyserOptions, OptionalWarnings, RuntimeOptions,
+};
 use serde_json::json;
 
 fn main() {

@@ -1,5 +1,5 @@
 //! Repeated single-file analysis benchmark. Usage: bench_file <path> [iters]
-use js_x_ray::ast_analyser::{AstAnalyser, RuntimeOptions};
+use js_x_ray_rs::ast_analyser::{AstAnalyser, RuntimeOptions};
 use std::time::Instant;
 
 fn main() {

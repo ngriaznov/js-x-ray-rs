@@ -8,13 +8,13 @@ use std::sync::{Arc, Mutex};
 use indexmap::IndexMap;
 use serde_json::Value;
 
-use js_x_ray::deobfuscator::{Deobfuscator, ObfuscatedIdentifier};
-use js_x_ray::estree::{Node, is_identifier};
-use js_x_ray::node_counter::{NodeCounter, NodeCounterOptions};
-use js_x_ray::parser::{JsSourceParser, SourceParser};
-use js_x_ray::pipelines::{Deobfuscate, Pipeline};
-use js_x_ray::walker::walk_enter;
-use js_x_ray::{AstAnalyser, AstAnalyserOptions, ReportOnFile, RuntimeOptions, Warning};
+use js_x_ray_rs::deobfuscator::{Deobfuscator, ObfuscatedIdentifier};
+use js_x_ray_rs::estree::{Node, is_identifier};
+use js_x_ray_rs::node_counter::{NodeCounter, NodeCounterOptions};
+use js_x_ray_rs::parser::{JsSourceParser, SourceParser};
+use js_x_ray_rs::pipelines::{Deobfuscate, Pipeline};
+use js_x_ray_rs::walker::walk_enter;
+use js_x_ray_rs::{AstAnalyser, AstAnalyserOptions, ReportOnFile, RuntimeOptions, Warning};
 
 /// Upstream's per-spec-file local `walkAst`: walks the parsed body, invoking
 /// `callback` for every non-array node.

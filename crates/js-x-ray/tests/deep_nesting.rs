@@ -3,7 +3,7 @@
 //! behave like upstream (which handles thousands of levels) instead of
 //! reporting a parsing error.
 
-use js_x_ray::ast_analyser::{AstAnalyser, RuntimeOptions};
+use js_x_ray_rs::ast_analyser::{AstAnalyser, RuntimeOptions};
 
 fn analyse_ok(code: &str) -> bool {
     AstAnalyser::default()

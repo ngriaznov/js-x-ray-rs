@@ -31,8 +31,8 @@ fn main() {
     drop(value);
 
     let t0 = Instant::now();
-    let body = <js_x_ray::JsSourceParser as js_x_ray::SourceParser>::parse(
-        &js_x_ray::JsSourceParser,
+    let body = <js_x_ray_rs::JsSourceParser as js_x_ray_rs::SourceParser>::parse(
+        &js_x_ray_rs::JsSourceParser,
         &code,
     )
     .expect("parses");
@@ -43,11 +43,11 @@ fn main() {
     drop(body);
 
     let t0 = Instant::now();
-    let analyser = js_x_ray::AstAnalyser::default();
+    let analyser = js_x_ray_rs::AstAnalyser::default();
     let report = analyser
         .analyse(
             &code,
-            js_x_ray::RuntimeOptions {
+            js_x_ray_rs::RuntimeOptions {
                 is_minified: true,
                 ..Default::default()
             },

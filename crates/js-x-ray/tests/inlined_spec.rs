@@ -3,10 +3,10 @@
 
 use std::sync::{Mutex, MutexGuard};
 
-use js_x_ray::estree::{Position, SourceLocation};
-use js_x_ray::inlined::virtual_variable_identifier::VirtualVariableIdentifier;
-use js_x_ray::inlined::{InlinedCallExpression, InlinedNew, InlinedRequire};
-use js_x_ray::parser::{JsSourceParser, SourceParser};
+use js_x_ray_rs::estree::{Position, SourceLocation};
+use js_x_ray_rs::inlined::virtual_variable_identifier::VirtualVariableIdentifier;
+use js_x_ray_rs::inlined::{InlinedCallExpression, InlinedNew, InlinedRequire};
+use js_x_ray_rs::parser::{JsSourceParser, SourceParser};
 use serde_json::Value;
 
 /// `VirtualVariableIdentifier` is a process-global counter (mirroring

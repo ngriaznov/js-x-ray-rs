@@ -1,7 +1,7 @@
 //! Upstream: `test/walker.spec.ts`
 
-use js_x_ray::estree::is_identifier;
-use js_x_ray::walker::{WalkerContext, walk, walk_enter};
+use js_x_ray_rs::estree::is_identifier;
+use js_x_ray_rs::walker::{WalkerContext, walk, walk_enter};
 use serde_json::{Value, json};
 
 #[test]

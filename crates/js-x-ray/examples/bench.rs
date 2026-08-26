@@ -10,9 +10,11 @@ use std::time::Instant;
 
 use serde_json::{Value, json};
 
-use js_x_ray::ast_analyser::{AstAnalyser, AstAnalyserOptions, OptionalWarnings, RuntimeOptions};
-use js_x_ray::collectable_set::DefaultCollectableSet;
-use js_x_ray::source_file::Sensitivity;
+use js_x_ray_rs::ast_analyser::{
+    AstAnalyser, AstAnalyserOptions, OptionalWarnings, RuntimeOptions,
+};
+use js_x_ray_rs::collectable_set::DefaultCollectableSet;
+use js_x_ray_rs::source_file::Sensitivity;
 
 struct Case {
     code: String,

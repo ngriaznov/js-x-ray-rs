@@ -27,7 +27,9 @@ use std::path::{Path, PathBuf};
 
 use serde_json::Value;
 
-use js_x_ray::ast_analyser::{AstAnalyser, AstAnalyserOptions, OptionalWarnings, RuntimeOptions};
+use js_x_ray_rs::ast_analyser::{
+    AstAnalyser, AstAnalyserOptions, OptionalWarnings, RuntimeOptions,
+};
 
 /// Hard cap on the number of mutated inputs actually executed.
 const MAX_MUTATIONS: usize = 8000;

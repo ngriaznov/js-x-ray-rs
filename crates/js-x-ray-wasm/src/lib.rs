@@ -1,8 +1,10 @@
 //! WASM bindings: `analyse(source, optionsJson)` returning the report as a
 //! JSON string, mirroring `new AstAnalyser(options).analyse(source)`.
 
-use js_x_ray::ast_analyser::{AstAnalyser, AstAnalyserOptions, OptionalWarnings, RuntimeOptions};
-use js_x_ray::source_file::Sensitivity;
+use js_x_ray_rs::ast_analyser::{
+    AstAnalyser, AstAnalyserOptions, OptionalWarnings, RuntimeOptions,
+};
+use js_x_ray_rs::source_file::Sensitivity;
 use serde_json::{Value, json};
 use wasm_bindgen::prelude::*;
 
@@ -74,9 +76,9 @@ pub fn analyse(source: &str, options_json: Option<String>) -> Result<String, JsE
         Err(error) => {
             let out = json!({
                 "ok": false,
-                "warnings": [js_x_ray::warnings::generate_warning(
+                "warnings": [js_x_ray_rs::warnings::generate_warning(
                     "parsing-error",
-                    js_x_ray::warnings::GenerateWarningOptions {
+                    js_x_ray_rs::warnings::GenerateWarningOptions {
                         value: Some(error.message),
                         ..Default::default()
                     },

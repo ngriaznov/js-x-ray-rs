@@ -1,4 +1,4 @@
-use js_x_ray::parser::{JsSourceParser, SourceParser};
+use js_x_ray_rs::parser::{JsSourceParser, SourceParser};
 
 #[test]
 fn parses_and_injects_loc() {

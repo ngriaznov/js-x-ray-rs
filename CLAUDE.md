@@ -35,7 +35,7 @@ spec from memory.
   `obfuscators/` (jsfuck/jjencode/trojan-source/… detectors), `walker/`
   (AST traversal over the `Value` tree).
 - `crates/js-x-ray-wasm` is a thin `wasm-bindgen` wrapper exposing
-  `analyse(source, optionsJson)`; it depends on `js-x-ray` with
+  `analyse(source, optionsJson)`; it depends on `js-x-ray-rs` with
   `default-features = false` (the `fs` feature — `analyse_file`,
   `EntryFilesAnalyser` — is filesystem-only and excluded from WASM builds).
 
@@ -43,13 +43,13 @@ spec from memory.
 
 ```sh
 cargo test --workspace          # everything: unit tests + etalon suite
-cargo test -p js-x-ray --test etalon   # just the etalon suite
+cargo test -p js-x-ray-rs --test etalon   # just the etalon suite
 ```
 
 - **Unit tests** (`crates/js-x-ray/tests/*_spec.rs` and friends) are
   transcriptions of upstream's own spec files (walker, estree helpers,
   VariableTracer, Deobfuscator, probes, utils, EntryFilesAnalyser, …) —
-  ~430 tests. `cargo test --doc -p js-x-ray` also runs the crate-doc
+  ~430 tests. `cargo test --doc -p js-x-ray-rs` also runs the crate-doc
   example in `lib.rs`.
 - **Etalon suite** (`crates/js-x-ray/tests/etalon.rs`) is the real
   cross-check against upstream: it replays every case in
@@ -83,7 +83,7 @@ Adding a new behavioral test case:
 1. Add a corpus JSON under `tests/etalon/corpus/<group>/`:
    `{"name", "code" or "file", "analyserOptions"?, "runtimeOptions"?}`.
 2. Run the generator above (regenerates the whole snapshot tree).
-3. `cargo test -p js-x-ray --test etalon` must pass for the **whole**
+3. `cargo test -p js-x-ray-rs --test etalon` must pass for the **whole**
    corpus, not just the new case.
 4. If the Rust port disagrees with the freshly generated snapshot, that's
    either a port bug (fix the Rust code minimally and faithfully) or a

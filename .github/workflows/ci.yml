@@ -40,4 +40,4 @@ jobs:
         # Smoke-tests the js-x-ray crate as built in release mode (same
         # profile the WASM build uses) without needing wasm-bindgen-cli /
         # a JS runtime to execute the actual .wasm artifact.
-        run: cargo test -p js-x-ray --test etalon --release
+        run: cargo test -p js-x-ray-rs --test etalon --release

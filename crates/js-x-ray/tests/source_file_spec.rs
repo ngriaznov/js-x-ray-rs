@@ -5,12 +5,12 @@ use serde_json::{Map, Value, json};
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use js_x_ray::collectable_set::{CollectableSetRegistry, DefaultCollectableSet};
-use js_x_ray::estree::{Node, Position, SourceLocation};
-use js_x_ray::probe::WalkAction;
-use js_x_ray::source_file::{SourceFileOptions, SourceFilePath};
-use js_x_ray::warnings::{Severity, Warning, WarningLocation};
-use js_x_ray::{Probe, ProbeCtx, ProbeReturn, ProbeRunner, SourceFile};
+use js_x_ray_rs::collectable_set::{CollectableSetRegistry, DefaultCollectableSet};
+use js_x_ray_rs::estree::{Node, Position, SourceLocation};
+use js_x_ray_rs::probe::WalkAction;
+use js_x_ray_rs::source_file::{SourceFileOptions, SourceFilePath};
+use js_x_ray_rs::warnings::{Severity, Warning, WarningLocation};
+use js_x_ray_rs::{Probe, ProbeCtx, ProbeReturn, ProbeRunner, SourceFile};
 
 fn zero_location() -> SourceLocation {
     SourceLocation {
@@ -320,11 +320,11 @@ fn constructor_uses_the_default_probes_when_given_that_list() {
     // Adaptation: `ProbeRunner::new` always takes an explicit probe list
     // (there is no "Defaults when none given" overload); this checks that
     // `probes::default_probes()` populates `ProbeRunner.probes` faithfully.
-    let expected_names: Vec<&'static str> = js_x_ray::probes::default_probes()
+    let expected_names: Vec<&'static str> = js_x_ray_rs::probes::default_probes()
         .iter()
         .map(|p| p.name())
         .collect();
-    let runner = ProbeRunner::new(&mut source_file, js_x_ray::probes::default_probes());
+    let runner = ProbeRunner::new(&mut source_file, js_x_ray_rs::probes::default_probes());
 
     let names: Vec<&'static str> = runner.probes.iter().map(|p| p.name()).collect();
     assert_eq!(names, expected_names);

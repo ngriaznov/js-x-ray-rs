@@ -11,9 +11,9 @@
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
 
-use js_x_ray::ast_analyser::{AstAnalyser, AstAnalyserOptions, ReportOnFile};
-use js_x_ray::collectable_set::DefaultCollectableSet;
-use js_x_ray::entry_files_analyser::{
+use js_x_ray_rs::ast_analyser::{AstAnalyser, AstAnalyserOptions, ReportOnFile};
+use js_x_ray_rs::collectable_set::DefaultCollectableSet;
+use js_x_ray_rs::entry_files_analyser::{
     EntryFilesAnalyser, EntryFilesAnalyserOptions, EntryFilesRuntimeOptions,
 };
 use serde_json::{Map, Value};

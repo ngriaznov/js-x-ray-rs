@@ -1,6 +1,6 @@
-# Publishing `js-x-ray` to crates.io
+# Publishing `js-x-ray-rs` to crates.io
 
-Only the `js-x-ray` library crate is published. `js-x-ray-wasm` is
+Only the `js-x-ray-rs` library crate is published. `js-x-ray-wasm` is
 `publish = false` — it ships as a WASM/npm artifact via `wasm-pack`, not to
 crates.io.
 
@@ -22,18 +22,18 @@ cargo test --workspace                       # 691/691 etalon + unit + fuzz
 #    and add a CHANGELOG.md entry. Commit.
 
 # 3. Dry run: packages and verify-builds without uploading.
-cargo publish -p js-x-ray --dry-run
+cargo publish -p js-x-ray-rs --dry-run
 
 # 4. Publish.
-cargo publish -p js-x-ray
+cargo publish -p js-x-ray-rs
 
 # 5. Tag the release.
-git tag -a v0.1.0 -m "js-x-ray 0.1.0" && git push origin v0.1.0
+git tag -a v0.1.0 -m "js-x-ray-rs 0.1.0" && git push origin v0.1.0
 ```
 
 ## What ships
 
-`cargo package -p js-x-ray --list` is the source of truth. The tarball
+`cargo package -p js-x-ray-rs --list` is the source of truth. The tarball
 contains the crate `src/`, `examples/`, crate-local `tests/` (unit specs and
 their small fixtures), `README.md`, and `LICENSE` — about 150 KiB
 compressed. The 6.2 MB etalon corpus at the workspace root is intentionally

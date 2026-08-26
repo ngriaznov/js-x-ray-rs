@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to `js-x-ray` are documented here. The format follows
+All notable changes to `js-x-ray-rs` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/); versions follow
 [SemVer](https://semver.org/).
 

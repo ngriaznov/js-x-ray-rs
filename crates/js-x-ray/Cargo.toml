@@ -1,6 +1,6 @@
 # Upstream reference: https://github.com/NodeSecure/js-x-ray (workspaces/js-x-ray)
 [package]
-name = "js-x-ray"
+name = "js-x-ray-rs"
 description = "Static security analysis of JavaScript/TypeScript: detect malicious code, obfuscation and supply-chain patterns in untrusted JS. Rust port of @nodesecure/js-x-ray, powered by oxc"
 version.workspace = true
 edition.workspace = true

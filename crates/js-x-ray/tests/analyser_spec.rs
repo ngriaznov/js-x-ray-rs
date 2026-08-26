@@ -18,16 +18,16 @@ use std::sync::atomic::{AtomicU64, Ordering};
 
 use serde_json::{Map, Value, json};
 
-use js_x_ray::ast_analyser::ProbeFactory;
-use js_x_ray::collectable_set::DefaultCollectableSet;
-use js_x_ray::estree::{Node, SourceLocation, root_location};
-use js_x_ray::parser::{ParseError, SourceParser};
-use js_x_ray::probe::{Probe, ProbeCtx, ProbeReturn};
-use js_x_ray::utils::to_array_location;
-use js_x_ray::warnings::{
+use js_x_ray_rs::ast_analyser::ProbeFactory;
+use js_x_ray_rs::collectable_set::DefaultCollectableSet;
+use js_x_ray_rs::estree::{Node, SourceLocation, root_location};
+use js_x_ray_rs::parser::{ParseError, SourceParser};
+use js_x_ray_rs::probe::{Probe, ProbeCtx, ProbeReturn};
+use js_x_ray_rs::utils::to_array_location;
+use js_x_ray_rs::warnings::{
     GenerateWarningOptions, Severity, Warning, WarningLocation, generate_warning,
 };
-use js_x_ray::{
+use js_x_ray_rs::{
     AstAnalyser, AstAnalyserOptions, OptionalWarnings, ReportOnFile, RuntimeOptions, SourceFile,
 };
 
@@ -951,7 +951,7 @@ fn constructor_instantiates_with_the_default_probe_list() {
     // compared instead.
     let analyser = AstAnalyser::default();
     let names: Vec<&str> = analyser.probes().iter().map(|p| p.name()).collect();
-    let expected: Vec<&str> = js_x_ray::probes::default_probes()
+    let expected: Vec<&str> = js_x_ray_rs::probes::default_probes()
         .iter()
         .map(|p| p.name())
         .collect();
