@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakArgon2): should warn with crypto.argon2Sync as well",
+  "code": "\n        import crypto from 'crypto';\n        crypto.argon2Sync(\"argon2id\", { memory: 8, passes: 1 });\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-argon2"
+    ]
+  }
+}

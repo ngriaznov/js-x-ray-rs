@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakArgon2): should not warn when the options argument is missing",
+  "code": "\n        import crypto from 'crypto';\n        crypto.argon2(\"argon2id\");\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-argon2"
+    ]
+  }
+}

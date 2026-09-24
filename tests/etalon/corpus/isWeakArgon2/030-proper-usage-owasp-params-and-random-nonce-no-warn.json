@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakArgon2): should not warn for argon2id with OWASP parameters and a random nonce",
+  "code": "\n        import crypto from 'crypto';\n        crypto.argon2(\"argon2id\", {\n          message: password,\n          nonce: crypto.randomBytes(16),\n          parallelism: 1,\n          tagLength: 32,\n          memory: 19456,\n          passes: 2\n        }, (err, tag) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-argon2"
+    ]
+  }
+}

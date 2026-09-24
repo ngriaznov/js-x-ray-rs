@@ -1,0 +1,32 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "crypto.weak-argon2",
+      "location": [
+        [
+          3,
+          8
+        ],
+        [
+          3,
+          96
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.weak_argon2",
+      "severity": "Warning",
+      "experimental": true,
+      "value": "weak-algorithm: argon2d"
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 0,
+  "stringScore": 0,
+  "dependencies": {
+    "crypto": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

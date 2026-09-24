@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakArgon2): should warn when nonce is a string literal of 16 bytes or more",
+  "code": "\n        import crypto from 'crypto';\n        crypto.argon2(\"argon2id\", { memory: 47104, passes: 1, nonce: \"0123456789abcdef\" }, (err, tag) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-argon2"
+    ]
+  }
+}

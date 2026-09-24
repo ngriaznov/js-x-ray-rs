@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakArgon2): should not warn when a key is computed from a variable",
+  "code": "\n        import crypto from 'crypto';\n        crypto.argon2(\"argon2id\", { [memory]: 8, [passes]: 1 }, (err, tag) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-argon2"
+    ]
+  }
+}

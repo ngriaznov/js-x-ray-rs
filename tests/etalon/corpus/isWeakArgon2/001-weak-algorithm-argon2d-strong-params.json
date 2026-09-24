@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakArgon2): should warn when the argon2d variant is used, even with strong parameters",
+  "code": "\n        import crypto from 'crypto';\n        crypto.argon2(\"argon2d\", { memory: 47104, passes: 1, parallelism: 1 }, (err, tag) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-argon2"
+    ]
+  }
+}

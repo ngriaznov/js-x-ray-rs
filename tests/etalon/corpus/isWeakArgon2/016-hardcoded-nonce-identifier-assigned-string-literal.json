@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakArgon2): should warn when nonce is an identifier assigned a string literal",
+  "code": "\n        import crypto from 'crypto';\n        const salt = \"0123456789abcdef\";\n        crypto.argon2(\"argon2id\", { memory: 47104, passes: 1, nonce: salt }, (err, tag) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-argon2"
+    ]
+  }
+}

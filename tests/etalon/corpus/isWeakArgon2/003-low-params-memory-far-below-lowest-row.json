@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakArgon2): should warn when memory is far below the lowest OWASP row",
+  "code": "\n        import crypto from 'crypto';\n        crypto.argon2(\"argon2id\", { memory: 8, passes: 1, parallelism: 1 }, (err, tag) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-argon2"
+    ]
+  }
+}

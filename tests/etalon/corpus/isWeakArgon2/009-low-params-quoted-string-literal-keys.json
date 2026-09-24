@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakArgon2): should warn when parameter keys are quoted string literals",
+  "code": "\n        import crypto from 'crypto';\n        crypto.argon2(\"argon2id\", { \"memory\": 8, \"passes\": 1 }, (err, tag) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-argon2"
+    ]
+  }
+}

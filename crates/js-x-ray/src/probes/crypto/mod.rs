@@ -3,6 +3,7 @@
 pub mod is_password_shucking;
 pub mod is_unsafe_prehash;
 pub mod is_weak_algorithm;
+pub mod is_weak_argon2;
 pub mod is_weak_bcrypt;
 pub mod is_weak_scrypt;
 mod resolve_digest_call;
@@ -12,6 +13,7 @@ mod resolve_string_value;
 pub use is_password_shucking::IsPasswordShucking;
 pub use is_unsafe_prehash::IsUnsafePrehash;
 pub use is_weak_algorithm::IsWeakAlgorithm;
+pub use is_weak_argon2::IsWeakArgon2;
 pub use is_weak_bcrypt::IsWeakBcrypt;
 pub use is_weak_scrypt::IsWeakScrypt;
 pub use resolve_digest_call::resolve_digest_call;

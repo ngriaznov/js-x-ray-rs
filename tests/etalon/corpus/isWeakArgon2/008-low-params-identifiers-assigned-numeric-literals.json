@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakArgon2): should warn when parameters are identifiers assigned numeric literals",
+  "code": "\n        import crypto from 'crypto';\n        const memoryCost = 8;\n        const iterations = 1;\n        crypto.argon2(\"argon2id\", { memory: memoryCost, passes: iterations }, (err, tag) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-argon2"
+    ]
+  }
+}

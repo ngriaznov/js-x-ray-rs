@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakArgon2): should not warn for an unrelated object exposing an argon2 method",
+  "code": "\n        import crypto from 'crypto';\n        const fake = { argon2: () => {} };\n        fake.argon2(\"argon2d\", { memory: 8, passes: 1 }, (err, tag) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-argon2"
+    ]
+  }
+}

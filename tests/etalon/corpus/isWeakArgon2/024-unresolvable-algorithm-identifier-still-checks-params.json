@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakArgon2): should still check the parameters when the algorithm is an unresolvable identifier",
+  "code": "\n        import crypto from 'crypto';\n        crypto.argon2(algorithm, { memory: 8, passes: 1 }, (err, tag) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-argon2"
+    ]
+  }
+}

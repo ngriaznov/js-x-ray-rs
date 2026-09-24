@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakArgon2): should emit every failing check of a call in one warning",
+  "code": "\n        import crypto from 'crypto';\n        crypto.argon2(\"argon2d\", { memory: 8, passes: 1, nonce: \"salt\" }, (err, tag) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-argon2"
+    ]
+  }
+}

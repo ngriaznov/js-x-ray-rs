@@ -62,6 +62,7 @@ pub fn optional_probe(name: &str) -> Option<Box<dyn Probe>> {
         "crypto.unsafe-prehash" => Some(Box::new(crypto::IsUnsafePrehash::default())),
         "crypto.weak-bcrypt" => Some(Box::new(crypto::IsWeakBcrypt)),
         "crypto.password-shucking" => Some(Box::new(crypto::IsPasswordShucking::default())),
+        "crypto.weak-argon2" => Some(Box::new(crypto::IsWeakArgon2)),
         _ => None,
     }
 }

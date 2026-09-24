@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakArgon2): should still report argon2d when the options cannot be read",
+  "code": "\n        import crypto from 'crypto';\n        crypto.argon2(\"argon2d\", options, (err, tag) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-argon2"
+    ]
+  }
+}

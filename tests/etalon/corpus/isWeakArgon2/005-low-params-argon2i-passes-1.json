@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakArgon2): should warn for argon2i with passes=1 regardless of how much memory is allocated",
+  "code": "\n        import crypto from 'crypto';\n        crypto.argon2(\"argon2i\", { memory: 47104, passes: 1, parallelism: 1 }, (err, tag) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-argon2"
+    ]
+  }
+}

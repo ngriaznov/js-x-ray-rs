@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakArgon2): should report low-params and short-nonce as a single warning",
+  "code": "\n        import crypto from 'crypto';\n        crypto.argon2(\"argon2id\", { memory: 8, passes: 1, nonce: \"salt\" }, (err, tag) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-argon2"
+    ]
+  }
+}

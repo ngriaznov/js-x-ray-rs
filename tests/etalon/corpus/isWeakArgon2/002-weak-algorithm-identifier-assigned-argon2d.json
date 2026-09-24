@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakArgon2): should warn when the algorithm is an identifier assigned argon2d",
+  "code": "\n        import crypto from 'crypto';\n        const algo = \"argon2d\";\n        crypto.argon2(algo, { memory: 47104, passes: 1, parallelism: 1 }, (err, tag) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-argon2"
+    ]
+  }
+}

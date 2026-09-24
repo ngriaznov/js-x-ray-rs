@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakArgon2): should not warn when parameters come from a spread and cannot all be read",
+  "code": "\n        import crypto from 'crypto';\n        crypto.argon2(\"argon2id\", { ...defaults, memory: 8 }, (err, tag) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-argon2"
+    ]
+  }
+}
