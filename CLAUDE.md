@@ -5,7 +5,7 @@ Guidance for agents (and humans) working in this repo.
 ## What this is
 
 `js-x-ray-rs` is a **behavioral clone** of [`@nodesecure/js-x-ray`](https://github.com/NodeSecure/js-x-ray)
-v16, ported line-by-line from TypeScript to Rust. Same probes, same warning
+v16.1, ported line-by-line from TypeScript to Rust. Same probes, same warning
 kinds/values/locations, same flags and scores — verified against the
 original library's actual output, not against a reimplementation of its
 spec from memory.
@@ -97,10 +97,11 @@ The pinned upstream commit/version lives in `UPSTREAM.lock`. To check for
 and start a sync:
 
 ```sh
-tools/sync/pull-upstream.sh
+tools/sync/pull-upstream.sh @nodesecure/js-x-ray@<version>   # or no argument for upstream HEAD
 ```
 
-This diffs the pinned commit against upstream `HEAD`, maps every changed
+This diffs the pinned commit against the given release tag (prefer tags:
+upstream `HEAD` can carry unreleased probes), maps every changed
 upstream file to its Rust counterpart via `tools/sync/mapping.tsv`, and
 prints a work list. Workflow: port each diff into its mapped Rust file →
 regenerate etalon snapshots → `cargo test --workspace` all green → bump

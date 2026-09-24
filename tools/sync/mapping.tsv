@@ -19,9 +19,11 @@ i18n/english.js	(not ported — locale bundle, see README "Deliberately not port
 i18n/french.js	(not ported — locale bundle, see README "Deliberately not ported")
 i18n/korean.js	(not ported — locale bundle, see README "Deliberately not ported")
 i18n/turkish.js	(not ported — locale bundle, see README "Deliberately not ported")
+estree/README.md	(not ported — upstream API docs for the estree helpers)
 estree/functions/arrayExpression.ts	crates/js-x-ray/src/estree/functions.rs
 estree/functions/concatBinaryExpression.ts	crates/js-x-ray/src/estree/functions.rs
 estree/functions/extractLogicalExpression.ts	crates/js-x-ray/src/estree/functions.rs
+estree/functions/findPropertyMatch.ts	crates/js-x-ray/src/estree/functions.rs
 estree/functions/getCallExpressionArguments.ts	crates/js-x-ray/src/estree/functions.rs
 estree/functions/getCallExpressionIdentifier.ts	crates/js-x-ray/src/estree/functions.rs
 estree/functions/getMemberCallExpression.ts	crates/js-x-ray/src/estree/functions.rs
@@ -48,8 +50,12 @@ probes/crypto/index.ts	crates/js-x-ray/src/probes/crypto/mod.rs
 probes/crypto/isPasswordShucking.ts	crates/js-x-ray/src/probes/crypto/is_password_shucking.rs
 probes/crypto/isUnsafePrehash.ts	crates/js-x-ray/src/probes/crypto/is_unsafe_prehash.rs
 probes/crypto/isWeakAlgorithm.ts	crates/js-x-ray/src/probes/crypto/is_weak_algorithm.rs
+probes/crypto/isWeakArgon2.ts	crates/js-x-ray/src/probes/crypto/is_weak_argon2.rs
 probes/crypto/isWeakBcrypt.ts	crates/js-x-ray/src/probes/crypto/is_weak_bcrypt.rs
 probes/crypto/isWeakScrypt.ts	crates/js-x-ray/src/probes/crypto/is_weak_scrypt.rs
+probes/crypto/resolveDigestCall.ts	crates/js-x-ray/src/probes/crypto/resolve_digest_call.rs
+probes/crypto/resolveNumericValue.ts	crates/js-x-ray/src/probes/crypto/resolve_numeric_value.rs
+probes/crypto/resolveStringValue.ts	crates/js-x-ray/src/probes/crypto/resolve_string_value.rs
 probes/data-exfiltration.ts	crates/js-x-ray/src/probes/data_exfiltration.rs
 probes/isArrayExpression.ts	crates/js-x-ray/src/probes/is_array_expression.rs
 probes/isBinaryExpression.ts	crates/js-x-ray/src/probes/is_binary_expression.rs

@@ -1,6 +1,8 @@
 # js-x-ray-rs
 
 [![CI](https://github.com/ngriaznov/js-x-ray-rs/actions/workflows/ci.yml/badge.svg)](https://github.com/ngriaznov/js-x-ray-rs/actions/workflows/ci.yml)
+[![crates.io](https://img.shields.io/crates/v/js-x-ray-rs.svg)](https://crates.io/crates/js-x-ray-rs)
+[![docs.rs](https://img.shields.io/docsrs/js-x-ray-rs)](https://docs.rs/js-x-ray-rs)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 **Static security analysis of JavaScript and TypeScript, in Rust.** Scan
@@ -51,7 +53,7 @@ minifiers and obfuscators produce.
 
 ## What it detects
 
-The full `@nodesecure/js-x-ray` v16 catalogue:
+The full `@nodesecure/js-x-ray` v16.1 catalogue:
 
 | Warning | Description |
 | --- | --- |
@@ -71,7 +73,7 @@ The full `@nodesecure/js-x-ray` v16 catalogue:
 | `suspicious-literal`, `suspicious-file`, `short-identifiers` | Statistical obfuscation signals |
 | `crypto.weak-algorithm` | md5 / sha1 / ripemd160 |
 | `parsing-error` | Input that isn't valid JS/TS |
-| opt-in | `synchronous-io`, `log-usage`, `insecure-random`, `crypto.weak-scrypt`, `crypto.unsafe-prehash`, `crypto.weak-bcrypt`, `crypto.password-shucking` |
+| opt-in | `synchronous-io`, `log-usage`, `insecure-random`, `crypto.weak-scrypt`, `crypto.unsafe-prehash`, `crypto.weak-bcrypt`, `crypto.password-shucking`, `crypto.weak-argon2` |
 
 Beyond warnings, every report carries the **dependency list** (every
 `require`/`import`, including computed and obfuscated forms the
@@ -96,7 +98,7 @@ reimplementation of its spec:
 
 ```toml
 [dependencies]
-js-x-ray-rs = { git = "https://github.com/ngriaznov/js-x-ray-rs" }
+js-x-ray-rs = "0.2"
 ```
 
 ```rust
@@ -172,11 +174,11 @@ Upstream is pinned in [`UPSTREAM.lock`](UPSTREAM.lock). When NodeSecure
 ships a new version:
 
 ```bash
-tools/sync/pull-upstream.sh   # lists upstream changes → affected Rust files
+tools/sync/pull-upstream.sh @nodesecure/js-x-ray@<version>  # changes → affected Rust files
 # port the diffs, then regenerate reference snapshots (Node >= 24):
 node --experimental-strip-types tools/etalon/generate.mjs
 cargo test --workspace        # etalon + unit tests must pass
-# finally bump commit= in UPSTREAM.lock
+# finally bump commit=/version=/date= in UPSTREAM.lock
 ```
 
 ## Testing

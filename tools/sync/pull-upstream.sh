@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
-# Diff the pinned upstream commit against upstream HEAD and report which
+# Diff the pinned upstream commit against a target ref and report which
 # ported Rust files are affected, using the 1:1 file mapping in
 # tools/sync/mapping.tsv. Run this when a new @nodesecure/js-x-ray version
 # ships to get a work-list for updating the port.
+#
+#   tools/sync/pull-upstream.sh                              # vs. upstream HEAD
+#   tools/sync/pull-upstream.sh @nodesecure/js-x-ray@16.1.0  # vs. a release tag
+#
+# Prefer release tags: upstream HEAD can carry unreleased probes.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
@@ -16,8 +21,8 @@ if [ ! -d "$CLONE_DIR/.git" ]; then
   mkdir -p "$(dirname "$CLONE_DIR")"
   git clone --filter=blob:none "$REPO" "$CLONE_DIR"
 fi
-git -C "$CLONE_DIR" fetch origin
-HEAD=$(git -C "$CLONE_DIR" rev-parse origin/HEAD)
+git -C "$CLONE_DIR" fetch --tags origin
+HEAD=$(git -C "$CLONE_DIR" rev-parse "${1:-origin/HEAD}^{commit}")
 
 echo "Pinned:   $PINNED"
 echo "Upstream: $HEAD"
