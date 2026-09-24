@@ -17,6 +17,7 @@ pub const OPTIONAL_WARNING_NAMES: &[&str] = &[
     "crypto.unsafe-prehash",
     "crypto.weak-bcrypt",
     "crypto.password-shucking",
+    "crypto.weak-argon2",
 ];
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -203,6 +204,12 @@ pub const WARNINGS: &[(&str, &str, Severity, bool)] = &[
         "sast_warnings.unsafe_vm_context",
         Severity::Warning,
         false,
+    ),
+    (
+        "crypto.weak-argon2",
+        "sast_warnings.weak_argon2",
+        Severity::Warning,
+        true,
     ),
 ];
 

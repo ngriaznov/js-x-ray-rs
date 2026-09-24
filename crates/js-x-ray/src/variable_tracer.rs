@@ -122,6 +122,8 @@ pub enum TracerEvent {
         id: String,
         location: Option<SourceLocation>,
         arguments: Vec<Value>,
+        /// The `CallExpression` / `NewExpression` whose value was assigned.
+        node: Value,
     },
     Import {
         module_name: String,
@@ -270,8 +272,10 @@ impl VariableTracer {
         })
     }
 
-    /// Lookup for `externalIdentifierLookup` closures.
-    pub fn literal_identifier_lookup(&self, name: &str) -> Option<String> {
+    /// Upstream `resolveLiteralIdentifier`: the `externalIdentifierLookup`
+    /// shared by every helper that resolves traced literal identifiers.
+    #[must_use]
+    pub fn resolve_literal_identifier(&self, name: &str) -> Option<String> {
         self.literal_identifiers
             .get(name)
             .map(|id| id.value.clone())
@@ -371,11 +375,8 @@ impl VariableTracer {
 
     /// Upstream `#reverseAtob`.
     fn reverse_atob(&mut self, node: &Value, id: &Value) {
-        let call_expr_arguments = {
-            let literal_identifiers = &self.literal_identifiers;
-            let lookup = move |name: &str| literal_identifiers.get(name).map(|id| id.value.clone());
-            get_call_expression_arguments(node, &lookup)
-        };
+        let call_expr_arguments =
+            get_call_expression_arguments(node, &|name| self.resolve_literal_identifier(name));
         let Some(call_expr_arguments) = call_expr_arguments else {
             return;
         };
@@ -674,6 +675,7 @@ impl VariableTracer {
                             .and_then(Value::as_array)
                             .cloned()
                             .unwrap_or_default(),
+                        node: child_node.clone(),
                     });
                     if follow_consecutive_assignment {
                         self.assigned_return_value_to_traced
@@ -734,12 +736,9 @@ impl VariableTracer {
             // process.mainModule and require.resolve
             Some("MemberExpression") => {
                 // Example: ["process", "mainModule"]
-                let member_expr_parts = {
-                    let literal_identifiers = &self.literal_identifiers;
-                    let lookup =
-                        move |name: &str| literal_identifiers.get(name).map(|id| id.value.clone());
-                    get_member_expression_identifier(child_node, &lookup)
-                };
+                let member_expr_parts = get_member_expression_identifier(child_node, &|name| {
+                    self.resolve_literal_identifier(name)
+                });
                 let member_expr_fullname = member_expr_parts.join(".");
 
                 // Function.prototype.call

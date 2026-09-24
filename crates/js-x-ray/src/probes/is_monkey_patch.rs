@@ -117,15 +117,9 @@ fn resolve_js_type_name(name: &str, source_file: &SourceFile) -> Option<String> 
 }
 
 fn validate_member_expression(node: &Value, source_file: &SourceFile) -> Option<String> {
-    let parts = {
-        let literal_identifiers = &source_file.tracer.literal_identifiers;
-        let lookup = |name: &str| {
-            literal_identifiers
-                .get(name)
-                .map(|literal| literal.value.clone())
-        };
-        get_member_expression_identifier(node, &lookup)
-    };
+    let parts = get_member_expression_identifier(node, &|name| {
+        source_file.tracer.resolve_literal_identifier(name)
+    });
 
     let raw_name = parts.first()?;
     let js_type_name = resolve_js_type_name(raw_name, source_file)?;

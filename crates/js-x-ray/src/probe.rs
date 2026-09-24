@@ -120,7 +120,7 @@ impl ProbeRunner {
 
         if is_call_expression(node) {
             let tracer = &source_file.tracer;
-            let lookup = |name: &str| tracer.literal_identifier_lookup(name);
+            let lookup = |name: &str| tracer.resolve_literal_identifier(name);
             let id = get_call_expression_identifier(
                 node,
                 &GetCallExpressionIdentifierOptions {

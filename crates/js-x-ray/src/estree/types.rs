@@ -75,6 +75,11 @@ pub fn is_member_expression(node: &Value) -> bool {
     is_type(node, "MemberExpression")
 }
 
+#[must_use]
+pub fn is_object_expression(node: &Value) -> bool {
+    is_type(node, "ObjectExpression")
+}
+
 /// The string `value` of a `Literal` node.
 #[must_use]
 pub fn literal_str(node: &Node) -> Option<&str> {

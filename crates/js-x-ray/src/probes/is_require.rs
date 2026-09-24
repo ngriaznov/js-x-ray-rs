@@ -116,7 +116,7 @@ impl Probe for IsRequire {
             // require(["ht", "tp"])
             Some("ArrayExpression") => {
                 let tracer = &ctx.source_file.tracer;
-                let lookup = |name: &str| tracer.literal_identifier_lookup(name);
+                let lookup = |name: &str| tracer.resolve_literal_identifier(name);
                 let value = array_expression_to_string(arg, &lookup)
                     .concat()
                     .trim()
@@ -139,7 +139,7 @@ impl Probe for IsRequire {
                         .push(unsafe_import_warning(location));
                 } else {
                     let tracer = &ctx.source_file.tracer;
-                    let lookup = |name: &str| tracer.literal_identifier_lookup(name);
+                    let lookup = |name: &str| tracer.resolve_literal_identifier(name);
                     match concat_binary_expression_parts(arg, &lookup, true) {
                         Some(parts) => ctx.source_file.add_dependency(&parts.concat(), location),
                         None => ctx
@@ -266,7 +266,7 @@ impl<'a> RequireCallExpressionWalker<'a> {
 
     fn handle_atob(&mut self, node: &Value) {
         let tracer = self.tracer;
-        let lookup = |name: &str| tracer.literal_identifier_lookup(name);
+        let lookup = |name: &str| tracer.resolve_literal_identifier(name);
         let Some(arguments) = get_call_expression_arguments(node, &lookup) else {
             return;
         };

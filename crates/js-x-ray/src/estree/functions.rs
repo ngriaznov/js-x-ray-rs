@@ -454,6 +454,41 @@ fn extract_logical_inner(node: &Value, out: &mut Vec<(String, Value)>) {
 }
 
 // ---------------------------------------------------------------------------
+// findPropertyMatch.ts
+// ---------------------------------------------------------------------------
+
+/// `None` for a computed identifier (`{ [cost]: 1 }`), whose key is only
+/// known at runtime.
+fn get_property_name(prop: &Value) -> Option<&str> {
+    let key = prop.get("key")?;
+    if prop.get("computed").and_then(Value::as_bool) != Some(true) && is_identifier(key) {
+        return key.get("name")?.as_str();
+    }
+    if is_string_literal(key) {
+        return key.get("value")?.as_str();
+    }
+
+    None
+}
+
+/// Finds the first property whose key name is in `names` and whose value
+/// matches `predicate`.
+pub fn find_property_match<'a>(
+    properties: &'a [Value],
+    names: &[&str],
+    predicate: impl Fn(&Value) -> bool,
+) -> Option<&'a Value> {
+    properties
+        .iter()
+        .filter(|prop| is_type(prop, "Property"))
+        .find_map(|prop| {
+            let key = get_property_name(prop)?;
+            let value = prop.get("value")?;
+            (names.contains(&key) && predicate(value)).then_some(value)
+        })
+}
+
+// ---------------------------------------------------------------------------
 // getMemberCallExpression.ts
 // ---------------------------------------------------------------------------
 
