@@ -1,0 +1,4 @@
+{
+  "name": "(isRequire): should resolve a template literal with no expression like a string literal",
+  "code": "\n      require(`http`);\n    "
+}

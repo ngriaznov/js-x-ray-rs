@@ -14,7 +14,10 @@ use indexmap::IndexMap;
 use regex::Regex;
 use serde_json::Value;
 
-use crate::estree::{Node, SourceLocation, identifier_name, is_identifier, is_type};
+use crate::estree::{
+    Node, SourceLocation, find_property_match, identifier_name, is_identifier,
+    is_object_expression, is_type,
+};
 use crate::probe::{Probe, ProbeCtx, ProbeReturn};
 use crate::source_file::SourceFile;
 use crate::utils::{SourceArrayLocation, to_array_location};
@@ -234,8 +237,10 @@ impl LogUsage {
             });
 
         if name == "winston.createLogger"
-            && let Some(levels) = resolve_call_context(arguments, source_file)
-                .and_then(|context| find_object_property(context, "levels"))
+            && let Some(levels) = resolve_call_context(arguments, source_file).and_then(|context| {
+                let properties = context.get("properties")?.as_array()?;
+                find_property_match(properties, &["levels"], is_object_expression)
+            })
         {
             methods.clear();
             add_log_methods(Some(levels), &mut methods);
@@ -285,8 +290,8 @@ impl LogUsage {
         if name == "pino"
             && let Some(context) = resolve_call_context(arguments, source_file)
         {
-            let custom_levels = find_object_property(context, "customLevels");
-            let use_only_custom_levels = find_object_property(context, "useOnlyCustomLevels")
+            let (custom_levels, use_only_custom_levels) = find_pino_options(context);
+            let use_only_custom_levels = use_only_custom_levels
                 .and_then(|property| resolve_property_text(property, source_file));
 
             if use_only_custom_levels.as_deref() == Some("true") {
@@ -341,17 +346,38 @@ fn resolve_call_context<'a>(
     is_type(context, "ObjectExpression").then_some(context)
 }
 
-fn find_object_property<'a>(object_expr: &'a Value, key_name: &str) -> Option<&'a Value> {
-    object_expr
-        .get("properties")?
-        .as_array()?
-        .iter()
-        .find(|property| {
-            is_type(property, "Property")
-                && property
-                    .get("key")
-                    .is_some_and(|key| is_identifier(key) && identifier_name(key) == Some(key_name))
-        })
+/// Upstream's pino options scan: `(customLevels value, useOnlyCustomLevels
+/// property)`. A later duplicate key replaces an earlier one until both are found.
+fn find_pino_options(context: &Value) -> (Option<&Value>, Option<&Value>) {
+    let mut custom_levels = None;
+    let mut use_only_custom_levels = None;
+    for property in context
+        .get("properties")
+        .and_then(Value::as_array)
+        .into_iter()
+        .flatten()
+    {
+        if custom_levels.is_some() && use_only_custom_levels.is_some() {
+            break;
+        }
+        if !is_type(property, "Property") {
+            continue;
+        }
+        let Some(key) = property.get("key").and_then(identifier_name) else {
+            continue;
+        };
+        if key == "customLevels" {
+            custom_levels = property
+                .get("value")
+                .filter(|value| is_object_expression(value))
+                .or(custom_levels);
+        }
+        if key == "useOnlyCustomLevels" {
+            use_only_custom_levels = Some(property);
+        }
+    }
+
+    (custom_levels, use_only_custom_levels)
 }
 
 /// Resolves a `Property` node's value to its literal source text, following
@@ -372,19 +398,12 @@ fn resolve_property_text(property: &Value, source_file: &SourceFile) -> Option<S
 }
 
 /// Upstream `addLogMethods`.
-fn add_log_methods(property: Option<&Value>, methods: &mut Vec<String>) {
-    let Some(property) = property else { return };
-    if !is_type(property, "Property") {
-        return;
-    }
-    let Some(value) = property.get("value") else {
+fn add_log_methods(custom_levels: Option<&Value>, methods: &mut Vec<String>) {
+    let Some(custom_levels) = custom_levels else {
         return;
     };
-    if !is_type(value, "ObjectExpression") {
-        return;
-    }
 
-    for level in value
+    for level in custom_levels
         .get("properties")
         .and_then(Value::as_array)
         .into_iter()

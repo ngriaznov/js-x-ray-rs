@@ -1,0 +1,7 @@
+{
+  "name": "(log-usage probe > pino): should not apply customLevels written with a computed key",
+  "code": "import pino from \"pino\";\n                    const logger = pino({\n                    [\"customLevels\"]:{\n                      foo: 35,\n                      bar: 36\n                      }\n                    });\n                    logger.info(\"hello\");\n                    logger.foo(\"hello\");\n                    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

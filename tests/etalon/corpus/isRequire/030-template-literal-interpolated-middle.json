@@ -1,0 +1,4 @@
+{
+  "name": "(isRequire): should warn on a template literal with an interpolated expression in the middle",
+  "code": "\n      require(`ht${x}tp`);\n    "
+}

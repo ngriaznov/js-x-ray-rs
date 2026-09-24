@@ -8,11 +8,11 @@ use crate::estree::{
     GetCallExpressionIdentifierOptions, Node, SourceLocation, array_expression_to_string,
     concat_binary_expression_parts, get_call_expression_arguments, get_call_expression_identifier,
     get_member_expression_identifier, is_call_expression, is_member_expression, is_string_literal,
-    is_type, node_type, noop,
+    is_type, node_type, noop, to_literal,
 };
 use crate::probe::{Probe, ProbeCtx, ProbeReturn};
 use crate::source_file::SourceFile;
-use crate::utils::hex;
+use crate::utils::{Base64Options, hex, is_string_base64};
 use crate::variable_tracer::VariableTracer;
 use crate::walker::{WalkerContext, walk_enter};
 use crate::warnings::{GenerateWarningOptions, Warning, generate_warning};
@@ -128,6 +128,22 @@ impl Probe for IsRequire {
                         .push(unsafe_import_warning(location));
                 } else {
                     ctx.source_file.add_dependency(&value, location);
+                }
+            }
+
+            // require(`http`)
+            Some("TemplateLiteral") => {
+                let has_expressions = arg
+                    .get("expressions")
+                    .and_then(Value::as_array)
+                    .is_some_and(|exprs| !exprs.is_empty());
+
+                if has_expressions {
+                    ctx.source_file
+                        .warnings
+                        .push(unsafe_import_warning(location));
+                } else {
+                    ctx.source_file.add_dependency(&to_literal(arg), location);
                 }
             }
 
@@ -276,11 +292,10 @@ impl<'a> RequireCallExpressionWalker<'a> {
     }
 
     fn handle_buffer_from(&mut self, node: &Value) {
-        let Some(element) = node
-            .get("arguments")
-            .and_then(Value::as_array)
-            .and_then(|args| args.first())
-        else {
+        let Some(arguments) = node.get("arguments").and_then(Value::as_array) else {
+            return;
+        };
+        let Some(element) = arguments.first() else {
             return;
         };
 
@@ -290,6 +305,27 @@ impl<'a> RequireCallExpressionWalker<'a> {
                 .trim()
                 .to_owned();
             self.dependencies.insert(dependency_name);
+
+            return;
+        }
+
+        let encoding = arguments.get(1);
+        if is_string_literal(element)
+            && encoding.is_some_and(is_string_literal)
+            && encoding
+                .and_then(|e| e.get("value"))
+                .and_then(Value::as_str)
+                == Some("base64")
+            && let Some(value) = element.get("value").and_then(Value::as_str)
+            && is_string_base64(
+                value,
+                Base64Options {
+                    allow_empty: Some(false),
+                    ..Default::default()
+                },
+            )
+        {
+            self.dependencies.insert(base64_decode_to_string(value));
         }
     }
 

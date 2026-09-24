@@ -1,0 +1,4 @@
+{
+  "name": "(isRequire): should not resolve Buffer.from base64-looking payload when the encoding argument is 'hex'",
+  "code": "\n      require(Buffer.from(\"aHR0cA==\", \"hex\").toString());\n    "
+}

@@ -1,0 +1,4 @@
+{
+  "name": "(isRequire): should resolve an empty template literal to no dependency",
+  "code": "\n      require(``);\n    "
+}

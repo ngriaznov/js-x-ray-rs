@@ -124,6 +124,7 @@ fn return_value_events(events: &[TracerEvent]) -> Vec<ReturnValueEvt> {
                 id,
                 location,
                 arguments,
+                node: _,
             } => Some(ReturnValueEvt {
                 name: name.clone(),
                 identifier_or_member_expr: identifier_or_member_expr.clone(),
@@ -1550,4 +1551,37 @@ fn it_should_return_null_because_crypto_createhash_is_not_imported_from_a_module
             .get_data_from_identifier("crypto.createHash", false)
             .is_none()
     );
+}
+
+// ---------------------------------------------------------------------------
+// Upstream: test/VariableTracer/resolveLiteralIdentifier.spec.ts
+// ---------------------------------------------------------------------------
+
+#[test]
+fn resolve_literal_identifier_returns_the_tracked_value_of_a_string_literal_assignment() {
+    let mut harness = Harness::new(false);
+    harness.walk_on_code("const foo = 'bar';");
+
+    assert_eq!(
+        harness.tracer.resolve_literal_identifier("foo"),
+        Some("bar".to_owned())
+    );
+}
+
+#[test]
+fn resolve_literal_identifier_returns_the_stringified_value_of_a_numeric_literal_assignment() {
+    let mut harness = Harness::new(false);
+    harness.walk_on_code("const rounds = 10;");
+
+    assert_eq!(
+        harness.tracer.resolve_literal_identifier("rounds"),
+        Some("10".to_owned())
+    );
+}
+
+#[test]
+fn resolve_literal_identifier_returns_none_for_an_identifier_that_was_never_assigned_a_literal() {
+    let harness = Harness::new(false);
+
+    assert_eq!(harness.tracer.resolve_literal_identifier("unknown"), None);
 }

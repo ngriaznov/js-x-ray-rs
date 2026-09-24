@@ -1,0 +1,4 @@
+{
+  "name": "(isRequire): should resolve Buffer.from base64 that decodes to non-UTF-8 bytes",
+  "code": "\n      require(Buffer.from(\"/w==\", \"base64\").toString());\n    "
+}

@@ -6,13 +6,15 @@
 //! `test/estree/getMemberCallExpression.spec.ts`,
 //! `test/estree/getMemberExpressionIdentifier.spec.ts`,
 //! `test/estree/getVariableDeclarationIdentifiers.spec.ts`,
-//! `test/estree/toLiteral.spec.ts`
+//! `test/estree/toLiteral.spec.ts`,
+//! `test/estree/findPropertyMatch.spec.ts`
 
 use js_x_ray_rs::estree::{
     GetCallExpressionIdentifierOptions, array_expression_to_string, concat_binary_expression_parts,
-    extract_logical_expression, get_call_expression_arguments, get_call_expression_identifier,
-    get_member_call_expression, get_member_expression_identifier,
-    get_variable_declaration_identifiers, join_array_expression, noop, to_literal,
+    extract_logical_expression, find_property_match, get_call_expression_arguments,
+    get_call_expression_identifier, get_member_call_expression, get_member_expression_identifier,
+    get_variable_declaration_identifiers, is_numeric_literal, is_string_literal,
+    join_array_expression, noop, to_literal,
 };
 use js_x_ray_rs::parser::{JsSourceParser, SourceParser};
 use serde_json::{Value, json};
@@ -715,4 +717,140 @@ fn to_literal_transforms_a_template_literal_to_a_literal() {
         })),
         "hello ${0} world ${1} "
     );
+}
+
+// ---------------------------------------------------------------------------
+// Upstream: test/estree/findPropertyMatch.spec.ts
+// ---------------------------------------------------------------------------
+
+/// Upstream `getProperties`.
+fn get_properties(code: &str) -> Vec<Value> {
+    let node = parse_first(&format!("({code})"));
+    expression_from_statement_if(&node)["properties"]
+        .as_array()
+        .cloned()
+        .unwrap_or_default()
+}
+
+#[test]
+fn find_property_match_returns_the_value_of_the_first_property_whose_key_matches_and_predicate_holds()
+ {
+    let properties = get_properties("{ cost: 100, N: 200 }");
+
+    let result = find_property_match(&properties, &["cost", "N"], is_numeric_literal);
+
+    assert!(result.is_some());
+    assert_eq!(result.unwrap()["value"], json!(100));
+}
+
+#[test]
+fn find_property_match_checks_names_in_property_order_not_in_the_order_given_to_names() {
+    let properties = get_properties("{ N: 200, cost: 100 }");
+
+    let result = find_property_match(&properties, &["cost", "N"], is_numeric_literal);
+
+    assert!(result.is_some());
+    assert_eq!(result.unwrap()["value"], json!(200));
+}
+
+#[test]
+fn find_property_match_returns_none_when_no_property_key_matches() {
+    let properties = get_properties("{ foo: 1 }");
+
+    assert!(find_property_match(&properties, &["cost", "N"], is_numeric_literal).is_none());
+}
+
+#[test]
+fn find_property_match_returns_none_when_the_key_matches_but_the_predicate_rejects_the_value() {
+    let properties = get_properties("{ cost: 'not-a-number' }");
+
+    assert!(find_property_match(&properties, &["cost"], is_numeric_literal).is_none());
+}
+
+#[test]
+fn find_property_match_skips_non_property_elements_such_as_spread_ones() {
+    let properties = get_properties("{ ...other, cost: 100 }");
+
+    let result = find_property_match(&properties, &["cost"], is_numeric_literal);
+
+    assert!(result.is_some());
+    assert_eq!(result.unwrap()["value"], json!(100));
+}
+
+#[test]
+fn find_property_match_works_with_a_different_predicate_is_string_literal() {
+    let properties = get_properties("{ algorithm: 'argon2d' }");
+
+    let result = find_property_match(&properties, &["algorithm"], is_string_literal);
+
+    assert!(result.is_some());
+    assert_eq!(result.unwrap()["value"], json!("argon2d"));
+}
+
+#[test]
+fn find_property_match_ignores_a_computed_property_even_when_its_key_identifier_name_matches() {
+    // { [cost]: 100 } - the real key is the *value* of `cost` at runtime, not the name "cost"
+    let properties = get_properties("{ [cost]: 100 }");
+
+    assert!(find_property_match(&properties, &["cost"], is_numeric_literal).is_none());
+}
+
+#[test]
+fn find_property_match_keeps_scanning_past_a_matching_key_whose_value_fails_the_predicate() {
+    let properties = get_properties("{ cost: 'not-a-number', N: 200 }");
+
+    let result = find_property_match(&properties, &["cost", "N"], is_numeric_literal);
+
+    assert!(result.is_some());
+    assert_eq!(result.unwrap()["value"], json!(200));
+}
+
+#[test]
+fn find_property_match_returns_none_for_an_empty_properties_array() {
+    assert!(find_property_match(&[], &["cost"], is_numeric_literal).is_none());
+}
+
+#[test]
+fn find_property_match_returns_none_for_an_empty_names_array() {
+    let properties = get_properties("{ cost: 100 }");
+
+    assert!(find_property_match(&properties, &[], is_numeric_literal).is_none());
+}
+
+#[test]
+fn find_property_match_returns_a_falsy_but_valid_value_such_as_0_rather_than_treating_it_as_no_match()
+ {
+    let properties = get_properties("{ cost: 0 }");
+
+    let result = find_property_match(&properties, &["cost"], is_numeric_literal);
+
+    assert!(result.is_some());
+    assert_eq!(result.unwrap()["value"], json!(0));
+}
+
+#[test]
+fn find_property_match_matches_a_key_written_as_a_quoted_string_literal() {
+    let properties = get_properties("{ 'cost' : 100 }");
+
+    let result = find_property_match(&properties, &["cost"], is_numeric_literal);
+
+    assert!(result.is_some());
+    assert_eq!(result.unwrap()["value"], json!(100));
+}
+
+#[test]
+fn find_property_match_matches_a_computed_key_holding_a_string_literal() {
+    let properties = get_properties(r#"{ ["cost"]: 100 }"#);
+
+    let result = find_property_match(&properties, &["cost"], is_numeric_literal);
+
+    assert!(result.is_some());
+    assert_eq!(result.unwrap()["value"], json!(100));
+}
+
+#[test]
+fn find_property_match_returns_none_when_a_quoted_key_does_not_match_any_name() {
+    let properties = get_properties(r#"{ "notCost": 100 }"#);
+
+    assert!(find_property_match(&properties, &["cost"], is_numeric_literal).is_none());
 }

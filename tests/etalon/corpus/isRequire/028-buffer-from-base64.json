@@ -1,0 +1,4 @@
+{
+  "name": "(isRequire): (require CallExpression): should detect MemberExpression Buffer.from (with base64 encoding)",
+  "code": "\n      require(Buffer.from(\"aHR0cA==\", \"base64\").toString());\n    "
+}

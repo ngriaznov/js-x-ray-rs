@@ -1,0 +1,4 @@
+{
+  "name": "(isRequire): (require CallExpression): should not resolve Buffer.from when the payload is not valid base64",
+  "code": "\n      require(Buffer.from(\"not base64 at all!\", \"base64\").toString());\n    "
+}

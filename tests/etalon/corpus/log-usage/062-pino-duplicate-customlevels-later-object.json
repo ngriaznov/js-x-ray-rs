@@ -1,0 +1,7 @@
+{
+  "name": "(log-usage probe > pino): should apply a later customLevels object when an earlier duplicate key is not an object",
+  "code": "import pino from \"pino\";\nconst logger = pino({\n  customLevels: levels,\n  customLevels: { foo: 35 }\n});\nlogger.foo(\"hello\");\nlogger.info(\"hello\");\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "name": "(isRequire): should warn on a template literal with an expression",
+  "code": "\n      require(`http${suffix}`);\n    "
+}

@@ -1,0 +1,4 @@
+{
+  "name": "(isRequire): should not resolve Buffer.from base64 when the payload is an empty string",
+  "code": "\n      require(Buffer.from(\"\", \"base64\").toString());\n    "
+}
