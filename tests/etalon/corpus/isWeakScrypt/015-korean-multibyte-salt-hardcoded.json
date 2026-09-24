@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakScrypt): should measure the length of salt in bytes (6 chars but 18 bytes)",
+  "code": "\n        import crypto from 'crypto';\n        crypto.scrypt(password, \"가나다라마바\", 64, (err, key) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-scrypt"
+    ]
+  }
+}

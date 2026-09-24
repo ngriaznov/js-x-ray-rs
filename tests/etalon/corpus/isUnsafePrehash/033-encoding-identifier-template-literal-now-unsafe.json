@@ -1,0 +1,9 @@
+{
+  "name": "(isUnsafePrehash probe): crypto.unsafe-prehash - should warn when the encoding is stored in an identifier pointing to a template literal, even with safe-looking content",
+  "code": "\n        import bcrypt from 'bcryptjs';\n        import crypto from 'crypto';\n        const encoding = `hex`;\n        const prehashed = crypto.createHash('sha256').update(password).digest(encoding);\n        bcrypt.hash(prehashed, salt, (err, hash) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.unsafe-prehash"
+    ]
+  }
+}

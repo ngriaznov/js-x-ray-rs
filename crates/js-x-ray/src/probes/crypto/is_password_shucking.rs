@@ -3,10 +3,11 @@
 use serde_json::Value;
 
 use crate::estree::{
-    Node, SourceLocation, get_member_call_expression, get_param_names, identifier_name,
-    is_call_expression, is_function_node, is_identifier, is_member_expression,
+    Node, SourceLocation, get_param_names, identifier_name, is_call_expression, is_function_node,
+    is_identifier, is_member_expression,
 };
 use crate::probe::{Probe, ProbeCtx, ProbeReturn};
+use crate::probes::crypto::resolve_digest_call;
 use crate::source_file::SourceFile;
 use crate::variable_tracer::{TraceOptions, TracerEvent};
 use crate::warnings::{GenerateWarningOptions, generate_warning};
@@ -46,25 +47,8 @@ fn is_create_hash_chain(node: Option<&Value>) -> bool {
     false
 }
 
-fn has_digest_chain(hash_node: Option<&Value>) -> bool {
-    let Some(hash_node) = hash_node else {
-        return false;
-    };
-    if get_member_call_expression(hash_node, "digest").is_some() {
-        return true;
-    }
-
-    let Some(to_string_call) = get_member_call_expression(hash_node, "toString") else {
-        return false;
-    };
-
-    to_string_call
-        .pointer("/callee/object")
-        .is_some_and(|object| get_member_call_expression(object, "digest").is_some())
-}
-
 fn is_shucking_prehash(hash_node: Option<&Value>) -> bool {
-    has_digest_chain(hash_node) && is_create_hash_chain(hash_node)
+    resolve_digest_call(hash_node).is_some() && is_create_hash_chain(hash_node)
 }
 
 /// Upstream `setEntryPoint`/named `main` handlers (`default` |

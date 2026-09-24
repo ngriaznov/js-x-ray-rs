@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakScrypt): should classify a 10-char two-byte-per-char salt as hardcoded, not short (10 UTF-16 units but 20 UTF-8 bytes)",
+  "code": "\n        import crypto from 'crypto';\n        crypto.scrypt(password, \"абвгдежзик\", 64, (err, key) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-scrypt"
+    ]
+  }
+}

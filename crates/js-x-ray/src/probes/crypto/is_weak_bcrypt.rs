@@ -2,10 +2,9 @@
 
 use serde_json::Value;
 
-use crate::estree::{
-    Node, SourceLocation, identifier_name, is_identifier, is_numeric_literal, is_string_literal,
-};
+use crate::estree::{Node, SourceLocation, is_string_literal};
 use crate::probe::{Probe, ProbeCtx, ProbeReturn};
+use crate::probes::crypto::resolve_numeric_value;
 use crate::source_file::SourceFile;
 use crate::variable_tracer::TraceOptions;
 use crate::warnings::{GenerateWarningOptions, generate_warning};
@@ -27,17 +26,6 @@ fn arg_index_for(function_name: &str) -> Option<usize> {
         .iter()
         .find(|(name, _)| *name == function_name)
         .map(|(_, index)| *index)
-}
-
-/// `Number(string)` for the digit-string cases this probe cares about:
-/// trimmed-empty coerces to `0`, otherwise a failed parse is `NaN`.
-fn js_number(value: &str) -> f64 {
-    let trimmed = value.trim();
-    if trimmed.is_empty() {
-        0.0
-    } else {
-        trimmed.parse().unwrap_or(f64::NAN)
-    }
 }
 
 #[derive(Debug, Default)]
@@ -94,31 +82,20 @@ impl Probe for IsWeakBcrypt {
             return ProbeReturn::Matched;
         };
 
-        let low_work_factor = if is_numeric_literal(arg) {
-            arg.get("value")
-                .and_then(Value::as_f64)
-                .is_some_and(|value| value < K_MIN_ROUNDS)
-        } else if is_identifier(arg) {
-            let name = identifier_name(arg).unwrap_or("");
-            ctx.source_file
-                .tracer
-                .literal_identifiers
-                .get(name)
-                .map(|literal| js_number(&literal.value))
-                .is_some_and(|value| !value.is_nan() && value < K_MIN_ROUNDS)
-        } else {
-            false
-        };
+        let num_value =
+            resolve_numeric_value(Some(arg), &ctx.source_file.tracer.literal_identifiers);
 
-        if low_work_factor {
-            ctx.source_file.warnings.push(generate_warning(
-                "crypto.weak-bcrypt",
-                GenerateWarningOptions {
-                    value: Some("low-work-factor".to_owned()),
-                    location: SourceLocation::from_node(node),
-                    ..Default::default()
-                },
-            ));
+        if let Some(value) = num_value {
+            if value < K_MIN_ROUNDS {
+                ctx.source_file.warnings.push(generate_warning(
+                    "crypto.weak-bcrypt",
+                    GenerateWarningOptions {
+                        value: Some("low-work-factor".to_owned()),
+                        location: SourceLocation::from_node(node),
+                        ..Default::default()
+                    },
+                ));
+            }
         } else if is_string_literal(arg) {
             ctx.source_file.warnings.push(generate_warning(
                 "crypto.weak-bcrypt",

@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakScrypt): should measure surrogate-pair salt in UTF-8 bytes, not UTF-16 units (8 emoji: 16 UTF-16 units, 32 UTF-8 bytes)",
+  "code": "\n        import crypto from 'crypto';\n        crypto.scrypt(password, \"😀😀😀😀😀😀😀😀\", 64, (err, key) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-scrypt"
+    ]
+  }
+}

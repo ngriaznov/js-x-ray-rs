@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakBcrypt): should warn when rounds are stored in a constant assigned a whitespace-padded numeric string literal",
+  "code": "\n        import bcrypt from 'bcryptjs';\n        const ROUNDS = \"  8 \";\n        bcrypt.hash(password, ROUNDS, (err, hash) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-bcrypt"
+    ]
+  }
+}

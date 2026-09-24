@@ -3,8 +3,7 @@
 use serde_json::Value;
 
 use crate::estree::{
-    Node, SourceLocation, identifier_name, is_identifier, is_numeric_literal, is_string_literal,
-    is_type,
+    Node, SourceLocation, find_property_match, is_numeric_literal, is_string_literal, is_type,
 };
 use crate::probe::{Probe, ProbeCtx, ProbeReturn};
 use crate::source_file::SourceFile;
@@ -32,17 +31,10 @@ const K_DEFAULT_PARALLELIZATION: f64 = 1.0;
 
 const K_TRACED_FUNCTIONS: [&str; 1] = ["crypto.scrypt"];
 
-fn extract_numeric_param(properties: &[&Value], names: &[&str]) -> Option<f64> {
-    properties.iter().find_map(|prop| {
-        let key = prop.get("key")?;
-        if !is_identifier(key) || !names.contains(&identifier_name(key)?) {
-            return None;
-        }
-        let value = prop.get("value")?;
-        is_numeric_literal(value)
-            .then(|| value.get("value")?.as_f64())
-            .flatten()
-    })
+fn numeric_param(properties: &[Value], names: &[&str]) -> Option<f64> {
+    find_property_match(properties, names, is_numeric_literal)?
+        .get("value")?
+        .as_f64()
 }
 
 fn is_weak_scrypt_params(cost: f64, block_size: f64, parallelization: f64) -> bool {
@@ -99,22 +91,15 @@ impl Probe for IsWeakScrypt {
         let arguments = node.get("arguments").and_then(Value::as_array);
         let salt = arguments.and_then(|args| args.get(1));
         let options = arguments.and_then(|args| args.get(3));
+        let mut reasons: Vec<&str> = Vec::new();
 
         if let Some(options) = options
             && is_type(options, "ObjectExpression")
+            && let Some(properties) = options.get("properties").and_then(Value::as_array)
         {
-            let properties: Vec<&Value> = options
-                .get("properties")
-                .and_then(Value::as_array)
-                .into_iter()
-                .flatten()
-                .filter(|prop| is_type(prop, "Property"))
-                .collect();
-
-            let cost_value = extract_numeric_param(&properties, &["cost", "N"]);
-            let block_size_value = extract_numeric_param(&properties, &["blockSize", "r"]);
-            let parallelization_value =
-                extract_numeric_param(&properties, &["parallelization", "p"]);
+            let cost_value = numeric_param(properties, &["cost", "N"]);
+            let block_size_value = numeric_param(properties, &["blockSize", "r"]);
+            let parallelization_value = numeric_param(properties, &["parallelization", "p"]);
 
             if (cost_value.is_some()
                 || block_size_value.is_some()
@@ -125,31 +110,27 @@ impl Probe for IsWeakScrypt {
                     parallelization_value.unwrap_or(K_DEFAULT_PARALLELIZATION),
                 )
             {
-                ctx.source_file.warnings.push(generate_warning(
-                    "crypto.weak-scrypt",
-                    GenerateWarningOptions {
-                        value: Some("low-cost".to_owned()),
-                        location: SourceLocation::from_node(node),
-                        ..Default::default()
-                    },
-                ));
+                reasons.push("low-cost");
             }
         }
 
         if let Some(salt) = salt
             && is_string_literal(salt)
+            && let Some(value) = salt.get("value").and_then(Value::as_str)
         {
-            let value = salt.get("value").and_then(Value::as_str).unwrap_or("");
-            let kind = if value.encode_utf16().count() < 16 {
+            // Buffer.byteLength: UTF-8 byte length, not UTF-16 code units.
+            reasons.push(if value.len() < 16 {
                 "short-salt"
             } else {
                 "hardcoded-salt"
-            };
+            });
+        }
 
+        if !reasons.is_empty() {
             ctx.source_file.warnings.push(generate_warning(
                 "crypto.weak-scrypt",
                 GenerateWarningOptions {
-                    value: Some(kind.to_owned()),
+                    value: Some(reasons.join(", ")),
                     location: SourceLocation::from_node(node),
                     ..Default::default()
                 },

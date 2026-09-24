@@ -4,10 +4,11 @@ use indexmap::IndexMap;
 use serde_json::Value;
 
 use crate::estree::{
-    Node, SourceLocation, get_member_call_expression, get_param_names, identifier_name,
-    is_call_expression, is_function_node, is_identifier, is_string_literal,
+    Node, SourceLocation, get_param_names, identifier_name, is_call_expression, is_function_node,
+    is_identifier,
 };
 use crate::probe::{Probe, ProbeCtx, ProbeReturn};
+use crate::probes::crypto::{resolve_digest_call, resolve_string_value};
 use crate::source_file::SourceFile;
 use crate::variable_tracer::{LiteralIdentifier, TraceOptions, TracerEvent};
 use crate::warnings::{GenerateWarningOptions, generate_warning};
@@ -30,63 +31,19 @@ const K_DIGEST_CHAINS: [&str; 8] = [
     "crypto.createHmac.digest.toString",
 ];
 
-/// Resolves both `x.digest(encoding)` and `x.digest().toString(encoding)`.
-fn resolve_digest_encoding_arguments(hash_node: Option<&Value>) -> Option<&[Value]> {
-    let hash_node = hash_node?;
-
-    if let Some(digest_call) = get_member_call_expression(hash_node, "digest") {
-        return digest_call
-            .get("arguments")
-            .and_then(Value::as_array)
-            .map(Vec::as_slice);
-    }
-
-    let to_string_call = get_member_call_expression(hash_node, "toString")?;
-    let inner_object = to_string_call.pointer("/callee/object")?;
-    let inner_digest_call = get_member_call_expression(inner_object, "digest")?;
-    let inner_args = inner_digest_call
-        .get("arguments")
-        .and_then(Value::as_array)?;
-
-    if inner_args.is_empty() {
-        to_string_call
-            .get("arguments")
-            .and_then(Value::as_array)
-            .map(Vec::as_slice)
-    } else {
-        Some(inner_args.as_slice())
-    }
-}
-
 fn is_safe_encoding_arg(
     node: Option<&Value>,
     literal_identifiers: &IndexMap<String, LiteralIdentifier>,
 ) -> bool {
-    let Some(node) = node else {
-        return false;
-    };
-
-    if is_string_literal(node) {
-        return node
-            .get("value")
-            .and_then(Value::as_str)
-            .is_some_and(|value| K_SAFE_DIGEST_ENCODINGS.contains(&value));
-    }
-    if is_identifier(node) {
-        let name = identifier_name(node).unwrap_or("");
-        return literal_identifiers
-            .get(name)
-            .is_some_and(|literal| K_SAFE_DIGEST_ENCODINGS.contains(&literal.value.as_str()));
-    }
-
-    false
+    resolve_string_value(node, literal_identifiers)
+        .is_some_and(|value| K_SAFE_DIGEST_ENCODINGS.contains(&value))
 }
 
 fn has_unsafe_digest_encoding(
     hash_node: Option<&Value>,
     literal_identifiers: &IndexMap<String, LiteralIdentifier>,
 ) -> bool {
-    let Some(encoding_args) = resolve_digest_encoding_arguments(hash_node) else {
+    let Some(encoding_args) = resolve_digest_call(hash_node) else {
         return false;
     };
 
@@ -226,7 +183,7 @@ impl Probe for IsUnsafePrehash {
         let TracerEvent::ReturnValue {
             identifier_or_member_expr,
             id,
-            arguments,
+            node,
             ..
         } = event
         else {
@@ -236,7 +193,7 @@ impl Probe for IsUnsafePrehash {
             return;
         }
 
-        let encoding_arg = arguments.first();
+        let encoding_arg = resolve_digest_call(Some(node)).and_then(<[Value]>::first);
         if !is_safe_encoding_arg(encoding_arg, &source_file.tracer.literal_identifiers) {
             self.unsafe_digest_variables.insert(id.clone());
         }

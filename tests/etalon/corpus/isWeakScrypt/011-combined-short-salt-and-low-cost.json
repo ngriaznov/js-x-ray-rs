@@ -1,5 +1,5 @@
 {
-  "name": "(isWeakScrypt): should emit both short-salt and low-cost warnings",
+  "name": "(isWeakScrypt): should report low-cost and short-salt in a single warning",
   "code": "\n        import crypto from 'crypto';\n        crypto.scrypt(password, \"abc\", 64, { cost: 1024 }, (err, key) => {});\n      ",
   "analyserOptions": {
     "optionalWarnings": [
