@@ -49,7 +49,7 @@ cargo test -p js-x-ray-rs --test etalon   # just the etalon suite
 - **Unit tests** (`crates/js-x-ray/tests/*_spec.rs` and friends) are
   transcriptions of upstream's own spec files (walker, estree helpers,
   VariableTracer, Deobfuscator, probes, utils, EntryFilesAnalyser, …) —
-  ~430 tests. `cargo test --doc -p js-x-ray-rs` also runs the crate-doc
+  ~470 tests. `cargo test --doc -p js-x-ray-rs` also runs the crate-doc
   example in `lib.rs`.
 - **Etalon suite** (`crates/js-x-ray/tests/etalon.rs`) is the real
   cross-check against upstream: it replays every case in

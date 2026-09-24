@@ -17,7 +17,9 @@ use crate::pipelines::{Inline, Pipeline, PipelineRunner};
 use crate::probe::{Probe, ProbeRunner, WalkAction};
 use crate::probes::{default_probes, optional_probe, optional_probe_names};
 use crate::source_file::{Sensitivity, SourceFile, SourceFileOptions};
-use crate::utils::{is_minified_code, is_one_line_expression_export};
+#[cfg(feature = "fs")]
+use crate::utils::is_minified_code;
+use crate::utils::is_one_line_expression_export;
 use crate::walker::walk_enter;
 use crate::warnings::{GenerateWarningOptions, Warning, generate_warning};
 

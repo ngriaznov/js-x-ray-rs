@@ -39,7 +39,7 @@ For a local release (or the very first publish before the secret exists):
 # 1. Green on the pinned toolchain CI uses.
 rustup run 1.98.0 cargo fmt --all --check
 rustup run 1.98.0 cargo clippy --workspace --all-targets -- -D warnings
-cargo test --workspace                       # 691/691 etalon + unit + fuzz
+cargo test --workspace                       # 749/749 etalon + unit + fuzz
 
 # 2. Bump the version in the workspace Cargo.toml ([workspace.package] version)
 #    and add a CHANGELOG.md entry. Commit.
