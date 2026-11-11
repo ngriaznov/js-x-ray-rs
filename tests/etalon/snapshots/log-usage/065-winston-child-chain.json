@@ -1,0 +1,13 @@
+{
+  "ok": true,
+  "warnings": [],
+  "flags": [],
+  "idsLengthAvg": 7,
+  "stringScore": 0,
+  "dependencies": {
+    "winston": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

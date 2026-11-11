@@ -1,0 +1,34 @@
+{
+  "ok": true,
+  "warnings": [
+    {
+      "kind": "data-exfiltration",
+      "location": [
+        [
+          [
+            3,
+            21
+          ],
+          [
+            3,
+            33
+          ]
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.data_exfiltration",
+      "severity": "Warning",
+      "experimental": false,
+      "value": "dns.getServers"
+    }
+  ],
+  "flags": [],
+  "idsLengthAvg": 10,
+  "stringScore": 0,
+  "dependencies": {
+    "dns": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

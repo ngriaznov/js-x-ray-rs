@@ -1,0 +1,7 @@
+{
+  "name": "console.log aliased through a variable",
+  "code": "\n      const l = console.log;\n      l(\"x\");\n      l(\"y\");\n    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

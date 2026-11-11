@@ -1,0 +1,7 @@
+{
+  "name": "destructured dns getServers via require",
+  "code": "\n      const { getServers } = require(\"dns\");\n      JSON.stringify(getServers());\n    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

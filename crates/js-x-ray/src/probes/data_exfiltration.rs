@@ -2,7 +2,7 @@
 
 use std::sync::LazyLock;
 
-use indexmap::IndexMap;
+use indexmap::IndexSet;
 use regex::Regex;
 use serde_json::Value;
 
@@ -11,12 +11,12 @@ use crate::estree::{
     is_call_expression, is_string_literal,
 };
 use crate::probe::{Probe, ProbeCtx, ProbeReturn};
+use crate::probes::tracing::{TraceAllOptions, trace_all, trace_all_from_module};
+use crate::probes::warning_aggregator::{
+    AggregatedLocations, collect_location, push_aggregated_warning,
+};
 use crate::source_file::{Sensitivity, SourceFile};
-use crate::utils::{SourceArrayLocation, to_array_location};
-use crate::variable_tracer::{TraceOptions, TracerEvent};
-use crate::warnings::{GenerateWarningOptions, WarningLocation, generate_warning};
-
-const K_SENSITIVE_MODULES: [&str; 2] = ["os", "dns"];
+use crate::variable_tracer::TracerEvent;
 
 const K_SENSITIVE_METHODS: [&str; 4] = [
     "os.userInfo",
@@ -40,7 +40,9 @@ enum EntryPoint {
 #[derive(Debug, Default)]
 pub struct DataExfiltration {
     /// Upstream probe-local `context: DataExfiltrationContextDef`.
-    context: IndexMap<String, Vec<SourceArrayLocation>>,
+    context: AggregatedLocations,
+    /// Upstream `sensitiveModules` captured by the aggressive import listener.
+    sensitive_modules: IndexSet<String>,
     entry_point: EntryPoint,
 }
 
@@ -81,7 +83,7 @@ impl DataExfiltration {
     /// Upstream `sensitiveLiteralHandler`.
     fn sensitive_literal_handler(&mut self, node: &Node) -> ProbeReturn {
         let value = node.get("value").and_then(Value::as_str).unwrap_or("");
-        self.add_in_context(value.to_owned(), SourceLocation::from_node(node));
+        collect_location(&mut self.context, value, SourceLocation::from_node(node));
 
         ProbeReturn::Matched
     }
@@ -106,32 +108,18 @@ impl DataExfiltration {
             return ProbeReturn::Matched;
         };
 
-        if let Some(data) = ctx.source_file.tracer.get_data_from_identifier(&id, false) {
-            let is_sensitive = K_SENSITIVE_METHODS.iter().any(|method| {
-                data.identifier_or_member_expr == *method
-                    && ctx
-                        .source_file
-                        .tracer
-                        .imported_modules
-                        .contains(method.split('.').next().unwrap_or(""))
-            });
-            if is_sensitive {
-                self.add_in_context(
-                    data.identifier_or_member_expr.clone(),
-                    SourceLocation::from_node(first_arg),
-                );
-            }
+        let data = ctx.source_file.tracer.get_data_from_identifier(&id, false);
+        if let Some(data) = data
+            && K_SENSITIVE_METHODS.contains(&data.identifier_or_member_expr.as_str())
+        {
+            collect_location(
+                &mut self.context,
+                &data.identifier_or_member_expr,
+                SourceLocation::from_node(first_arg),
+            );
         }
 
         ProbeReturn::Matched
-    }
-
-    /// Upstream `addInContext`.
-    fn add_in_context(&mut self, value: String, location: Option<SourceLocation>) {
-        self.context
-            .entry(value)
-            .or_default()
-            .push(to_array_location(location));
     }
 }
 
@@ -145,47 +133,11 @@ impl Probe for DataExfiltration {
     }
 
     fn initialize(&mut self, source_file: &mut SourceFile) {
-        source_file
-            .tracer
-            .trace(
-                "JSON.stringify",
-                TraceOptions {
-                    follow_consecutive_assignment: true,
-                    ..Default::default()
-                },
-            )
-            .trace(
-                "os.userInfo",
-                TraceOptions {
-                    module_name: Some("os".to_owned()),
-                    follow_consecutive_assignment: true,
-                    ..Default::default()
-                },
-            )
-            .trace(
-                "os.networkInterfaces",
-                TraceOptions {
-                    module_name: Some("os".to_owned()),
-                    follow_consecutive_assignment: true,
-                    ..Default::default()
-                },
-            )
-            .trace(
-                "os.cpus",
-                TraceOptions {
-                    module_name: Some("os".to_owned()),
-                    follow_consecutive_assignment: true,
-                    ..Default::default()
-                },
-            )
-            .trace(
-                "dns.getServers",
-                TraceOptions {
-                    module_name: Some("dns".to_owned()),
-                    follow_consecutive_assignment: true,
-                    ..Default::default()
-                },
-            );
+        let tracer = &mut source_file.tracer;
+
+        trace_all(tracer, ["JSON.stringify"], TraceAllOptions::default());
+        self.sensitive_modules =
+            trace_all_from_module(tracer, K_SENSITIVE_METHODS, TraceAllOptions::default());
     }
 
     fn on_tracer_event(&mut self, event: &TracerEvent, source_file: &mut SourceFile) {
@@ -201,11 +153,9 @@ impl Probe for DataExfiltration {
             return;
         };
 
-        if K_SENSITIVE_MODULES.contains(&module_name.as_str())
-            && !self.context.contains_key(module_name)
-        {
-            self.context
-                .insert(module_name.clone(), vec![to_array_location(*location)]);
+        // Only the import itself is reported, not every later usage.
+        if self.sensitive_modules.contains(module_name) && !self.context.contains_key(module_name) {
+            collect_location(&mut self.context, module_name, *location);
         }
     }
 
@@ -227,20 +177,6 @@ impl Probe for DataExfiltration {
     }
 
     fn finalize(&mut self, source_file: &mut SourceFile) {
-        if self.context.is_empty() {
-            return;
-        }
-
-        let value = self.context.keys().cloned().collect::<Vec<_>>().join(", ");
-        let mut warning = generate_warning(
-            "data-exfiltration",
-            GenerateWarningOptions {
-                value: Some(value),
-                ..Default::default()
-            },
-        );
-        warning.location =
-            WarningLocation::Multiple(self.context.values().flatten().copied().collect());
-        source_file.warnings.push(warning);
+        push_aggregated_warning(&self.context, source_file, "data-exfiltration", None);
     }
 }

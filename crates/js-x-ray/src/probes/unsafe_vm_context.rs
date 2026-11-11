@@ -6,6 +6,7 @@ use serde_json::Value;
 
 use crate::estree::{Node, SourceLocation, is_call_expression};
 use crate::probe::{Probe, ProbeCtx, ProbeReturn};
+use crate::probes::tracing::{get_traced_call, has_imported_modules};
 use crate::source_file::SourceFile;
 use crate::variable_tracer::{TraceOptions, TracerEvent};
 use crate::warnings::{GenerateWarningOptions, generate_warning};
@@ -78,13 +79,12 @@ impl Probe for UnsafeVmContext {
         if !is_call_expression(node) {
             return None;
         }
-        if !ctx.source_file.tracer.imported_modules.contains("vm") {
+        if !has_imported_modules(ctx, &["vm"]) {
             return None;
         }
 
-        let identifier_or_member_expr = ctx
-            .traced_data
-            .map(|data| data.identifier_or_member_expr.as_str());
+        let identifier_or_member_expr =
+            get_traced_call(ctx).map(|data| data.identifier_or_member_expr.as_str());
 
         if identifier_or_member_expr
             .is_some_and(|id| self.run_in_context_traced_functions.contains(id))

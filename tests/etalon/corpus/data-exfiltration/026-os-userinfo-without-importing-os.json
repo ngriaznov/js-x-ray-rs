@@ -1,0 +1,7 @@
+{
+  "name": "os.userInfo() without importing os should not warn",
+  "code": "\n      JSON.stringify(os.userInfo());\n    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

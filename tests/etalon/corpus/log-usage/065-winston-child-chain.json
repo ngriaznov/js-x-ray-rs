@@ -1,0 +1,7 @@
+{
+  "name": "winston createLogger child chain",
+  "code": "\n      const winston = require(\"winston\");\n      winston.createLogger().child({a: 1}).info(\"hi\");\n    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

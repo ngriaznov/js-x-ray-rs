@@ -1,0 +1,7 @@
+{
+  "name": "inline pino call chain yields virtual identifier",
+  "code": "\n      require(\"pino\")().info(\"hello\");\n      const pino = require(\"pino\");\n      pino().warn(\"x\");\n    ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

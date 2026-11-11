@@ -10,7 +10,6 @@
 use std::collections::{HashMap, HashSet};
 use std::sync::LazyLock;
 
-use indexmap::IndexMap;
 use regex::Regex;
 use serde_json::Value;
 
@@ -19,22 +18,28 @@ use crate::estree::{
     is_object_expression, is_type,
 };
 use crate::probe::{Probe, ProbeCtx, ProbeReturn};
+use crate::probes::tracing::{TraceAllOptions, get_traced_call, trace_all};
+use crate::probes::warning_aggregator::{
+    AggregatedLocations, collect_location, push_aggregated_warning,
+};
 use crate::source_file::SourceFile;
-use crate::utils::{SourceArrayLocation, to_array_location};
 use crate::variable_tracer::{TraceOptions, TracerEvent};
-use crate::warnings::{GenerateWarningOptions, WarningLocation, generate_warning};
 
 const K_PINO_LOG_METHODS: [&str; 6] = ["info", "warn", "error", "fatal", "debug", "trace"];
 const K_WINSTON_LOG_METHODS: [&str; 8] = [
     "info", "warn", "error", "http", "debug", "verbose", "silly", "log",
 ];
 
+/// Virtual identifiers are an internal tracer detail, strip them from the report.
+static K_VIRTUAL_CALL_PREFIX: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"__virtual_call_.*\d+__\.").expect("valid regex"));
+
 #[derive(Debug, Default)]
 pub struct LogUsage {
     /// Upstream `logUsages` (grows as new logger instances are discovered).
     logger_names: HashSet<String>,
     /// Upstream probe `context` (`LogUsageContextDef`).
-    context: IndexMap<String, Vec<SourceArrayLocation>>,
+    context: AggregatedLocations,
     /// Upstream `createWinstonTracerListener`'s `winstonLoggerFactoryTracedFunctions`.
     winston_child_sources: HashSet<String>,
     /// Upstream `createWinstonCreateLoggerTracerListener`'s
@@ -58,22 +63,20 @@ impl Probe for LogUsage {
     }
 
     fn initialize(&mut self, source_file: &mut SourceFile) {
-        for method in [
+        let console_methods = [
             "console.log",
             "console.info",
             "console.warn",
             "console.error",
             "console.debug",
-        ] {
-            self.logger_names.insert(method.to_owned());
-            source_file.tracer.trace(
-                method,
-                TraceOptions {
-                    follow_consecutive_assignment: true,
-                    ..Default::default()
-                },
-            );
-        }
+        ];
+        self.logger_names
+            .extend(console_methods.iter().map(|method| (*method).to_owned()));
+        trace_all(
+            &mut source_file.tracer,
+            console_methods,
+            TraceAllOptions::default(),
+        );
 
         for (identifier, module_name) in [
             ("winston.createLogger", "winston"),
@@ -142,7 +145,7 @@ impl Probe for LogUsage {
     }
 
     fn validate_node(&mut self, _node: &Node, ctx: &mut ProbeCtx<'_>) -> Option<Value> {
-        let identifier_or_member_expr = ctx.traced_data?.identifier_or_member_expr.as_str();
+        let identifier_or_member_expr = get_traced_call(ctx)?.identifier_or_member_expr.as_str();
 
         self.logger_names
             .contains(identifier_or_member_expr)
@@ -151,41 +154,23 @@ impl Probe for LogUsage {
 
     fn main(&mut self, node: &Node, data: &Value, _ctx: &mut ProbeCtx<'_>) -> ProbeReturn {
         if let Some(log_identifier) = data.as_str() {
-            let location = to_array_location(SourceLocation::from_node(node));
-            self.context
-                .entry(log_identifier.to_owned())
-                .or_default()
-                .push(location);
+            collect_location(
+                &mut self.context,
+                log_identifier,
+                SourceLocation::from_node(node),
+            );
         }
 
         ProbeReturn::Matched
     }
 
     fn finalize(&mut self, source_file: &mut SourceFile) {
-        if self.context.is_empty() {
-            return;
-        }
-
-        static VIRTUAL_CALL_RE: LazyLock<Regex> =
-            LazyLock::new(|| Regex::new(r"__virtual_call_.*\d+__\.").expect("valid regex"));
-
-        let value = self
-            .context
-            .keys()
-            .map(|method| VIRTUAL_CALL_RE.replace(method, "").into_owned())
-            .collect::<Vec<_>>()
-            .join(", ");
-
-        let mut warning = generate_warning(
+        push_aggregated_warning(
+            &self.context,
+            source_file,
             "log-usage",
-            GenerateWarningOptions {
-                value: Some(value),
-                ..Default::default()
-            },
+            Some(&|method| K_VIRTUAL_CALL_PREFIX.replace(method, "").into_owned()),
         );
-        warning.location =
-            WarningLocation::Multiple(self.context.values().flatten().copied().collect());
-        source_file.warnings.push(warning);
     }
 }
 

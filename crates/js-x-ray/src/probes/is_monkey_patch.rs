@@ -10,8 +10,8 @@ use crate::estree::{
     is_member_expression, node_type,
 };
 use crate::probe::{Probe, ProbeCtx, ProbeReturn};
+use crate::probes::tracing::{TraceAllOptions, trace_all};
 use crate::source_file::SourceFile;
-use crate::variable_tracer::TraceOptions;
 use crate::warnings::{GenerateWarningOptions, generate_warning};
 
 static JS_TYPES: LazyLock<HashSet<&'static str>> = LazyLock::new(|| {
@@ -141,15 +141,11 @@ impl Probe for IsMonkeyPatch {
     }
 
     fn initialize(&mut self, source_file: &mut SourceFile) {
-        for js_type in JS_TYPES.iter().copied() {
-            source_file.tracer.trace(
-                js_type,
-                TraceOptions {
-                    follow_consecutive_assignment: true,
-                    ..Default::default()
-                },
-            );
-        }
+        trace_all(
+            &mut source_file.tracer,
+            JS_TYPES.iter().copied(),
+            TraceAllOptions::default(),
+        );
     }
 
     fn validate_node(&mut self, node: &Node, ctx: &mut ProbeCtx<'_>) -> Option<Value> {

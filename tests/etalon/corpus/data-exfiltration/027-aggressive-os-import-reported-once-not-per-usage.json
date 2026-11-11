@@ -1,0 +1,8 @@
+{
+  "name": "aggressive: os import reported once, not per usage",
+  "code": "\n      import os from \"os\";\n      os.cpus();\n      os.cpus();\n      JSON.stringify(os.cpus());\n    ",
+  "analyserOptions": {
+    "optionalWarnings": true,
+    "sensitivity": "aggressive"
+  }
+}
