@@ -4,6 +4,35 @@ All notable changes to `js-x-ray-rs` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/); versions follow
 [SemVer](https://semver.org/).
 
+## [0.2.1] — 2026-11-11
+
+Tracks `@nodesecure/js-x-ray` **16.2.0** ([pinned commit](UPSTREAM.lock)).
+
+### Added
+
+- `crypto.weak-pbkdf2` opt-in warning: `crypto.pbkdf2()`/`pbkdf2Sync()` with
+  an iteration count below OWASP's minimum for the digest (1,300,000 for
+  SHA-1, 600,000 for SHA-256, 210,000 otherwise) or a short or hardcoded
+  salt.
+- ``import(`lodash`)`` (template literal, no expressions) records the
+  dependency, and ``import(`data:text/javascript,...`)`` reports
+  `unsafe-import`, like their string-literal forms.
+
+### Changed
+
+- `synchronous-io` reports only the sync functions it lists, instead of
+  any traced call ending in `Sync` once `fs`, `crypto`, `child_process` or
+  `zlib` is imported. Its value is now the method name taken from the
+  traced identifier, so member calls such as `fs.readFileSync()` carry a
+  value instead of none.
+- Probes share upstream's new tracing and warning-aggregation helpers
+  (`probes::tracing`, `probes::warning_aggregator`), mirroring upstream's
+  refactor so future syncs stay line-by-line.
+
+### Verified
+
+- 800/800 etalon cases match upstream 16.2.0 byte-for-byte.
+
 ## [0.2.0] — 2026-09-24
 
 Tracks `@nodesecure/js-x-ray` **16.1.0** ([pinned commit](UPSTREAM.lock)).
