@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakPbkdf2): should report low-iterations and short-salt in a single warning",
+  "code": "\n        import crypto from 'crypto';\n        crypto.pbkdf2(password, \"abc\", 1000, 64, 'sha512', (err, key) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-pbkdf2"
+    ]
+  }
+}

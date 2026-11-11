@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakPbkdf2): non-ASCII salt with at least 16 UTF-8 bytes but fewer than 16 characters is hardcoded-salt",
+  "code": "\n        import crypto from 'crypto';\n        crypto.pbkdf2Sync(password, \"éééééééé\", 210000, 64, 'sha512');\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-pbkdf2"
+    ]
+  }
+}

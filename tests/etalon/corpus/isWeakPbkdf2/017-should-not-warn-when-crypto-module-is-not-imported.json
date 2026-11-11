@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakPbkdf2): should not warn when crypto module is not imported",
+  "code": "\n        const crypto = { pbkdf2() {} };\n        crypto.pbkdf2(password, \"short\", 1000, 64, 'sha512', (err, key) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-pbkdf2"
+    ]
+  }
+}

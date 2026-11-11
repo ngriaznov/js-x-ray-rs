@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakPbkdf2): should warn when salt is a short string literal (less than 16 bytes)",
+  "code": "\n        import crypto from 'crypto';\n        crypto.pbkdf2(password, \"short\", 210000, 64, 'sha512', (err, key) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-pbkdf2"
+    ]
+  }
+}

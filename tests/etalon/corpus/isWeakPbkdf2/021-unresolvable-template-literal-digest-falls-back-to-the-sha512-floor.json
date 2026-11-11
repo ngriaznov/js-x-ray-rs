@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakPbkdf2): unresolvable template-literal digest falls back to the sha512 floor",
+  "code": "\n        import crypto from 'crypto';\n        const d = `sha${bits}`;\n        crypto.pbkdf2Sync(password, salt, 300000, 64, d);\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-pbkdf2"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakPbkdf2): should not warn when salt is a variable",
+  "code": "\n        import crypto from 'crypto';\n        const salt = crypto.randomBytes(16);\n        crypto.pbkdf2(password, salt, 210000, 64, 'sha512', (err, key) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-pbkdf2"
+    ]
+  }
+}

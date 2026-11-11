@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakPbkdf2): should match digest names case-insensitively",
+  "code": "\n        import crypto from 'crypto';\n        crypto.pbkdf2Sync(password, salt, 250000, 64, 'SHA256');\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-pbkdf2"
+    ]
+  }
+}

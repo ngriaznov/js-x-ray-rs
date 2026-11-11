@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakPbkdf2): digest given via a variable (sha256) is resolved",
+  "code": "\n        import crypto from 'crypto';\n        const digest = 'sha256';\n        crypto.pbkdf2Sync(password, salt, 500000, 64, digest);\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-pbkdf2"
+    ]
+  }
+}

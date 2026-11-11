@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakPbkdf2): should warn when salt is a hardcoded string literal of 16 bytes or more",
+  "code": "\n        import crypto from 'crypto';\n        crypto.pbkdf2(password, \"this-is-a-long-hardcoded-salt\", 210000, 64, 'sha512', (err, key) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-pbkdf2"
+    ]
+  }
+}

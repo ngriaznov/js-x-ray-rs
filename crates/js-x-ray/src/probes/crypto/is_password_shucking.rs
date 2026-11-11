@@ -8,8 +8,11 @@ use crate::estree::{
 };
 use crate::probe::{Probe, ProbeCtx, ProbeReturn};
 use crate::probes::crypto::resolve_digest_call;
+use crate::probes::tracing::{
+    TraceAllOptions, has_imported_modules, match_traced_call, trace_all_from_module,
+};
 use crate::source_file::SourceFile;
-use crate::variable_tracer::{TraceOptions, TracerEvent};
+use crate::variable_tracer::TracerEvent;
 use crate::warnings::{GenerateWarningOptions, generate_warning};
 
 const K_MODULE_NAME: &str = "bcryptjs";
@@ -125,28 +128,19 @@ impl Probe for IsPasswordShucking {
     }
 
     fn initialize(&mut self, source_file: &mut SourceFile) {
-        for identifier_or_member_expr in K_TRACED_FUNCTIONS {
-            source_file.tracer.trace(
-                identifier_or_member_expr,
-                TraceOptions {
-                    follow_consecutive_assignment: true,
-                    module_name: Some(K_MODULE_NAME.to_owned()),
-                    ..Default::default()
-                },
-            );
-        }
-
-        for chain in K_HASH_DIGEST_CHAINS {
-            source_file.tracer.trace(
-                chain,
-                TraceOptions {
-                    follow_return_value_assignement: true,
-                    follow_consecutive_assignment: true,
-                    module_name: Some("crypto".to_owned()),
-                    ..Default::default()
-                },
-            );
-        }
+        trace_all_from_module(
+            &mut source_file.tracer,
+            K_TRACED_FUNCTIONS,
+            TraceAllOptions::default(),
+        );
+        trace_all_from_module(
+            &mut source_file.tracer,
+            K_HASH_DIGEST_CHAINS,
+            TraceAllOptions {
+                follow_return_value_assignement: true,
+                ..Default::default()
+            },
+        );
     }
 
     fn on_tracer_event(&mut self, event: &TracerEvent, _source_file: &mut SourceFile) {
@@ -165,13 +159,7 @@ impl Probe for IsPasswordShucking {
     }
 
     fn validate_node(&mut self, node: &Node, ctx: &mut ProbeCtx<'_>) -> Option<Value> {
-        if !ctx
-            .source_file
-            .tracer
-            .imported_modules
-            .contains(K_MODULE_NAME)
-            || !ctx.source_file.tracer.imported_modules.contains("crypto")
-        {
+        if !has_imported_modules(ctx, &[K_MODULE_NAME, "crypto"]) {
             return None;
         }
 
@@ -196,11 +184,7 @@ impl Probe for IsPasswordShucking {
         }
 
         self.entry_point = EntryPoint::Default;
-        ctx.traced_data
-            .is_some_and(|data| {
-                K_TRACED_FUNCTIONS.contains(&data.identifier_or_member_expr.as_str())
-            })
-            .then_some(Value::Null)
+        match_traced_call(ctx, &K_TRACED_FUNCTIONS).map(|_| Value::Null)
     }
 
     fn main(&mut self, node: &Node, data: &Value, ctx: &mut ProbeCtx<'_>) -> ProbeReturn {

@@ -1,0 +1,4 @@
+{
+  "name": "(isWeakPbkdf2): should NOT report warnings when crypto.weak-pbkdf2 is not enabled",
+  "code": "\n        import crypto from 'crypto';\n        crypto.pbkdf2(password, \"short\", 1000, 64, 'sha512', (err, key) => {});\n      "
+}

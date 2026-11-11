@@ -4,11 +4,13 @@ use serde_json::Value;
 
 use crate::estree::{Node, SourceLocation, find_property_match, is_node, is_type};
 use crate::probe::{Probe, ProbeCtx, ProbeReturn};
+use crate::probes::tracing::{
+    TraceAllOptions, has_imported_modules, match_traced_call, trace_all_from_module,
+};
 use crate::source_file::SourceFile;
-use crate::variable_tracer::TraceOptions;
 use crate::warnings::{GenerateWarningOptions, generate_warning};
 
-use super::{resolve_numeric_value, resolve_string_value};
+use super::{classify_hardcoded_secret, resolve_numeric_value, resolve_string_value};
 
 /// OWASP recommended Argon2 parameter combinations.
 /// Each entry is `(minMemory (KiB), passes)` — every row provides an equal
@@ -64,26 +66,19 @@ impl Probe for IsWeakArgon2 {
     }
 
     fn initialize(&mut self, source_file: &mut SourceFile) {
-        for identifier_or_member_expr in K_TRACED_FUNCTIONS {
-            source_file.tracer.trace(
-                identifier_or_member_expr,
-                TraceOptions {
-                    follow_consecutive_assignment: true,
-                    module_name: Some("crypto".to_owned()),
-                    ..Default::default()
-                },
-            );
-        }
+        trace_all_from_module(
+            &mut source_file.tracer,
+            K_TRACED_FUNCTIONS,
+            TraceAllOptions::default(),
+        );
     }
 
     fn validate_node(&mut self, _node: &Node, ctx: &mut ProbeCtx<'_>) -> Option<Value> {
-        if !ctx.source_file.tracer.imported_modules.contains("crypto") {
+        if !has_imported_modules(ctx, &["crypto"]) {
             return None;
         }
 
-        K_TRACED_FUNCTIONS
-            .contains(&ctx.traced_data?.identifier_or_member_expr.as_str())
-            .then_some(Value::Null)
+        match_traced_call(ctx, &K_TRACED_FUNCTIONS)
     }
 
     fn main(&mut self, node: &Node, _data: &Value, ctx: &mut ProbeCtx<'_>) -> ProbeReturn {
@@ -129,14 +124,11 @@ impl Probe for IsWeakArgon2 {
             }
 
             if let Some(nonce) = nonce {
-                reasons.push(
-                    if nonce.len() < K_MIN_NONCE_LENGTH {
-                        "short-nonce"
-                    } else {
-                        "hardcoded-nonce"
-                    }
-                    .to_owned(),
-                );
+                reasons.push(classify_hardcoded_secret(
+                    nonce,
+                    "nonce",
+                    K_MIN_NONCE_LENGTH,
+                ));
             }
         }
 

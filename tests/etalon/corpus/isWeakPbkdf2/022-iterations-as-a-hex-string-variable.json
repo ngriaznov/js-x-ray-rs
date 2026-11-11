@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakPbkdf2): iterations as a hex string variable",
+  "code": "\n        import crypto from 'crypto';\n        const iterations = '0x10';\n        crypto.pbkdf2Sync(password, salt, iterations, 64, 'sha512');\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-pbkdf2"
+    ]
+  }
+}

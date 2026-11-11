@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakPbkdf2): should resolve the iteration count from a variable",
+  "code": "\n        import crypto from 'crypto';\n        const iterations = 1000;\n        crypto.pbkdf2(password, salt, iterations, 64, 'sha512', (err, key) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-pbkdf2"
+    ]
+  }
+}

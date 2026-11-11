@@ -2,12 +2,15 @@
 
 use serde_json::Value;
 
+use super::classify_hardcoded_secret;
 use crate::estree::{
     Node, SourceLocation, find_property_match, is_numeric_literal, is_string_literal, is_type,
 };
 use crate::probe::{Probe, ProbeCtx, ProbeReturn};
+use crate::probes::tracing::{
+    TraceAllOptions, has_imported_modules, match_traced_call, trace_all_from_module,
+};
 use crate::source_file::SourceFile;
-use crate::variable_tracer::TraceOptions;
 use crate::warnings::{GenerateWarningOptions, generate_warning};
 
 /// OWASP recommended minimum scrypt parameter combinations: `(minCost,
@@ -23,6 +26,7 @@ const K_OWASP_MIN_PARAMS: [(f64, f64); 5] = [
 ];
 
 const K_MIN_BLOCK_SIZE: f64 = 8.0;
+const K_MIN_SALT_LENGTH: usize = 16;
 
 // Node.js crypto.scrypt defaults.
 const K_DEFAULT_COST: f64 = 16384.0;
@@ -65,33 +69,26 @@ impl Probe for IsWeakScrypt {
     }
 
     fn initialize(&mut self, source_file: &mut SourceFile) {
-        for identifier_or_member_expr in K_TRACED_FUNCTIONS {
-            source_file.tracer.trace(
-                identifier_or_member_expr,
-                TraceOptions {
-                    follow_consecutive_assignment: true,
-                    module_name: Some("crypto".to_owned()),
-                    ..Default::default()
-                },
-            );
-        }
+        trace_all_from_module(
+            &mut source_file.tracer,
+            K_TRACED_FUNCTIONS,
+            TraceAllOptions::default(),
+        );
     }
 
     fn validate_node(&mut self, _node: &Node, ctx: &mut ProbeCtx<'_>) -> Option<Value> {
-        if !ctx.source_file.tracer.imported_modules.contains("crypto") {
+        if !has_imported_modules(ctx, &["crypto"]) {
             return None;
         }
 
-        K_TRACED_FUNCTIONS
-            .contains(&ctx.traced_data?.identifier_or_member_expr.as_str())
-            .then_some(Value::Null)
+        match_traced_call(ctx, &K_TRACED_FUNCTIONS)
     }
 
     fn main(&mut self, node: &Node, _data: &Value, ctx: &mut ProbeCtx<'_>) -> ProbeReturn {
         let arguments = node.get("arguments").and_then(Value::as_array);
         let salt = arguments.and_then(|args| args.get(1));
         let options = arguments.and_then(|args| args.get(3));
-        let mut reasons: Vec<&str> = Vec::new();
+        let mut reasons: Vec<String> = Vec::new();
 
         if let Some(options) = options
             && is_type(options, "ObjectExpression")
@@ -110,7 +107,7 @@ impl Probe for IsWeakScrypt {
                     parallelization_value.unwrap_or(K_DEFAULT_PARALLELIZATION),
                 )
             {
-                reasons.push("low-cost");
+                reasons.push("low-cost".to_owned());
             }
         }
 
@@ -118,12 +115,7 @@ impl Probe for IsWeakScrypt {
             && is_string_literal(salt)
             && let Some(value) = salt.get("value").and_then(Value::as_str)
         {
-            // Buffer.byteLength: UTF-8 byte length, not UTF-16 code units.
-            reasons.push(if value.len() < 16 {
-                "short-salt"
-            } else {
-                "hardcoded-salt"
-            });
+            reasons.push(classify_hardcoded_secret(value, "salt", K_MIN_SALT_LENGTH));
         }
 
         if !reasons.is_empty() {

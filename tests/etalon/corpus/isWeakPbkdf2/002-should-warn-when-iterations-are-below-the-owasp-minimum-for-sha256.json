@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakPbkdf2): should warn when iterations are below the OWASP minimum for sha256",
+  "code": "\n        import crypto from 'crypto';\n        crypto.pbkdf2Sync(password, salt, 500000, 64, 'sha256');\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-pbkdf2"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakPbkdf2): pbkdf2Sync aliased through destructuring",
+  "code": "\n        const { pbkdf2Sync: p } = require(\"crypto\");\n        p(password, \"abc\", 1000, 64, 'sha512');\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-pbkdf2"
+    ]
+  }
+}

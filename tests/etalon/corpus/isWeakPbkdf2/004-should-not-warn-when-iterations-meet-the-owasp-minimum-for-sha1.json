@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakPbkdf2): should not warn when iterations meet the OWASP minimum for sha1",
+  "code": "\n        import crypto from 'crypto';\n        crypto.pbkdf2(password, salt, 1300000, 64, 'sha1', (err, key) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-pbkdf2"
+    ]
+  }
+}

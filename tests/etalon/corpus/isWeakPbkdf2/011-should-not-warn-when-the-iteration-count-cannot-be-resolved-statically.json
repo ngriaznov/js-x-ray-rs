@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakPbkdf2): should not warn when the iteration count cannot be resolved statically",
+  "code": "\n        import crypto from 'crypto';\n        crypto.pbkdf2(password, salt, getIterations(), 64, 'sha512', (err, key) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-pbkdf2"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakPbkdf2): uppercase SHA1 digest uses the sha1 floor",
+  "code": "\n        import crypto from 'crypto';\n        crypto.pbkdf2Sync(password, salt, 1000000, 64, 'SHA1');\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-pbkdf2"
+    ]
+  }
+}

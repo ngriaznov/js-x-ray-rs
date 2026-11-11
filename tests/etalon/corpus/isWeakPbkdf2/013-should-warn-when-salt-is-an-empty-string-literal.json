@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakPbkdf2): should warn when salt is an empty string literal",
+  "code": "\n        import crypto from 'crypto';\n        crypto.pbkdf2Sync(password, \"\", 210000, 64, 'sha512');\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-pbkdf2"
+    ]
+  }
+}

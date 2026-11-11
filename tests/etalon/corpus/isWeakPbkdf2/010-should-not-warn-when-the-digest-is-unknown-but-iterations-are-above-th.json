@@ -1,0 +1,9 @@
+{
+  "name": "(isWeakPbkdf2): should not warn when the digest is unknown but iterations are above the lowest floor",
+  "code": "\n        import crypto from 'crypto';\n        crypto.pbkdf2(password, salt, 300000, 64, digest, (err, key) => {});\n      ",
+  "analyserOptions": {
+    "optionalWarnings": [
+      "crypto.weak-pbkdf2"
+    ]
+  }
+}
