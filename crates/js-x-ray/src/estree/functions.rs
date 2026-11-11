@@ -6,7 +6,7 @@ use serde_json::Value;
 use super::literal::js_string;
 use super::types::{
     is_call_expression, is_identifier, is_member_expression, is_node, is_string_literal, is_type,
-    node_type,
+    literal_str, node_type,
 };
 use crate::utils::hex;
 
@@ -51,8 +51,7 @@ pub fn get_call_expression_identifier(
     }
     if is_member_expression(callee) {
         let member_object = callee.get("object")?;
-        let last_id =
-            get_member_expression_identifier(callee, options.external_identifier_lookup).join(".");
+        let last_id = get_member_expression_full_name(callee, options.external_identifier_lookup);
 
         if options.resolve_call_expression && is_call_expression(member_object) {
             // Upstream concatenates even when the inner lookup returns null,
@@ -135,14 +134,9 @@ fn collect_member_expression_identifier(node: &Value, lookup: Lookup<'_>, out: &
         }
         // foo.bar[callexpr()]
         Some("CallExpression") => {
-            let args = property.get("arguments").and_then(Value::as_array);
-            if let Some(args) = args
-                && let Some(first) = args.first()
-                && is_type(first, "Literal")
-                && let Some(value) = first.get("value").and_then(Value::as_str)
-                && hex::is_hex_str(value)
-            {
-                out.push(hex::decode_hex_lossy(value));
+            let first_argument = property.pointer("/arguments/0");
+            if let Some(decoded_hex) = first_argument.and_then(literal_str).and_then(hex::decode) {
+                out.push(decoded_hex);
             }
         }
         // foo.bar["k" + "e" + "y"]
@@ -156,6 +150,20 @@ fn collect_member_expression_identifier(node: &Value, lookup: Lookup<'_>, out: &
         }
         _ => {}
     }
+}
+
+/// Upstream `getMemberExpressionFullName`: the member expression's parts
+/// joined with dots.
+pub fn get_member_expression_full_name(node: &Value, lookup: Lookup<'_>) -> String {
+    get_member_expression_identifier(node, lookup)
+        .into_iter()
+        .fold(String::new(), |full_name, part| {
+            if full_name.is_empty() {
+                part
+            } else {
+                format!("{full_name}.{part}")
+            }
+        })
 }
 
 // ---------------------------------------------------------------------------
@@ -280,7 +288,7 @@ pub fn get_call_expression_arguments(node: &Value, lookup: Lookup<'_>) -> Option
             }
             Some("Literal") => {
                 if let Some(value) = arg.get("value").and_then(Value::as_str) {
-                    literals_node.push(hex_to_string(value));
+                    literals_node.push(hex::decode(value).unwrap_or_else(|| value.to_owned()));
                 }
             }
             Some("TemplateLiteral") => {
@@ -302,14 +310,6 @@ pub fn get_call_expression_arguments(node: &Value, lookup: Lookup<'_>) -> Option
         None
     } else {
         Some(literals_node)
-    }
-}
-
-fn hex_to_string(value: &str) -> String {
-    if hex::is_hex_str(value) {
-        hex::decode_hex_lossy(value)
-    } else {
-        value.to_owned()
     }
 }
 
@@ -408,7 +408,7 @@ pub fn join_array_expression(node: &Value, lookup: Lookup<'_>) -> Option<String>
         return None;
     }
 
-    let id = get_member_expression_identifier(callee, &noop).join(".");
+    let id = get_member_expression_full_name(callee, &noop);
     if id != "join" || !is_string_literal(&args[0]) {
         return None;
     }

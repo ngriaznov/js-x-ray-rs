@@ -45,6 +45,16 @@ pub fn to_value(str_or_literal: &Value) -> String {
     }
 }
 
+/// Upstream `literalToString`: flatten a Literal or a TemplateLiteral into a
+/// string, keeping template expressions as `${index}` placeholders.
+pub fn literal_to_string(node: &Value) -> String {
+    if node.get("type").and_then(Value::as_str) == Some("TemplateLiteral") {
+        super::functions::to_literal(node)
+    } else {
+        js_string(node.get("value").unwrap_or(&Value::Null))
+    }
+}
+
 /// Upstream `toRaw`: the `raw` source text of a Literal (or the string itself).
 pub fn to_raw(str_or_literal: &Value) -> Option<String> {
     match str_or_literal {

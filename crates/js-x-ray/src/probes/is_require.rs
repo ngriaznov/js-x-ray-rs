@@ -7,8 +7,8 @@ use serde_json::Value;
 use crate::estree::{
     GetCallExpressionIdentifierOptions, Node, SourceLocation, array_expression_to_string,
     concat_binary_expression_parts, get_call_expression_arguments, get_call_expression_identifier,
-    get_member_expression_identifier, is_call_expression, is_member_expression, is_string_literal,
-    is_type, node_type, noop, to_literal,
+    get_member_expression_full_name, is_call_expression, is_member_expression, is_string_literal,
+    is_type, literal_str, node_type, noop, to_literal,
 };
 use crate::probe::{Probe, ProbeCtx, ProbeReturn};
 use crate::source_file::SourceFile;
@@ -246,18 +246,15 @@ impl<'a> RequireCallExpressionWalker<'a> {
             return;
         };
 
-        if is_type(root_argument, "Literal")
-            && let Some(value) = root_argument.get("value").and_then(Value::as_str)
-            && hex::is_hex_str(value)
-        {
-            self.dependencies.insert(hex::decode_hex_lossy(value));
+        if let Some(decoded_root_arg) = literal_str(root_argument).and_then(hex::decode) {
+            self.dependencies.insert(decoded_root_arg);
             wctx.skip();
             return;
         }
 
         let callee = node.get("callee");
         let full_name = match callee.filter(|c| is_member_expression(c)) {
-            Some(member) => get_member_expression_identifier(member, &noop).join("."),
+            Some(member) => get_member_expression_full_name(member, &noop),
             None => callee
                 .and_then(|c| c.get("name"))
                 .and_then(Value::as_str)

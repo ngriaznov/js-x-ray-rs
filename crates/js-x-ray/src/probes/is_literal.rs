@@ -108,8 +108,7 @@ impl Probe for IsLiteral {
         let value = node.get("value").and_then(Value::as_str).unwrap_or("");
         let location = SourceLocation::from_node(node);
 
-        if hex::is_hex_str(value) {
-            let decoded = hex::decode_hex_lossy(value);
+        if let Some(decoded) = hex::decode(value) {
             source_file.deobfuscator.analyze_string(&decoded);
 
             if NODE_BUILTIN_MODULES.contains(&decoded.as_str()) {

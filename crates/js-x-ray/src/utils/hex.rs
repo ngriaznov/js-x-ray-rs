@@ -45,6 +45,12 @@ pub fn decode_hex_lossy(value: &str) -> String {
     String::from_utf8_lossy(&bytes).into_owned()
 }
 
+/// Upstream `Hex.decode`: the UTF-8 decoding of a hex string, or `None`
+/// when the value is not hex.
+pub fn decode(value: &str) -> Option<String> {
+    is_hex_str(value).then(|| decode_hex_lossy(value))
+}
+
 /// Upstream `Hex.isHex` for a Literal node or plain string value.
 pub fn is_hex(any_value: &Value) -> bool {
     is_hex_str(&to_value(any_value))

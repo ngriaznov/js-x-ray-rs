@@ -23,7 +23,9 @@ pub mod is_unsafe_callee;
 pub mod is_unsafe_command;
 pub mod log_usage;
 pub mod sql_injection;
+pub mod tracing;
 pub mod unsafe_vm_context;
+pub mod warning_aggregator;
 
 use crate::probe::Probe;
 

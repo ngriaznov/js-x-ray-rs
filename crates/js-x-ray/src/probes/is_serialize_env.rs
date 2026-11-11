@@ -6,7 +6,7 @@
 use serde_json::Value;
 
 use crate::estree::{
-    Node, SourceLocation, get_member_expression_identifier, identifier_name, is_identifier,
+    Node, SourceLocation, get_member_expression_full_name, identifier_name, is_identifier,
     is_member_expression, noop,
 };
 use crate::probe::{Probe, ProbeCtx, ProbeReturn};
@@ -38,7 +38,7 @@ impl IsSerializeEnv {
         let first_arg = node.get("arguments")?.as_array()?.first()?;
 
         if is_member_expression(first_arg) {
-            let member_expr_id = get_member_expression_identifier(first_arg, &noop).join(".");
+            let member_expr_id = get_member_expression_full_name(first_arg, &noop);
             if member_expr_id == "process.env" {
                 return Some(Value::Null);
             }
@@ -65,7 +65,7 @@ impl IsSerializeEnv {
             return None;
         }
 
-        let member_expr_id = get_member_expression_identifier(node, &noop).join(".");
+        let member_expr_id = get_member_expression_full_name(node, &noop);
         if member_expr_id != "process.env" {
             return None;
         }
