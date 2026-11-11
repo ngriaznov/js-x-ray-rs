@@ -53,7 +53,7 @@ minifiers and obfuscators produce.
 
 ## What it detects
 
-The full `@nodesecure/js-x-ray` v16.1 catalogue:
+The full `@nodesecure/js-x-ray` v16.2 catalogue:
 
 | Warning | Description |
 | --- | --- |
@@ -73,7 +73,7 @@ The full `@nodesecure/js-x-ray` v16.1 catalogue:
 | `suspicious-literal`, `suspicious-file`, `short-identifiers` | Statistical obfuscation signals |
 | `crypto.weak-algorithm` | md5 / sha1 / ripemd160 |
 | `parsing-error` | Input that isn't valid JS/TS |
-| opt-in | `synchronous-io`, `log-usage`, `insecure-random`, `crypto.weak-scrypt`, `crypto.unsafe-prehash`, `crypto.weak-bcrypt`, `crypto.password-shucking`, `crypto.weak-argon2` |
+| opt-in | `synchronous-io`, `log-usage`, `insecure-random`, `crypto.weak-scrypt`, `crypto.unsafe-prehash`, `crypto.weak-bcrypt`, `crypto.password-shucking`, `crypto.weak-argon2`, `crypto.weak-pbkdf2` |
 
 Beyond warnings, every report carries the **dependency list** (every
 `require`/`import`, including computed and obfuscated forms the

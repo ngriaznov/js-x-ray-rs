@@ -5,7 +5,7 @@ Guidance for agents (and humans) working in this repo.
 ## What this is
 
 `js-x-ray-rs` is a **behavioral clone** of [`@nodesecure/js-x-ray`](https://github.com/NodeSecure/js-x-ray)
-v16.1, ported line-by-line from TypeScript to Rust. Same probes, same warning
+v16.2, ported line-by-line from TypeScript to Rust. Same probes, same warning
 kinds/values/locations, same flags and scores — verified against the
 original library's actual output, not against a reimplementation of its
 spec from memory.

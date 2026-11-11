@@ -46,12 +46,14 @@ pipelines/Runner.class.ts	crates/js-x-ray/src/pipelines/mod.rs
 pipelines/deobfuscate.ts	crates/js-x-ray/src/pipelines/deobfuscate.rs
 pipelines/index.ts	crates/js-x-ray/src/pipelines/mod.rs
 pipelines/inline.ts	crates/js-x-ray/src/pipelines/inline.rs
+probes/crypto/classifyHardcodedSecret.ts	crates/js-x-ray/src/probes/crypto/classify_hardcoded_secret.rs
 probes/crypto/index.ts	crates/js-x-ray/src/probes/crypto/mod.rs
 probes/crypto/isPasswordShucking.ts	crates/js-x-ray/src/probes/crypto/is_password_shucking.rs
 probes/crypto/isUnsafePrehash.ts	crates/js-x-ray/src/probes/crypto/is_unsafe_prehash.rs
 probes/crypto/isWeakAlgorithm.ts	crates/js-x-ray/src/probes/crypto/is_weak_algorithm.rs
 probes/crypto/isWeakArgon2.ts	crates/js-x-ray/src/probes/crypto/is_weak_argon2.rs
 probes/crypto/isWeakBcrypt.ts	crates/js-x-ray/src/probes/crypto/is_weak_bcrypt.rs
+probes/crypto/isWeakPbkdf2.ts	crates/js-x-ray/src/probes/crypto/is_weak_pbkdf2.rs
 probes/crypto/isWeakScrypt.ts	crates/js-x-ray/src/probes/crypto/is_weak_scrypt.rs
 probes/crypto/resolveDigestCall.ts	crates/js-x-ray/src/probes/crypto/resolve_digest_call.rs
 probes/crypto/resolveNumericValue.ts	crates/js-x-ray/src/probes/crypto/resolve_numeric_value.rs
@@ -77,7 +79,9 @@ probes/isUnsafeCallee.ts	crates/js-x-ray/src/probes/is_unsafe_callee.rs
 probes/isUnsafeCommand.ts	crates/js-x-ray/src/probes/is_unsafe_command.rs
 probes/log-usage.ts	crates/js-x-ray/src/probes/log_usage.rs
 probes/sql-injection.ts	crates/js-x-ray/src/probes/sql_injection.rs
+probes/tracing.ts	crates/js-x-ray/src/probes/tracing.rs
 probes/unsafe-vm-context.ts	crates/js-x-ray/src/probes/unsafe_vm_context.rs
+probes/warningAggregator.ts	crates/js-x-ray/src/probes/warning_aggregator.rs
 utils/extractNode.ts	(inlined at call sites)
 utils/getSubMemberExpressionSegments.ts	crates/js-x-ray/src/utils/get_sub_member_expression_segments.rs
 utils/hex.ts	crates/js-x-ray/src/utils/hex.rs

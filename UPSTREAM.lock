@@ -1,6 +1,6 @@
 # Upstream pin for the port. Update with tools/sync/pull-upstream.sh
 repository=https://github.com/NodeSecure/js-x-ray
 workspace=workspaces/js-x-ray
-commit=208e9ac3350ad6bed4be2179f167a655323817d0
-version=16.1.0
-date=2026-09-17
+commit=94e957b9ea95eaa00a153f3e2056347211a9fa68
+version=16.2.0
+date=2026-10-05
