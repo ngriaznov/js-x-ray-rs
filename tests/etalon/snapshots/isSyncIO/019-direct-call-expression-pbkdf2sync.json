@@ -2,6 +2,24 @@
   "ok": true,
   "warnings": [
     {
+      "kind": "crypto.weak-pbkdf2",
+      "location": [
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          56
+        ]
+      ],
+      "source": "JS-X-Ray",
+      "i18n": "sast_warnings.weak_pbkdf2",
+      "severity": "Warning",
+      "experimental": true,
+      "value": "low-iterations, short-salt"
+    },
+    {
       "kind": "synchronous-io",
       "location": [
         [
