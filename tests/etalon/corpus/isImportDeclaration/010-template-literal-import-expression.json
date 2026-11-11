@@ -1,0 +1,4 @@
+{
+  "name": "should detect 1 dependency for an ImportExpression with a template literal",
+  "code": "import(`bar`)"
+}

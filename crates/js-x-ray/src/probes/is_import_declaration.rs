@@ -2,7 +2,7 @@
 //!
 //! Search for ESM `ImportDeclaration`/`ImportExpression`, e.g.
 //! `import * as foo from "bar";`, `import fs from "fs";`,
-//! `import "make-promises-safe";`.
+//! `import "make-promises-safe";`, `import(`bar`);`.
 //! <https://github.com/estree/estree/blob/master/es2015.md#importdeclaration>
 
 use serde_json::Value;
@@ -17,6 +17,28 @@ use crate::warnings::{GenerateWarningOptions, generate_warning};
 /// - `file:...`: file inclusion vulnerability, see
 ///   <https://en.wikipedia.org/wiki/File_inclusion_vulnerability>
 const SUSPICIOUS_IMPORT_PREFIXES: [&str; 2] = ["data:text/javascript", "file:"];
+
+/// Upstream `getSpecifier`: `import(`bar`)` is the same specifier as
+/// `import("bar")`.
+fn get_specifier(source: &Node) -> Option<String> {
+    if is_string_literal(source) {
+        return source.get("value")?.as_str().map(str::to_owned);
+    }
+
+    if node_type(source) == Some("TemplateLiteral")
+        && source
+            .get("expressions")
+            .and_then(Value::as_array)
+            .is_some_and(Vec::is_empty)
+    {
+        return source
+            .pointer("/quasis/0/value/cooked")?
+            .as_str()
+            .map(str::to_owned);
+    }
+
+    None
+}
 
 #[derive(Debug, Default)]
 pub struct IsImportDeclaration;
@@ -38,15 +60,11 @@ impl Probe for IsImportDeclaration {
             return None;
         }
 
-        let source = node.get("source")?;
-        is_string_literal(source).then_some(Value::Null)
+        get_specifier(node.get("source")?).map(Value::String)
     }
 
-    fn main(&mut self, node: &Node, _data: &Value, ctx: &mut ProbeCtx<'_>) -> ProbeReturn {
-        let value = node
-            .pointer("/source/value")
-            .and_then(Value::as_str)
-            .unwrap_or_default();
+    fn main(&mut self, node: &Node, data: &Value, ctx: &mut ProbeCtx<'_>) -> ProbeReturn {
+        let value = data.as_str().unwrap_or_default();
         let location = SourceLocation::from_node(node);
 
         if SUSPICIOUS_IMPORT_PREFIXES

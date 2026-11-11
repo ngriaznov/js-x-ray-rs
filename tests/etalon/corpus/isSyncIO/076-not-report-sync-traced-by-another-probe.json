@@ -1,0 +1,7 @@
+{
+  "name": "it should NOT report a warning for a *Sync identifier traced by another probe",
+  "code": "\n    const fs = require(\"fs\");\n    const bcrypt = require(\"bcryptjs\");\n    bcrypt.hashSync(\"password\", 12);\n  ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

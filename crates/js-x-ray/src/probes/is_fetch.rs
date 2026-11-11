@@ -4,8 +4,10 @@ use serde_json::Value;
 
 use crate::estree::Node;
 use crate::probe::{Probe, ProbeCtx, ProbeReturn};
+use crate::probes::tracing::{TraceAllOptions, match_traced_call, trace_all};
 use crate::source_file::SourceFile;
-use crate::variable_tracer::TraceOptions;
+
+const K_TRACED_FUNCTIONS: [&str; 1] = ["fetch"];
 
 #[derive(Debug, Default)]
 pub struct IsFetch;
@@ -20,19 +22,15 @@ impl Probe for IsFetch {
     }
 
     fn initialize(&mut self, source_file: &mut SourceFile) {
-        source_file.tracer.trace(
-            "fetch",
-            TraceOptions {
-                follow_consecutive_assignment: true,
-                ..Default::default()
-            },
+        trace_all(
+            &mut source_file.tracer,
+            K_TRACED_FUNCTIONS,
+            TraceAllOptions::default(),
         );
     }
 
     fn validate_node(&mut self, _node: &Node, ctx: &mut ProbeCtx<'_>) -> Option<Value> {
-        ctx.traced_data
-            .is_some_and(|data| data.identifier_or_member_expr == "fetch")
-            .then_some(Value::Null)
+        match_traced_call(ctx, &K_TRACED_FUNCTIONS)
     }
 
     fn main(&mut self, _node: &Node, _data: &Value, ctx: &mut ProbeCtx<'_>) -> ProbeReturn {

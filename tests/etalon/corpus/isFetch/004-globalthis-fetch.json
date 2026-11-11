@@ -1,0 +1,4 @@
+{
+  "name": "globalThis.fetch(url)",
+  "code": "globalThis.fetch(url);\n"
+}

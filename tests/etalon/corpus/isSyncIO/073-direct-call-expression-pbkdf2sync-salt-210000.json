@@ -1,0 +1,7 @@
+{
+  "name": "(isSyncIO probe): it should report a warning in case of *Sync(...params)` usage [pbkdf2Sync.js, salt 210000]",
+  "code": "const { pbkdf2Sync } = require(\"crypto\");\n\npbkdf2Sync('mypassword', salt, 210000, 64, 'sha512');\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

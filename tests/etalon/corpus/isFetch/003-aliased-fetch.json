@@ -1,0 +1,4 @@
+{
+  "name": "fetch aliased via const f = fetch",
+  "code": "const f = fetch;\nf(url);\n"
+}

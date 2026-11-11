@@ -1,0 +1,7 @@
+{
+  "name": "it should report the method name when the call is a MemberExpression",
+  "code": "\n    const fs = require(\"fs\");\n    fs.readFileSync(\"foo.txt\");\n  ",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

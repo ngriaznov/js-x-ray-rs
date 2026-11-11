@@ -1,0 +1,7 @@
+{
+  "name": "spawn curl with array args (aggressive)",
+  "code": "const { spawn } = require(\"child_process\");\nspawn(\"curl\", [\"-s\", \"http://example.com\"]);\n",
+  "analyserOptions": {
+    "sensitivity": "aggressive"
+  }
+}

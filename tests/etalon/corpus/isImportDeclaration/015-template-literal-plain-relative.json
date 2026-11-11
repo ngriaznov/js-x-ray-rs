@@ -1,0 +1,4 @@
+{
+  "name": "import with template literal relative path",
+  "code": "import(`./x`);"
+}

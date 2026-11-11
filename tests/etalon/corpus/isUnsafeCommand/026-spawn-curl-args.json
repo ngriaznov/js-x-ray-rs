@@ -1,0 +1,4 @@
+{
+  "name": "spawn curl with array args",
+  "code": "const { spawn } = require(\"child_process\");\nspawn(\"curl\", [\"-s\", \"http://example.com\"]);\n"
+}

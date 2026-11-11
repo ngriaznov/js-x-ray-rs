@@ -1,0 +1,4 @@
+{
+  "name": "import with template literal relative path and expression is not resolved",
+  "code": "const y = 1;\nimport(`./x${y}`);"
+}

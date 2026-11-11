@@ -6,13 +6,11 @@
 
 use serde_json::Value;
 
-use crate::estree::{Node, SourceLocation, identifier_name};
+use crate::estree::{Node, SourceLocation};
 use crate::probe::{Probe, ProbeCtx, ProbeReturn};
+use crate::probes::tracing::{TraceAllOptions, match_traced_call, trace_all_from_module};
 use crate::source_file::SourceFile;
-use crate::variable_tracer::TraceOptions;
 use crate::warnings::{GenerateWarningOptions, generate_warning};
-
-const K_TRACED_NODE_CORE_MODULES: [&str; 4] = ["fs", "crypto", "child_process", "zlib"];
 
 const K_SYNC_IO_IDENTIFIER_OR_MEMBER_EXPS: [&str; 32] = [
     "crypto.pbkdf2Sync",
@@ -62,42 +60,21 @@ impl Probe for IsSyncIo {
     }
 
     fn initialize(&mut self, source_file: &mut SourceFile) {
-        for identifier_or_member_exp in K_SYNC_IO_IDENTIFIER_OR_MEMBER_EXPS {
-            let module_name = identifier_or_member_exp
-                .split('.')
-                .next()
-                .unwrap_or_default()
-                .to_owned();
-            source_file.tracer.trace(
-                identifier_or_member_exp,
-                TraceOptions {
-                    follow_consecutive_assignment: true,
-                    module_name: Some(module_name),
-                    ..Default::default()
-                },
-            );
-        }
+        trace_all_from_module(
+            &mut source_file.tracer,
+            K_SYNC_IO_IDENTIFIER_OR_MEMBER_EXPS,
+            TraceAllOptions::default(),
+        );
     }
 
     fn validate_node(&mut self, _node: &Node, ctx: &mut ProbeCtx<'_>) -> Option<Value> {
-        let tracer = &ctx.source_file.tracer;
-        if !K_TRACED_NODE_CORE_MODULES
-            .iter()
-            .any(|module_name| tracer.imported_modules.contains(*module_name))
-        {
-            return None;
-        }
-
-        let data = ctx.traced_data?;
-        data.identifier_or_member_expr
-            .ends_with("Sync")
-            .then_some(Value::Null)
+        match_traced_call(ctx, &K_SYNC_IO_IDENTIFIER_OR_MEMBER_EXPS)
     }
 
-    fn main(&mut self, node: &Node, _data: &Value, ctx: &mut ProbeCtx<'_>) -> ProbeReturn {
-        let value = node
-            .get("callee")
-            .and_then(identifier_name)
+    fn main(&mut self, node: &Node, data: &Value, ctx: &mut ProbeCtx<'_>) -> ProbeReturn {
+        let value = data
+            .as_str()
+            .and_then(|name| name.split('.').nth(1))
             .map(str::to_owned);
 
         let warning = generate_warning(

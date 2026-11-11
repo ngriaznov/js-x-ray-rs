@@ -1,0 +1,7 @@
+{
+  "name": "Math.random aliased via const r = Math.random",
+  "code": "const r = Math.random;\nr();\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

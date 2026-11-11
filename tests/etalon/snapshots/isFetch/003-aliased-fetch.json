@@ -1,0 +1,10 @@
+{
+  "ok": true,
+  "warnings": [],
+  "flags": [
+    "fetch"
+  ],
+  "idsLengthAvg": 1,
+  "stringScore": 0,
+  "dependencies": {}
+}

@@ -1,0 +1,7 @@
+{
+  "name": "it should NOT report a warning for an unlisted fs *Sync function",
+  "code": "const fs = require(\"fs\");\nfs.someCustomSync(\"a\");\nfs.existsSync(\"a\");\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

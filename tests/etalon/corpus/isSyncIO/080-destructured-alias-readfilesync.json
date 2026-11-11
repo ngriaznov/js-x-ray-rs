@@ -1,0 +1,7 @@
+{
+  "name": "it should report the original method name through a destructured alias",
+  "code": "const { readFileSync: rfs } = require(\"fs\");\nrfs(\"./p\");\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

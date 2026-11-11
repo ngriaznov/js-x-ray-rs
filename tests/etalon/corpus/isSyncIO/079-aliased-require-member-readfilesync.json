@@ -1,0 +1,7 @@
+{
+  "name": "it should report readFileSync through an aliased require member",
+  "code": "const r = require(\"fs\").readFileSync;\nr(\"./p\");\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

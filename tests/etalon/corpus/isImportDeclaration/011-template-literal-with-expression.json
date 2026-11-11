@@ -1,0 +1,4 @@
+{
+  "name": "should not detect a dependency for an ImportExpression with a template literal expression",
+  "code": "\n      import(`bar${suffix}`);\n    "
+}

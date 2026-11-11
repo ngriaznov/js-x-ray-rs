@@ -1,0 +1,17 @@
+{
+  "ok": true,
+  "warnings": [],
+  "flags": [],
+  "idsLengthAvg": 4,
+  "stringScore": 0,
+  "dependencies": {
+    "fs": {
+      "unsafe": false,
+      "inTry": false
+    },
+    "bcryptjs": {
+      "unsafe": false,
+      "inTry": false
+    }
+  }
+}

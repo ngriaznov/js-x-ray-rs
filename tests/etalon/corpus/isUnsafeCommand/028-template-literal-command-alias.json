@@ -1,0 +1,4 @@
+{
+  "name": "exec template literal via alias",
+  "code": "const cp = require(\"child_process\");\nconst e = cp.exec;\ne(`curl ${url}`);\n"
+}

@@ -1,0 +1,7 @@
+{
+  "name": "it should NOT report a warning for crypto.timingSafeEqualSync-like name",
+  "code": "const { timingSafeEqualSync } = require(\"crypto\");\ntimingSafeEqualSync(a, b);\n",
+  "analyserOptions": {
+    "optionalWarnings": true
+  }
+}

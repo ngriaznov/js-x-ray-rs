@@ -10,8 +10,8 @@ use crate::estree::{
     is_member_expression, noop,
 };
 use crate::probe::{Probe, ProbeCtx, ProbeReturn};
+use crate::probes::tracing::{TraceAllOptions, get_traced_call, trace_all};
 use crate::source_file::{Sensitivity, SourceFile};
-use crate::variable_tracer::TraceOptions;
 use crate::warnings::{GenerateWarningOptions, generate_warning};
 
 /// Upstream `setEntryPoint`/named `main` handlers (`default` | `process.env`).
@@ -30,8 +30,7 @@ pub struct IsSerializeEnv {
 impl IsSerializeEnv {
     /// Upstream `validateJsonStringify`.
     fn validate_json_stringify(node: &Node, ctx: &mut ProbeCtx<'_>) -> Option<Value> {
-        let data = ctx.traced_data?;
-        if data.identifier_or_member_expr != "JSON.stringify" {
+        if get_traced_call(ctx)?.identifier_or_member_expr != "JSON.stringify" {
             return None;
         }
 
@@ -119,19 +118,10 @@ impl Probe for IsSerializeEnv {
     }
 
     fn initialize(&mut self, source_file: &mut SourceFile) {
-        source_file.tracer.trace(
-            "process.env",
-            TraceOptions {
-                follow_consecutive_assignment: true,
-                ..Default::default()
-            },
-        );
-        source_file.tracer.trace(
-            "JSON.stringify",
-            TraceOptions {
-                follow_consecutive_assignment: true,
-                ..Default::default()
-            },
+        trace_all(
+            &mut source_file.tracer,
+            ["process.env", "JSON.stringify"],
+            TraceAllOptions::default(),
         );
     }
 
